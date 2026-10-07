@@ -1,0 +1,10 @@
+# build output: the exe is attached to GitHub Releases, not committed
+dist/
+
+# local design process and test artifacts
+design-demos/
+direction-approved.md
+assets/shot-attach.png
+assets/shot-managed.png
+*.log
+release/

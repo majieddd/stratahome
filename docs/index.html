@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StrataHome - run Strata from the Windows tray</title>
+<meta name="description" content="StrataHome is a free, open-source, unofficial Windows tray app that launches Strata without a console window, a browser tab or batch files.">
+<link rel="icon" href="img/icon-512.png">
+<link rel="canonical" href="https://majieddd.github.io/stratahome/">
+<meta name="theme-color" content="#14181C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="StrataHome - run Strata from the Windows tray">
+<meta property="og:description" content="A free, open-source, unofficial tray launcher for Strata: no console window, no browser tab, no batch files. About 80 KB.">
+<meta property="og:url" content="https://majieddd.github.io/stratahome/">
+<meta property="og:image" content="https://majieddd.github.io/stratahome/img/shot-main.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+:root{
+  color-scheme:light;
+  /* palette: the four bands of the mark, plus its near-black */
+  --ink:#14181C;
+  --ink-2:#34404A;
+  --muted:#4F5A64;
+  --amber:#E8B04B;
+  --ochre:#D69650;
+  --teal:#60A896;
+  --blue:#3F8CA0;
+  --link:#1F6F85;
+  --tint:#F3F5F4;
+  --dark:#14181C;
+  --hair:rgba(20,24,28,.14);
+  --pad:32px;
+  --maxw:1200px;
+  --ang:5deg;
+  --cut:8.75vw;
+  --font:"Segoe UI Variable Text","Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --display:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,"DejaVu Sans Mono",monospace;
+}
+@supports (width:calc(tan(5deg) * 1px)){
+  .page{--cut:calc(tan(var(--ang)) * 100cqw)}
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font:400 18px/1.6 var(--font);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{max-width:100%}
+a{color:var(--link);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2.5px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:4px}
+code{font-family:var(--mono);font-size:max(14px,.88em);background:rgba(20,24,28,.07);padding:.08em .4em;border-radius:6px;overflow-wrap:anywhere}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+.skip{position:absolute;left:12px;top:-80px;z-index:50;background:#fff;color:var(--ink);padding:12px 18px;border-radius:8px;font-weight:600}
+.skip:focus{top:12px}
+
+.page{container-type:inline-size;position:relative}
+.wrap{position:relative;width:min(100% - 2 * var(--pad),var(--maxw));margin-inline:auto}
+
+/* ---------- strata: every section is one tilted layer ---------- */
+.stratum{position:relative;isolation:isolate;margin-top:calc(var(--cut) * -1);padding:calc(var(--cut) + 40px) 0 calc(var(--cut) + 20px)}
+.stratum>.bg{position:absolute;z-index:-1;inset:-1px 0 0 0;background:var(--bg,#fff);clip-path:polygon(0 var(--cut),100% 0,100% 100%,0 100%);overflow:hidden}
+/* two hairline column guides, cut off by the tilted edge */
+.stratum>.bg::before,.stratum>.bg::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--rule,rgba(20,24,28,.075))}
+.stratum>.bg::before{left:calc((100% - min(100% - 2 * var(--pad),var(--maxw))) / 2 - 24px)}
+.stratum>.bg::after{right:calc((100% - min(100% - 2 * var(--pad),var(--maxw))) / 2 - 24px)}
+/* the mark in miniature: four parallel bands along every seam (clip-path edges, so they stay crisp) */
+.seam{--s:clamp(2px,.3cqw,4px);position:absolute;left:0;right:0;top:-1px;height:calc(var(--cut) + var(--s) * 8);pointer-events:none}
+.seam b{position:absolute;inset:0}
+.seam b:nth-child(1){background:var(--amber);clip-path:polygon(0 calc(var(--cut) + var(--s) * 0),100% calc(var(--s) * 0),100% calc(var(--s) * 1),0 calc(var(--cut) + var(--s) * 1))}
+.seam b:nth-child(2){background:var(--ochre);clip-path:polygon(0 calc(var(--cut) + var(--s) * 2),100% calc(var(--s) * 2),100% calc(var(--s) * 3),0 calc(var(--cut) + var(--s) * 3))}
+.seam b:nth-child(3){background:var(--teal);clip-path:polygon(0 calc(var(--cut) + var(--s) * 4),100% calc(var(--s) * 4),100% calc(var(--s) * 5),0 calc(var(--cut) + var(--s) * 5))}
+.seam b:nth-child(4){background:var(--blue);clip-path:polygon(0 calc(var(--cut) + var(--s) * 6),100% calc(var(--s) * 6),100% calc(var(--s) * 7),0 calc(var(--cut) + var(--s) * 7))}
+.t-white{--bg:#fff}
+.t-tint{--bg:var(--tint)}
+.t-dark{--bg:var(--dark);--rule:rgba(255,255,255,.09);color:#EDF1F3}
+
+.kicker{font:600 14px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--link);margin-bottom:18px}
+.t-dark .kicker{color:var(--amber)}
+h2{font:700 clamp(32px,4.1vw,54px)/1.08 var(--display);letter-spacing:-.025em;max-width:20ch;text-wrap:balance}
+h3{font:600 21px/1.3 var(--display);letter-spacing:-.01em}
+.lede{font-size:clamp(18px,1.55vw,21px);line-height:1.55;color:var(--ink-2);max-width:60ch;margin-top:20px}
+.t-dark .lede{color:#C5CFD5}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:0 30px 0 26px;border-radius:999px;background:var(--ink);color:#fff;font:600 19px/1 var(--font);text-decoration:none;box-shadow:0 14px 28px -12px rgba(20,24,28,.65);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 30px -12px rgba(20,24,28,.7)}
+.btn svg{width:22px;height:22px;flex:none}
+.btn:focus-visible{outline-color:var(--ink);outline-offset:4px;border-radius:999px}
+.link-ink{color:var(--ink);font-weight:600}
+
+/* ---------- gradient (hero + footer): the mark's four colours as a fluid field ---------- */
+.mesh{position:absolute;inset:-25%;animation:drift 42s ease-in-out infinite alternate;will-change:transform;
+  background:
+    radial-gradient(26% 34% at 30% 36%,#FBE3AE 0%,rgba(251,227,174,0) 72%),
+    radial-gradient(30% 36% at 46% 22%,#E8B04B 0%,rgba(232,176,75,0) 72%),
+    radial-gradient(30% 38% at 28% 74%,#D69650 0%,rgba(214,150,80,0) 72%),
+    radial-gradient(28% 36% at 62% 40%,#B9D8C0 0%,rgba(185,216,192,0) 72%),
+    radial-gradient(30% 38% at 70% 28%,#60A896 0%,rgba(96,168,150,0) 72%),
+    radial-gradient(32% 40% at var(--bx,76%) var(--by,76%),#3F8CA0 0%,rgba(63,140,160,0) 72%),
+    #EBC884}
+@keyframes drift{from{transform:translate3d(-3%,-2%,0) rotate(0deg) scale(1)}to{transform:translate3d(3%,2.5%,0) rotate(5deg) scale(1.07)}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .mesh{animation:none}
+  .btn{transition:none}
+}
+
+/* ---------- header ---------- */
+.top{position:absolute;inset:0 0 auto 0;z-index:10}
+.bar{display:flex;align-items:center;justify-content:space-between;height:88px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none;font:700 21px/1 var(--display);letter-spacing:-.01em}
+.brand img{width:44px;height:44px;filter:drop-shadow(0 6px 8px rgba(20,24,28,.3))}
+.top nav{display:flex;align-items:center;gap:4px}
+.top nav a{color:var(--ink);text-decoration:none;font:600 16px/1 var(--font);padding:13px 14px;border-radius:999px}
+.top nav a:hover{background:rgba(255,255,255,.5)}
+.top nav a.pill{border:1.5px solid var(--ink);margin-left:8px;padding:12px 18px}
+.top nav a.pill:hover{background:var(--ink);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;z-index:2;padding:132px 0 52px}
+.hero-bg{position:absolute;inset:0;overflow:hidden;background:#EBC884;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut)),0 100%)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:56px;align-items:start}
+.hero-copy{padding-top:6px}
+.tag{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.62);border-radius:999px;padding:7px 16px 7px 8px;font:500 15px/1.2 var(--font);color:var(--ink)}
+.tag b{background:var(--ink);color:#fff;border-radius:999px;padding:4px 10px;font:600 14px/1.2 var(--mono)}
+h1{font:700 clamp(46px,13.2vw,98px)/.98 var(--display);letter-spacing:-.034em;margin:22px 0 18px}
+.promise{font:600 clamp(23px,2.4vw,31px)/1.22 var(--display);letter-spacing:-.015em;max-width:25ch;text-wrap:balance}
+.sub{margin-top:18px;max-width:50ch;font-size:19px;line-height:1.55;color:var(--ink)}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:28px}
+.cta-meta{margin-top:14px;font:500 15px/1.4 var(--mono);letter-spacing:.01em;color:var(--ink)}
+.honest{margin-top:22px;padding-top:16px;border-top:1px solid rgba(20,24,28,.28);max-width:52ch;font-size:16px;line-height:1.5;color:var(--ink)}
+.honest a{color:var(--ink);font-weight:600}
+.hero-fig{position:relative;justify-self:end;width:min(100%,520px)}
+.win{position:relative;overflow:hidden;border-radius:10px;background:#fff;aspect-ratio:870/1035;box-shadow:0 0 0 1px rgba(20,24,28,.2),0 30px 46px -30px rgba(20,24,28,.55),0 12px 22px -16px rgba(20,24,28,.4)}
+.win img{display:block;width:102.529%;max-width:none;height:auto;margin-left:-1.2644%}
+.win-chat{aspect-ratio:1080/1005}
+.win-chat img{width:102.037%;margin-left:-1.0185%}
+.cap{font-size:14px;line-height:1.45;color:var(--muted);margin-top:26px;max-width:44ch}
+.hero-fig .cap{position:absolute;right:0;top:calc(100% + 18px);width:fit-content;max-width:100%;text-align:right;margin:0;padding:6px 12px;background:#fff;border-radius:8px;box-shadow:0 0 0 1px var(--hair)}
+
+/* ---------- what it replaces ---------- */
+.intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:end}
+.intro .lede{margin-top:0}
+.lanes{margin-top:40px;display:grid;gap:18px}
+.lane{display:grid;grid-template-columns:190px repeat(3,minmax(0,1fr));gap:20px 44px;padding:30px 34px 28px;border-radius:20px}
+.lane-old{background:#EEF0EF;border:1.5px dashed rgba(20,24,28,.34)}
+.lane-new{background:linear-gradient(100deg,#FBEBC4 0%,#EFEFD6 38%,#D9EEE6 100%);border:1.5px solid rgba(20,24,28,.2);box-shadow:0 22px 40px -28px rgba(20,24,28,.5)}
+.lane-title{grid-row:span 2;align-self:start}
+.lane-title .tiny{display:block;font:600 14px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.lane-title h3{font-size:24px}
+.steps{display:contents;list-style:none;padding:0}
+.steps li{position:relative}
+.steps li+li::before{content:"\2192";position:absolute;left:-34px;top:-1px;font:400 26px/1.2 var(--font);color:var(--ink)}
+.steps b{display:block;font:600 21px/1.25 var(--display);letter-spacing:-.01em;margin-bottom:6px}
+.steps span{display:block;font-size:17px;line-height:1.5;color:var(--ink-2)}
+.lane-foot{grid-column:2 / -1;padding-top:16px;border-top:1px solid rgba(20,24,28,.2);font-size:17px;color:var(--ink)}
+.lane-old .lane-foot{border-top-style:dashed}
+
+/* ---------- what it does ---------- */
+.what{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:56px;align-items:start}
+.specs{margin-top:34px}
+.specs .row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:6px 22px;padding:20px 0;border-top:1px solid var(--hair)}
+.specs .row:last-child{border-bottom:1px solid var(--hair)}
+.specs dt{font:600 14px/1.5 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--link);padding-top:4px}
+.specs dd p{font-size:17px;line-height:1.55;color:var(--ink)}
+.specs dd p+p{margin-top:8px}
+.what figure{position:sticky;top:28px}
+
+/* ---------- memory ---------- */
+.mem-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:end}
+.measure{display:flex;gap:44px;flex-wrap:wrap}
+.measure div{min-width:0}
+.measure strong{display:block;font:700 clamp(44px,5.6vw,72px)/1 var(--display);letter-spacing:-.04em}
+.measure .warm strong{color:#7A4C14}
+.measure .cold strong{color:#17586C}
+.measure span{display:block;margin-top:8px;font-size:15px;line-height:1.45;color:var(--ink-2);max-width:26ch}
+table.modes{width:100%;border-collapse:collapse;margin-top:48px}
+.modes th{font:600 14px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 24px 14px 0;border-bottom:2px solid var(--ink)}
+.modes td{vertical-align:top;padding:24px 24px 24px 0;border-bottom:1px solid var(--hair);font-size:17px;line-height:1.55}
+.modes td:first-child{width:25%}
+.modes td:first-child b{display:block;font:600 22px/1.25 var(--display);letter-spacing:-.01em}
+.modes td:first-child small{display:block;margin-top:4px;font:500 14px/1.4 var(--mono);color:var(--muted)}
+.modes td.cost{background:#FFF1CF;padding-left:22px;padding-right:22px;color:var(--ink)}
+.modes th.cost-h{padding-left:22px;color:#6B4308}
+.mem-note{margin-top:24px;max-width:78ch;color:var(--ink-2);font-size:17px}
+
+/* ---------- install bars (staggered like the mark) ---------- */
+.bars{margin-top:44px;display:grid;gap:14px}
+.bar-step{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:6px 26px;align-items:center;padding:26px 36px 26px 30px;border-radius:26px;color:var(--ink);min-height:116px}
+.bar-step .n{font:700 44px/1 var(--display);letter-spacing:-.04em}
+.bar-step .n.or{font:600 16px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.bar-step h3{font-size:24px}
+.bar-step p{font-size:17px;line-height:1.5;margin-top:4px;max-width:62ch}
+.bar-step a:not(.btn){color:var(--ink);font-weight:600}
+.bar-step .btn{min-height:54px;font-size:18px;white-space:nowrap}
+.b1{background:var(--amber);margin-left:0;width:96.8%}
+.b2{background:var(--ochre);margin-left:6.9%;width:79%;grid-template-columns:64px minmax(0,1fr) auto}
+.b3{background:var(--teal);margin-left:2.8%;width:97.2%}
+.b4{background:var(--blue);margin-left:9.8%;width:80.4%}
+.b2 p{max-width:34ch}
+.b4 code{background:rgba(255,255,255,.3)}
+
+/* ---------- verify (dark slab) ---------- */
+.verify{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:64px;align-items:start}
+.t-dark h2{max-width:14ch}
+.t-dark a{color:var(--amber)}
+.t-dark :focus-visible{outline-color:#fff}
+.t-dark code{background:rgba(255,255,255,.12);color:#fff}
+.reqs{list-style:none;padding:0;margin-top:32px;display:grid;gap:12px}
+.reqs li{position:relative;padding-left:22px;font-size:17px;line-height:1.5}
+.reqs li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:3px;background:var(--teal)}
+.smart{margin-top:34px;padding-top:22px;border-top:1px solid rgba(255,255,255,.22)}
+.smart h3{color:#fff;margin-bottom:8px}
+.smart p{font-size:17px;color:#D9E0E4}
+.manifest{border-top:1px solid rgba(255,255,255,.28)}
+.manifest .m{display:grid;grid-template-columns:128px minmax(0,1fr);gap:4px 20px;padding:17px 0;border-bottom:1px solid rgba(255,255,255,.16)}
+.manifest dt{font:600 14px/1.6 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#A9B6BE}
+.manifest dd{font:400 16px/1.55 var(--mono);color:#fff;overflow-wrap:anywhere}
+.manifest .sha dd{font-size:19px;font-weight:600;color:var(--amber)}
+.manifest dd small{display:block;margin-top:4px;font:400 14px/1.45 var(--font);color:#B7C2C9}
+
+/* ---------- faq ---------- */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:0 64px;margin-top:40px}
+.faq div{padding:24px 0 26px;border-top:1px solid var(--hair)}
+.faq h3{margin-bottom:8px}
+.faq p{font-size:17px;color:var(--ink-2);max-width:48ch}
+
+/* ---------- footer ---------- */
+.foot{padding:calc(var(--cut) + 52px) 0 44px}
+.foot>.bg{background:#EBC884}
+.foot>.bg::before,.foot>.bg::after{display:none}
+.foot .mesh{--bx:86%;--by:34%}
+.foot-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px 48px}
+.foot-cta h2{max-width:none}
+.foot-cta .cta-meta{margin-top:14px}
+.fine{margin-top:56px;padding-top:22px;border-top:1px solid rgba(20,24,28,.32);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 40px;font-size:16px;line-height:1.55;color:var(--ink)}
+.fine a{color:var(--ink);font-weight:600}
+.fine b{display:block;font:600 14px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+
+/* ---------- tablet / phone ---------- */
+@media (max-width:1100px){
+  .stratum>.bg::before,.stratum>.bg::after{display:none}
+  .lane{grid-template-columns:150px repeat(3,minmax(0,1fr));gap:20px 36px;padding:26px 26px 24px}
+  .steps li+li::before{left:-28px}
+  .what{gap:36px}
+  .verify{gap:40px}
+  .faq{gap:0 40px}
+}
+@media (max-width:900px){
+  :root{--pad:20px}
+  body{font-size:17px}
+  .top nav a:not(.pill){display:none}
+  .bar{height:76px}
+  .hero{padding:104px 0 0}
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .hero-fig{justify-self:center;width:min(100%,440px);margin-bottom:calc(var(--cut) * -.6)}
+  .hero-fig{display:flex;flex-direction:column-reverse}
+  .hero-fig .cap{position:static;text-align:left;margin:0 0 14px;color:var(--ink);font-size:15px;background:none;box-shadow:none;padding:0;width:auto}
+  .promise{max-width:none}
+  .stratum{padding:calc(var(--cut) + 40px) 0 calc(var(--cut) + 20px)}
+  /* the figure caption sits in the flow on phones, so give the next layer room */
+  .hero+.stratum{padding-top:calc(var(--cut) + 96px)}
+  .lane{grid-template-columns:1fr;gap:22px;padding:24px 22px}
+  .lane-title{grid-row:auto}
+  .steps{display:grid;gap:22px}
+  .steps li+li{padding-top:20px;border-top:1px solid rgba(20,24,28,.2)}
+  .steps li+li::before{content:none}
+  .lane-foot{grid-column:auto}
+  .what{grid-template-columns:1fr}
+  .intro{grid-template-columns:1fr;gap:20px}
+  .intro .lede{margin-top:0}
+  .what figure{position:static;order:2}
+  .specs .row{grid-template-columns:1fr}
+  .mem-intro{grid-template-columns:1fr;gap:32px}
+  table.modes,.modes tbody,.modes tr,.modes td{display:block;width:100%}
+  .modes thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .modes tr{border-top:2px solid var(--ink);padding:18px 0 6px}
+  .modes td{border:0;padding:6px 0 10px}
+  .modes td:first-child{width:100%}
+  .modes td:first-child::before{display:none!important}
+  .modes td[data-l]::before{content:attr(data-l);display:block;font:600 14px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .modes td.cost{padding:12px 16px 14px;margin:6px 0 12px;border-radius:12px}
+  .bar-step,.b1,.b2,.b3,.b4{width:100%;margin-left:0;grid-template-columns:minmax(0,1fr);gap:4px;padding:20px 20px 24px;min-height:0;border-radius:22px}
+  .bar-step .n{font-size:34px}
+  .bar-step .n.or{font-size:15px;padding-bottom:6px}
+  .bar-step h3{font-size:22px}
+  .bar-step .btn{justify-self:start;margin-top:14px}
+  .b2 p{max-width:none}
+  .verify{grid-template-columns:1fr;gap:44px}
+  .manifest .m{grid-template-columns:1fr;gap:2px}
+  .faq{grid-template-columns:1fr}
+  .fine{grid-template-columns:1fr}
+  .foot-cta{align-items:flex-start}
+}
+@media (max-width:480px){
+  .btn{width:100%;justify-content:center}
+  .cta{gap:18px}
+  .cta .link-ink{margin-inline:auto}
+  .bar-step .btn{width:auto}
+  .measure{gap:28px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="page" id="top">
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#top"><img src="img/icon-512.png" width="44" height="44" alt=""><span>StrataHome</span></a>
+    <nav aria-label="Sections">
+      <a href="#replaces">What it replaces</a>
+      <a href="#install">Install</a>
+      <a href="#verify">Verify</a>
+      <a href="#faq">FAQ</a>
+      <a class="pill" href="https://github.com/majieddd/stratahome">Source</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO: the top, warm layer ============ -->
+<section class="hero" aria-labelledby="h1">
+  <i class="hero-bg" aria-hidden="true"><i class="mesh"></i></i>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="tag"><b>v0.1.0</b> Free, MIT, unofficial</p>
+      <h1 id="h1">StrataHome</h1>
+      <p class="promise">Run Strata from the Windows tray. No console window, no browser tab, no batch files.</p>
+      <p class="sub">A small launcher for Strata, the engine that runs a very large local AI model (125 billion parameters) on one gaming PC. Nothing else on the PC needs to be open.</p>
+      <div class="cta">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
+          Download for Windows
+        </a>
+        <a class="link-ink" href="https://github.com/majieddd/stratahome">View the source on GitHub</a>
+      </div>
+      <p class="cta-meta">v0.1.0 &middot; about 80 KB &middot; Windows 10/11</p>
+      <p class="honest">It needs an existing Strata install, and the .exe is unsigned, so Windows SmartScreen may warn you. Both are explained under <a href="#install">Install</a> and <a href="#verify">Verify</a>.</p>
+    </div>
+    <figure class="hero-fig">
+      <div class="win win-main">
+        <img src="img/shot-main.png" width="892" height="1046" alt="The StrataHome main window in the Ready state, serving swift-1.5-iq2_xs at http://127.0.0.1:8080/v1, with Strata's startup log in the pane below the settings.">
+      </div>
+      <figcaption class="cap">The main window when the model is ready. The log pane is Strata's real startup output.</figcaption>
+    </figure>
+  </div>
+  <!-- NOTE: the figure is outside the clipped gradient, so it hangs over the tilted edge on purpose -->
+</section>
+
+<!-- ============ WHAT IT REPLACES ============ -->
+<section class="stratum t-white" id="replaces" aria-labelledby="h-replaces" style="--pb:0">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap">
+    <p class="kicker">What it replaces</p>
+    <div class="intro">
+      <h2 id="h-replaces">A console window and a browser tab, or one tray icon.</h2>
+      <p class="lede">Strata starts from its own START-HERE.bat. StrataHome takes over that path and leaves the model, and the time it takes to load, exactly as Strata makes them.</p>
+    </div>
+
+    <div class="lanes">
+      <div class="lane lane-old">
+        <div class="lane-title">
+          <span class="tiny">Before</span>
+          <h3>Strata&rsquo;s own start</h3>
+        </div>
+        <ol class="steps">
+          <li><b>START-HERE.bat</b><span>You run a batch file.</span></li>
+          <li><b>A console window</b><span>It opens and has to stay open while the model loads and runs.</span></li>
+          <li><b>A browser tab</b><span>It opens when the model is ready. That is where you chat.</span></li>
+        </ol>
+        <p class="lane-foot">Strata&rsquo;s own log says it plainly: <code>close this window to stop the model</code></p>
+      </div>
+
+      <div class="lane lane-new">
+        <div class="lane-title">
+          <span class="tiny">After</span>
+          <h3>With StrataHome</h3>
+        </div>
+        <ol class="steps">
+          <li><b>A tray icon</b><span>Shows live state: Stopped, Starting, Loading the model, Ready, Idle or Problem.</span></li>
+          <li><b>A notification</b><span>Appears when the model is ready.</span></li>
+          <li><b>Chat window or any API client</b><span>The native chat window, or any app pointed at <code>http://127.0.0.1:8080/v1</code>.</span></li>
+        </ol>
+        <p class="lane-foot">Nothing else on the PC needs to be open. The model load itself is still Strata&rsquo;s.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT DOES ============ -->
+<section class="stratum t-tint" id="what" aria-labelledby="h-what">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap what">
+    <div>
+      <p class="kicker">What it does</p>
+      <h2 id="h-what">A tray icon, a small window, a chat window.</h2>
+      <dl class="specs">
+        <div class="row">
+          <dt>In the tray</dt>
+          <dd>
+            <p>One icon, six states: Stopped, Starting, Loading the model, Ready, Idle (model unloaded) and Problem.</p>
+            <p>A notification appears when the model is ready.</p>
+            <p>Optional and off by default: start with Windows, minimized to the tray.</p>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>In the window</dt>
+          <dd>
+            <p>Copy API URL puts <code>http://127.0.0.1:8080/v1</code> on the clipboard. It is OpenAI-compatible, so any app that talks to that API can use it.</p>
+            <p>It attaches to a Strata server that was started somewhere else, for example by START-HERE.bat, and can stop it.</p>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>In the chat window</dt>
+          <dd>
+            <p>Answers stream in as they are written. You choose the thinking level (none, low, medium or high), and it shows tokens per second.</p>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>When you close it</dt>
+          <dd>
+            <p>The model server stops with the app, through a Windows job object, so a model that holds tens of gigabytes of memory is never left running by accident.</p>
+            <p>If you want it to keep running, tick &ldquo;Leave Strata running when this app exits&rdquo;.</p>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <figure>
+      <div class="win win-chat">
+        <img src="img/shot-chat.png" width="1102" height="1016" alt="The StrataHome chat window: a thinking-level menu set to low, a New chat button, a tokens per second readout, a streamed answer about commit messages, and a message box with a Send button.">
+      </div>
+      <figcaption class="cap">The native chat window, with the thinking level and the tokens-per-second readout in the top bar.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ MEMORY ============ -->
+<section class="stratum t-white" id="memory" aria-labelledby="h-mem">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap">
+    <div class="mem-intro">
+      <div>
+        <p class="kicker">Memory modes</p>
+        <h2 id="h-mem">Choose when the model sits in memory.</h2>
+        <p class="lede">A model like Swift 1.5 IQ2_XS holds about 36 GB of RAM, plus GPU memory, while it is loaded. StrataHome offers three ways to handle that, and each one has a price.</p>
+      </div>
+      <div>
+        <div class="measure">
+          <div class="warm"><strong>16&nbsp;s</strong><span>Swift 1.5 IQ2_XS ready on a warm start, measured on an RTX 5090 Laptop.</span></div>
+          <div class="cold"><strong>1&ndash;2&nbsp;min</strong><span>A first cold start takes about this long (Strata&rsquo;s own figure).</span></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="modes">
+      <thead>
+        <tr><th scope="col">Mode</th><th scope="col">What happens</th><th scope="col" class="cost-h">What it costs</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-l="Mode"><b>Keep the model loaded</b><small>fastest replies</small></td>
+          <td data-l="What happens">The model stays loaded for as long as Strata runs, so a request starts answering at once.</td>
+          <td class="cost" data-l="What it costs">It keeps using GPU memory and RAM the whole time.</td>
+        </tr>
+        <tr>
+          <td data-l="Mode"><b>Unload when idle</b><small>after N minutes</small></td>
+          <td data-l="What happens">After N minutes without a request the model is unloaded, which frees GPU and RAM. You choose N.</td>
+          <td class="cost" data-l="What it costs">The next request waits while the model loads again.</td>
+        </tr>
+        <tr>
+          <td data-l="Mode"><b>Load on first request</b><small>nothing loaded at start</small></td>
+          <td data-l="What happens">The model is not loaded until something asks for it.</td>
+          <td class="cost" data-l="What it costs">That first request waits while the model loads.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="mem-note">Two buttons do it by hand: <b>Free GPU</b> and <b>Load now</b>. The wait is Strata&rsquo;s model load, not StrataHome&rsquo;s. StrataHome does not load the model faster than Strata; what it removes is the console window, the browser tab and the leftover processes.</p>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="stratum t-tint" id="install" aria-labelledby="h-install">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap">
+    <p class="kicker">Install</p>
+    <h2 id="h-install">Three steps, one small file.</h2>
+    <div class="bars">
+      <div class="bar-step b1">
+        <span class="n" aria-hidden="true">1</span>
+        <div>
+          <h3>Run Strata&rsquo;s START-HERE.bat once.</h3>
+          <p>StrataHome needs an existing Strata install. It does not download Strata or any model. Get Strata from <a href="https://github.com/Niko1221/Strata">github.com/Niko1221/Strata</a> (MIT).</p>
+        </div>
+      </div>
+      <div class="bar-step b2">
+        <span class="n" aria-hidden="true">2</span>
+        <div>
+          <h3>Download StrataHome.exe and put it anywhere.</h3>
+          <p>One file, about 80 KB. Nothing to install.</p>
+        </div>
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
+          Download
+        </a>
+      </div>
+      <div class="bar-step b3">
+        <span class="n" aria-hidden="true">3</span>
+        <div>
+          <h3>Run it.</h3>
+          <p>It finds Strata by itself, or you pick the folder. If Windows says &ldquo;Windows protected your PC&rdquo;, see the note under <a href="#verify">Verify</a>.</p>
+        </div>
+      </div>
+      <div class="bar-step b4">
+        <span class="n or" aria-hidden="true">or</span>
+        <div>
+          <h3>Build it yourself.</h3>
+          <p>Run <code>build.cmd</code>. It uses the C# compiler that ships with Windows, so no SDK is needed. <a href="https://github.com/majieddd/stratahome">Source on GitHub</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VERIFY (dark layer) ============ -->
+<section class="stratum t-dark" id="verify" aria-labelledby="h-verify">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap verify">
+    <div>
+      <p class="kicker">Requirements and verification</p>
+      <h2 id="h-verify">Unsigned, so here is how to check it.</h2>
+      <ul class="reqs">
+        <li>Windows 10 (1903 or newer) or Windows 11, 64-bit.</li>
+        <li>An existing Strata install, with its START-HERE.bat run once.</li>
+        <li>Aimed at gaming PCs that run Strata: NVIDIA RTX or AMD, 12 GB+ of VRAM.</li>
+        <li>Windows only. StrataHome is not a model and does not make anything faster.</li>
+      </ul>
+      <div class="smart">
+        <h3>SmartScreen may warn you</h3>
+        <p>StrataHome.exe is not code-signed. Windows may show &ldquo;Windows protected your PC&rdquo;. Choose <b>More info</b>, then <b>Run anyway</b>. Compare the SHA-256 listed in this section first, or build it yourself with <code>build.cmd</code>.</p>
+      </div>
+    </div>
+    <dl class="manifest">
+      <div class="m sha"><dt>SHA-256</dt><dd>14ff0f20a5c8a521b07343c43e3b6b7eab5815021808370a6fb1570db8c5cf88<small>For StrataHome.exe v0.1.0.</small></dd></div>
+      <div class="m"><dt>Size</dt><dd>about 80 KB, a single .exe</dd></div>
+      <div class="m"><dt>Memory</dt><dd>about 65 MB of RAM while its window is open</dd></div>
+      <div class="m"><dt>Network</dt><dd>none except localhost, no telemetry</dd></div>
+      <div class="m"><dt>Checks</dt><dd>14 automated lifecycle checks<small>Start, stop, crash detection, attaching to a running server and clean-up. Run them with <code>StrataHome.exe --selftest</code>.</small></dd></div>
+      <div class="m"><dt>Build</dt><dd><code>build.cmd</code>, using the C# compiler that ships with Windows, no SDK</dd></div>
+      <div class="m"><dt>Source</dt><dd><a href="https://github.com/majieddd/stratahome">github.com/majieddd/stratahome</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="stratum t-white" id="faq" aria-labelledby="h-faq">
+  <i class="bg" aria-hidden="true"></i><i class="seam" aria-hidden="true"><b></b><b></b><b></b><b></b></i>
+  <div class="wrap">
+    <p class="kicker">Questions</p>
+    <h2 id="h-faq">Short answers.</h2>
+    <div class="faq">
+      <div>
+        <h3>Is it official?</h3>
+        <p>No. StrataHome is an unofficial launcher and is not affiliated with Strata or its author. Strata is MIT licensed. Models have their own licences.</p>
+      </div>
+      <div>
+        <h3>Does it send data anywhere?</h3>
+        <p>No. It makes no network connections except to localhost, and it sends no telemetry. The source is public, and you can build it yourself.</p>
+      </div>
+      <div>
+        <h3>What happens when I close it?</h3>
+        <p>The model server stops with it, through a Windows job object, so a model that holds tens of gigabytes of memory is never left running by accident. Tick &ldquo;Leave Strata running when this app exits&rdquo; if you want it to keep going.</p>
+      </div>
+      <div>
+        <h3>Why is it unsigned?</h3>
+        <p>This release has no code-signing certificate, so Windows cannot show a verified publisher and SmartScreen may warn. What you get instead: the SHA-256, the source, and <code>build.cmd</code> for anyone who prefers to build it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER (second warm layer) ============ -->
+<footer class="stratum foot">
+  <i class="bg" aria-hidden="true"><i class="mesh"></i></i>
+  <div class="wrap">
+    <div class="foot-cta">
+      <div>
+        <h2>Get StrataHome v0.1.0</h2>
+        <p class="cta-meta">about 80 KB &middot; Windows 10/11 &middot; needs an existing Strata install</p>
+      </div>
+      <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
+        Download for Windows
+      </a>
+    </div>
+    <div class="fine">
+      <p><b>Licence</b>StrataHome is free and open source under the MIT licence. <a href="https://github.com/majieddd/stratahome">Repository</a></p>
+      <p><b>Built for Strata</b>Strata is MIT licensed and made by its own author: <a href="https://github.com/Niko1221/Strata">github.com/Niko1221/Strata</a>. Models have their own licences.</p>
+      <p><b>Unofficial</b>StrataHome is not affiliated with Strata or its author. It does not download Strata or any model.</p>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -20,6 +20,25 @@ namespace StrataHome
         [DllImport("user32.dll")]
         public static extern bool DestroyIcon(IntPtr icon);
 
+        [DllImport("psapi.dll")]
+        static extern bool EmptyWorkingSet(IntPtr process);
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetCurrentProcess();
+
+        /// <summary>Gives the memory this process is not touching back to Windows. Called once the window has gone to the tray,
+        /// so the idle app costs a few dozen MB instead of the ~150 MB an open window needs.</summary>
+        public static void TrimMemory()
+        {
+            try
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                EmptyWorkingSet(GetCurrentProcess());
+            }
+            catch { }
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         struct BasicLimit
         {

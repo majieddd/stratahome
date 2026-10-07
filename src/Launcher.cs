@@ -343,7 +343,7 @@ namespace StrataHome
 
         // ---------------------------------------------------------------- helpers
 
-        static string Trim(string s, int n) { return s.Length <= n ? s : s.Substring(0, n - 1) + "…"; }
+        static string Trim(string s, int n) { return s.Length <= n ? s : s.Substring(0, n - 1) + "\u2026"; }
 
         static string Q(string s) { return "\"" + s + "\""; }
 

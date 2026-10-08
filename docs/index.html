@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#14181C">
 <meta property="og:type" content="website">
 <meta property="og:title" content="StrataHome - run Strata from the Windows tray">
-<meta property="og:description" content="A free, open-source, unofficial tray launcher for Strata: no console window, no browser tab, no batch files. About 80 KB.">
+<meta property="og:description" content="A free, open-source, unofficial tray launcher for Strata: no console window, no browser tab, no batch files. Chat, live Monitor, About and Server tabs.">
 <meta property="og:url" content="https://majieddd.github.io/stratahome/">
 <meta property="og:image" content="https://majieddd.github.io/stratahome/img/shot-main.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -131,10 +131,10 @@ h1{font:700 clamp(46px,13.2vw,98px)/.98 var(--display);letter-spacing:-.034em;ma
 .honest{margin-top:22px;padding-top:16px;border-top:1px solid rgba(20,24,28,.28);max-width:52ch;font-size:16px;line-height:1.5;color:var(--ink)}
 .honest a{color:var(--ink);font-weight:600}
 .hero-fig{position:relative;justify-self:end;width:min(100%,520px)}
-.win{position:relative;overflow:hidden;border-radius:10px;background:#fff;aspect-ratio:870/1035;box-shadow:0 0 0 1px rgba(20,24,28,.2),0 30px 46px -30px rgba(20,24,28,.55),0 12px 22px -16px rgba(20,24,28,.4)}
-.win img{display:block;width:102.529%;max-width:none;height:auto;margin-left:-1.2644%}
-.win-chat{aspect-ratio:1080/1005}
-.win-chat img{width:102.037%;margin-left:-1.0185%}
+.win{position:relative;overflow:hidden;border-radius:10px;background:#fff;aspect-ratio:1650/1230;box-shadow:0 0 0 1px rgba(20,24,28,.2),0 30px 46px -30px rgba(20,24,28,.55),0 12px 22px -16px rgba(20,24,28,.4)}
+.win img{display:block;width:100%;max-width:none;height:auto}
+.win-chat{aspect-ratio:1650/1230}
+.win-chat img{width:100%;margin-left:0}
 .cap{font-size:14px;line-height:1.45;color:var(--muted);margin-top:26px;max-width:44ch}
 .hero-fig .cap{position:absolute;right:0;top:calc(100% + 18px);width:fit-content;max-width:100%;text-align:right;margin:0;padding:6px 12px;background:#fff;border-radius:8px;box-shadow:0 0 0 1px var(--hair)}
 
@@ -325,25 +325,25 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
   <i class="hero-bg" aria-hidden="true"><i class="mesh"></i></i>
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="tag"><b>v0.1.0</b> Free, MIT, unofficial</p>
+      <p class="tag"><b>v0.2.0</b> Free, MIT, unofficial</p>
       <h1 id="h1">StrataHome</h1>
       <p class="promise">Run Strata from the Windows tray. No console window, no browser tab, no batch files.</p>
-      <p class="sub">A small launcher for Strata, the engine that runs a very large local AI model (125 billion parameters) on one gaming PC. Nothing else on the PC needs to be open.</p>
+      <p class="sub">A native desktop app in the look of Strata’s web interface: streaming Chat, live Monitor, About and Server controls. Keep the tray icon; skip the browser.</p>
       <div class="cta">
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download for Windows
         </a>
         <a class="link-ink" href="https://github.com/majieddd/stratahome">View the source on GitHub</a>
       </div>
-      <p class="cta-meta">v0.1.0 &middot; about 80 KB &middot; Windows 10/11</p>
+      <p class="cta-meta">v0.2.0 &middot; 391,680 bytes &middot; Windows 10/11</p>
       <p class="honest">It needs an existing Strata install, and the .exe is unsigned, so Windows SmartScreen may warn you. Both are explained under <a href="#install">Install</a> and <a href="#verify">Verify</a>.</p>
     </div>
     <figure class="hero-fig">
       <div class="win win-main">
-        <img src="img/shot-main.png" width="892" height="1046" alt="The StrataHome main window in the Ready state, serving swift-1.5-iq2_xs at http://127.0.0.1:8080/v1, with Strata's startup log in the pane below the settings.">
+        <img src="img/shot-main.png" width="1650" height="1230" alt="StrataHome v0.2.0 Monitor tab showing live model state, token speed, GPU and memory metrics, with Chat, Monitor, About and Server navigation.">
       </div>
-      <figcaption class="cap">The main window when the model is ready. The log pane is Strata's real startup output.</figcaption>
+      <figcaption class="cap">The native Monitor tab, with live metrics from the running Strata server.</figcaption>
     </figure>
   </div>
   <!-- NOTE: the figure is outside the clipped gradient, so it hangs over the tilted edge on purpose -->
@@ -395,7 +395,7 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
   <div class="wrap what">
     <div>
       <p class="kicker">What it does</p>
-      <h2 id="h-what">A tray icon, a small window, a chat window.</h2>
+      <h2 id="h-what">Chat, Monitor, About and Server.</h2>
       <dl class="specs">
         <div class="row">
           <dt>In the tray</dt>
@@ -406,8 +406,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
           </dd>
         </div>
         <div class="row">
-          <dt>In the window</dt>
+          <dt>Monitor &amp; About</dt>
           <dd>
+            <p>The Monitor shows model state, decode and prefill speed, GPU load, VRAM, temperature, power, PCIe, CPU, RAM, disk, context fill and recent requests. About includes a context-length picker with Save and restart.</p>
             <p>Copy API URL puts <code>http://127.0.0.1:8080/v1</code> on the clipboard. It is OpenAI-compatible, so any app that talks to that API can use it.</p>
             <p>It attaches to a Strata server that was started somewhere else, for example by START-HERE.bat, and can stop it.</p>
           </dd>
@@ -415,13 +416,13 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
         <div class="row">
           <dt>In the chat window</dt>
           <dd>
-            <p>Answers stream in as they are written. You choose the thinking level (none, low, medium or high), and it shows tokens per second.</p>
+            <p>Answers stream as Markdown, with collapsible thinking, text-file attachments, and tokens plus tok/s under each answer while it streams. The Sampling drawer controls thinking level, temperature, top-p, top-k, max tokens and seed.</p>
           </dd>
         </div>
         <div class="row">
-          <dt>When you close it</dt>
+          <dt>When you exit</dt>
           <dd>
-            <p>The model server stops with the app, through a Windows job object, so a model that holds tens of gigabytes of memory is never left running by accident.</p>
+            <p>Closing the window sends it to the tray. Exiting the app stops a server it started through a Windows job object, unless you choose to leave Strata running.</p>
             <p>If you want it to keep running, tick &ldquo;Leave Strata running when this app exits&rdquo;.</p>
           </dd>
         </div>
@@ -429,9 +430,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
     </div>
     <figure>
       <div class="win win-chat">
-        <img src="img/shot-chat.png" width="1102" height="1016" alt="The StrataHome chat window: a thinking-level menu set to low, a New chat button, a tokens per second readout, a streamed answer about commit messages, and a message box with a Send button.">
+        <img src="img/shot-chat.png" width="1650" height="1230" alt="StrataHome v0.2.0 Chat tab with a Markdown answer, collapsible thinking, and tokens plus tok/s beneath the answer.">
       </div>
-      <figcaption class="cap">The native chat window, with the thinking level and the tokens-per-second readout in the top bar.</figcaption>
+      <figcaption class="cap">The native Chat tab: rendered Markdown, collapsible thinking, and tokens plus tok/s beneath each answer.</figcaption>
     </figure>
   </div>
 </section>
@@ -498,9 +499,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
         <span class="n" aria-hidden="true">2</span>
         <div>
           <h3>Download StrataHome.exe and put it anywhere.</h3>
-          <p>One file, about 80 KB. Nothing to install.</p>
+          <p>One file, 391,680 bytes. Nothing to install.</p>
         </div>
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download
         </a>
@@ -542,11 +543,11 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       </div>
     </div>
     <dl class="manifest">
-      <div class="m sha"><dt>SHA-256</dt><dd>14ff0f20a5c8a521b07343c43e3b6b7eab5815021808370a6fb1570db8c5cf88<small>For StrataHome.exe v0.1.0.</small></dd></div>
-      <div class="m"><dt>Size</dt><dd>about 80 KB, a single .exe</dd></div>
-      <div class="m"><dt>Memory</dt><dd>about 65 MB of RAM while its window is open</dd></div>
+      <div class="m sha"><dt>SHA-256</dt><dd>98b82d7210fb8defd7fce8f6b15eec9b8b11b055879ed4326df31c6854163bb8<small>For StrataHome.exe v0.2.0.</small></dd></div>
+      <div class="m"><dt>Size</dt><dd>391,680 bytes, a single .exe</dd></div>
+      <div class="m"><dt>Memory</dt><dd>WPF desktop window; closing to the tray trims its working set</dd></div>
       <div class="m"><dt>Network</dt><dd>none except localhost, no telemetry</dd></div>
-      <div class="m"><dt>Checks</dt><dd>14 automated lifecycle checks<small>Start, stop, crash detection, attaching to a running server and clean-up. Run them with <code>StrataHome.exe --selftest</code>.</small></dd></div>
+      <div class="m"><dt>Checks</dt><dd>14 lifecycle checks and 28 UI checks<small>Run <code>StrataHome.exe --selftest</code> and <code>StrataHome.exe --instance test --uitest</code>. The separate <code>--uitest-restart</code> adds four context save/restart/restore checks and restarts Strata twice.</small></dd></div>
       <div class="m"><dt>Build</dt><dd><code>build.cmd</code>, using the C# compiler that ships with Windows, no SDK</dd></div>
       <div class="m"><dt>Source</dt><dd><a href="https://github.com/majieddd/stratahome">github.com/majieddd/stratahome</a></dd></div>
     </dl>
@@ -588,10 +589,10 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
   <div class="wrap">
     <div class="foot-cta">
       <div>
-        <h2>Get StrataHome v0.1.0</h2>
-        <p class="cta-meta">about 80 KB &middot; Windows 10/11 &middot; needs an existing Strata install</p>
+        <h2>Get StrataHome v0.2.0</h2>
+        <p class="cta-meta">391,680 bytes &middot; Windows 10/11 &middot; needs an existing Strata install</p>
       </div>
-      <a class="btn" href="https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe">
+      <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
         Download for Windows
       </a>

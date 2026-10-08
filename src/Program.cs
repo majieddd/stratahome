@@ -26,7 +26,8 @@ namespace StrataHome
             opt.Minimized = Has(args, "--minimized");
             opt.NoStart = Has(args, "--no-start");
             opt.Drawer = Has(args, "--drawer");
-            opt.UiTest = Has(args, "--uitest");
+            opt.RestartTest = Has(args, "--uitest-restart");
+            opt.UiTest = Has(args, "--uitest") || opt.RestartTest;
             string size = ValueOf(args, "--size");                       // e.g. 900x700 (for the layout checks)
             if (size != null && size.Contains("x"))
             {
@@ -40,6 +41,7 @@ namespace StrataHome
             opt.Tab = ValueOf(args, "--tab");
             opt.ThemeName = ValueOf(args, "--theme");
             opt.Prompt = ValueOf(args, "--prompt");
+            double.TryParse(ValueOf(args, "--scroll"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out opt.ScrollY);
             double delay;
             if (double.TryParse(ValueOf(args, "--delay"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out delay)) opt.DelaySeconds = delay;
 

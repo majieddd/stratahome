@@ -36,7 +36,50 @@ namespace StrataHome
         bool started;
         string tempFile;
 
+        string cfgResult;
+
         public UiTest(MainWindow window) { w = window; }
+
+        /// <summary>Changes the context of a sample run config three ways and checks what changed. Returns null when all is as expected.</summary>
+        static string ContextRoundTrip()
+        {
+            string dir = Path.Combine(Path.GetTempPath(), "stratahome-cfgtest");
+            try
+            {
+                Directory.CreateDirectory(dir);
+                string path = Path.Combine(dir, "strata-test.json");
+                string sample = "{\n \"exe\": \"C:\\\\x\\\\strata.exe\",\n \"args\": [\n  \"--pack\",\n  \"p\",\n  \"--max-context\",\n  \"262144\",\n  \"--kv\",\n  \"int8\",\n  \"--kv-resident\",\n  \"32768\",\n  \"--pool-workers\",\n  \"15\"\n ],\n \"model_name\": \"t\",\n \"port\": 8080,\n \"sampling\": {\n  \"temperature\": 0.7\n },\n \"gpus_asked\": true,\n \"note\": \"caf\\u00e9\"\n}";
+                File.WriteAllText(path, sample);
+
+                string err = RunConfig.SetContext(path, 262144, 64);
+                if (err != null) return "same context: " + err;
+                if (File.ReadAllText(path) != sample) return "writing the same context changed the file's text (formatting differs from Python's)";
+
+                err = RunConfig.SetContext(path, 32768, 64);
+                if (err != null) return "32K: " + err;
+                if (RunConfig.ArgValue(path, "--max-context") != "32768") return "--max-context is " + RunConfig.ArgValue(path, "--max-context");
+                if (RunConfig.ArgValue(path, "--kv-resident") != null) return "--kv-resident was not removed below 64K";
+                if (RunConfig.ArgValue(path, "--pool-workers") != "15" || RunConfig.ArgValue(path, "--kv") != "int8") return "another engine option changed";
+                string text = File.ReadAllText(path);
+                if (text.IndexOf("\"temperature\": 0.7") < 0 || text.IndexOf("caf\\u00e9") < 0 || text.IndexOf("\"gpus_asked\": true") < 0) return "another key changed";
+                if (!File.Exists(path + ".bak") || File.ReadAllText(path + ".bak") != sample) return "the earlier file was not kept as .bak";
+
+                err = RunConfig.SetContext(path, 131072, 64);
+                if (err != null) return "128K: " + err;
+                if (RunConfig.ArgValue(path, "--max-context") != "131072" || RunConfig.ArgValue(path, "--kv-resident") != "32768") return "128K did not turn KV streaming on";
+
+                RunConfig.SetContext(path, 16384, 64);
+                RunConfig.SetContext(path, 131072, 16);
+                if (RunConfig.ArgValue(path, "--kv-resident") != null) return "KV streaming was turned on for a PC with 16 GB of RAM";
+
+                string before = File.ReadAllText(path);
+                if (RunConfig.SetContext(path, 999999, 64) == null) return "a context past the trained length was accepted";
+                if (File.ReadAllText(path) != before) return "a refused change still touched the file";
+                return null;
+            }
+            catch (Exception ex) { return ex.Message; }
+            finally { try { Directory.Delete(dir, true); } catch { } }
+        }
 
         void Add(string name, Action act, Func<bool> until, int timeoutMs, Func<string> verify)
         {
@@ -108,6 +151,17 @@ namespace StrataHome
                 delegate { return w.Server.ModelRowCount == Math.Max(1, w.Models.Count) ? null : "model rows: " + w.Server.ModelRowCount; });
             Add("toast appears and goes away", delegate { toasts = w.ToastCount; w.Toast("info", "uitest", "hello", 700); }, null, 0, delegate { return w.ToastCount == toasts + 1 ? null : "toast not shown"; });
             Add("toast is removed after its time", null, delegate { return w.ToastCount == toasts; }, 3000, delegate { return null; });
+            // ---- the context length option (on a copy of a run config, never the real one)
+            Add("run config: a context change touches only --max-context and KV streaming", delegate { cfgResult = ContextRoundTrip(); }, null, 0, delegate { return cfgResult; });
+            Add("about: the context picker offers the sizes and shows the model's current one", delegate { w.ShowTab("about"); }, null, 0, delegate
+            {
+                ModelEntry m = w.SelectedModel;
+                if (m == null || m.MaxContext <= 0) return null;               // no Strata install on this PC: nothing to show
+                if (!w.About.ContextCardVisible) return "the context card is hidden";
+                if (w.About.ContextPicked != m.MaxContext) return "picked " + w.About.ContextPicked + " but the config says " + m.MaxContext;
+                if (w.About.ContextChipCount < RunConfig.Presets.Length) return "only " + w.About.ContextChipCount + " sizes are offered";
+                return null;
+            });
 
             // ---- the live server
             bool live = w.Launcher.State == RunState.Ready || w.Launcher.State == RunState.External || w.Launcher.State == RunState.Unloaded;
@@ -120,16 +174,19 @@ namespace StrataHome
                     if (m == null || m.Role != "assistant") return "no assistant message";
                     if (m.Error.Length > 0) return "error: " + m.Error;
                     if (m.Text.ToLowerInvariant().IndexOf("pong") < 0) return "answer was '" + m.Text + "'";
-                    if (m.Meta.IndexOf("tokens") < 0) return "no token meta: '" + m.Meta + "'";
+                    if (m.Meta.IndexOf("tokens") < 0 || m.Meta.IndexOf("tok/s") < 0 || m.Meta.IndexOf("tokens") > m.Meta.IndexOf("tok/s")) return "tokens and tok/s are not shown together: '" + m.Meta + "'";
                     return null;
                 });
             Add("chat: Stop ends a long answer", delegate { w.Chat.TestSend("Count from 1 to 400, one number per line, nothing else."); },
                 delegate { return w.Chat.Busy; }, 20000, delegate { return null; });
             Add("chat: (waiting a moment for text to stream)", null, delegate { return Waited(1500); }, 3000, delegate { return null; });
+            Add("chat: tokens and tok/s show live under the answer while it streams", null,
+                delegate { string t = w.Chat.MetaTextOfLast; return t.IndexOf("tokens") >= 0 && t.IndexOf("tok/s") > t.IndexOf("tokens"); }, 8000, delegate { return null; });
             Add("chat: pressing Stop", delegate { w.Chat.StopForTest(); }, delegate { return !w.Chat.Busy; }, 15000, delegate
             {
                 ChatMsg m = w.Chat.LastMessage;
                 if (m == null || !m.Stopped) return "the message was not marked stopped";
+                if (m.Meta.ToLowerInvariant().IndexOf("stopped") < 0) return "the meta line does not say stopped: '" + m.Meta + "'";
                 if (m.Text.Length == 0 && m.Reasoning.Length == 0) return "nothing had streamed before the stop";
                 return null;
             });
@@ -153,7 +210,39 @@ namespace StrataHome
             Add("chat: Undo brings it back", delegate { w.Chat.UndoForTest(); }, null, 0, delegate { return w.Chat.MessageCount == count ? null : "restored " + w.Chat.MessageCount + " of " + count; });
             Add("chat: cleaning up the test conversation", delegate { w.Chat.ClearForTest(); try { File.Delete(tempFile); } catch { } }, null, 0, delegate { return w.Chat.MessageCount == 0 ? null : "not cleared"; });
             Add("pill reflects the live state", delegate { w.UpdatePill(); }, null, 0, delegate { return null; });
+            if (w.Opt.RestartTest) AddRestartSteps();
         }
+
+        /// <summary>--uitest-restart: really saves another context from the About page, restarts Strata and asks /health, then puts the
+        /// run config back exactly as it was. It restarts the server twice, so it is not part of the plain --uitest.</summary>
+        void AddRestartSteps()
+        {
+            string path = null, original = null;
+            int ctx0 = 0, target = 0;
+            Add("context: (restart test) remember the real run config", delegate
+            {
+                ModelEntry m = w.SelectedModel;
+                if (m == null || m.MaxContext < 16384) return;
+                path = m.ConfigPath; original = File.ReadAllText(path); ctx0 = m.MaxContext;
+                target = ctx0 == 131072 ? 65536 : 131072;
+                w.ShowTab("about");
+            }, null, 0, delegate { return path == null ? "no model with a context of 16K or more is selected" : null; });
+            Add("context: Save and restart loads the model with the new size", delegate { if (path != null) w.About.ChooseContextForTest(target, true); },
+                delegate { return path == null || (w.Launcher.State == RunState.Ready && w.Launcher.MaxContext == target); }, 240000,
+                delegate { return path == null || (w.Launcher.MaxContext == target && RunConfig.ArgValue(path, "--max-context") == target.ToString()) ? null : "the server serves " + w.Launcher.MaxContext + ", the config says " + RunConfig.ArgValue(path, "--max-context"); });
+            Add("context: and back to the original size", delegate { if (path != null) w.About.ChooseContextForTest(ctx0, true); },
+                delegate { return path == null || (w.Launcher.State == RunState.Ready && w.Launcher.MaxContext == ctx0); }, 240000,
+                delegate { return path == null || w.Launcher.MaxContext == ctx0 ? null : "the server serves " + w.Launcher.MaxContext + ", expected " + ctx0; });
+            Add("context: the run config is put back exactly as it was", delegate
+            {
+                if (path != null && File.ReadAllText(path) != original) File.WriteAllText(path, original, new UTF8Encoding(false));   // same options, maybe another order: put the original text back
+            }, null, 0, delegate
+            {
+                if (path == null) return null;
+                return File.ReadAllText(path) == original && RunConfig.ArgValue(path, "--max-context") == ctx0.ToString() ? null : "the config is not back to the original";
+            });
+        }
+
 
         string md = "";
         int toasts;

@@ -17,11 +17,12 @@ namespace StrataHome
     /// <summary>What was asked on the command line.</summary>
     internal sealed class Options
     {
-        public bool Minimized, NoStart, Drawer, UiTest;
+        public bool Minimized, NoStart, Drawer, UiTest, RestartTest;       // RestartTest: --uitest-restart also changes the context and restarts the server twice
         public double WidthPx, HeightPx;
         public string Mode, ScreenshotPath, Tab, ThemeName, Prompt;
         public int IdleMinutes;
         public double DelaySeconds = 3;
+        public double ScrollY;                   // --scroll: how far down the About page to scroll before a screenshot
     }
 
     /// <summary>
@@ -536,6 +537,7 @@ namespace StrataHome
             try
             {
                 Tick();
+                if (Opt.ScrollY > 0 && tab == "about") About.ScrollTo(Opt.ScrollY);
                 Server.Redact();
                 Chat.Redact();
                 DispatcherTimer settle = new DispatcherTimer();

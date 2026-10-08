@@ -43,7 +43,7 @@ namespace StrataHome
         public string Url, ApiKey;
         public Dictionary<string, object> Body;
         public Action<string> OnReasoning, OnContent;
-        public Action<Dictionary<string, object>> OnUsage;
+        public Action<Dictionary<string, object>> OnUsage, OnTimings;
         public volatile bool Aborted;
         HttpWebRequest current;
 
@@ -87,6 +87,8 @@ namespace StrataHome
                         if (err != null) return J.Str(err, "message") ?? "the engine reported an error";
                         Dictionary<string, object> usage = J.Get(o, "usage") as Dictionary<string, object>;
                         if (usage != null && OnUsage != null) OnUsage(usage);
+                        Dictionary<string, object> timings = J.Get(o, "timings") as Dictionary<string, object>;
+                        if (timings != null && OnTimings != null) OnTimings(timings);
                         IList choices = J.List(o, "choices");
                         if (choices.Count == 0) continue;
                         object delta = J.Get(choices[0], "delta");
@@ -505,8 +507,18 @@ namespace StrataHome
                 if (v.Rtb == null) { v.Rtb = MakeRtb(); v.Bubble.Child = v.Rtb; }
                 v.Rtb.Document = Markdown.Build(text);
             }
-            v.Meta.Text = m.Meta.Length > 0 ? m.Meta : (!streaming && m.Stopped ? "Stopped" : "");
+            v.Meta.Text = m.Meta.Length > 0 ? m.Meta : streaming ? LiveText() : (m.Stopped ? "Stopped" : "");
             v.Copy.Visibility = !streaming && text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        double liveTokens, liveRate;
+
+        /// <summary>While an answer streams: the engine's running token count and speed (the Monitor's numbers), under the answer.</summary>
+        string LiveText()
+        {
+            double? g = J.Dbl(w.Metrics.Last, "live", "generated"), r = J.Dbl(w.Metrics.Last, "live", "tok_s");
+            if (g > 0) { liveTokens = g.Value; liveRate = r ?? 0; }
+            return liveTokens > 0 ? Fmt.N(liveTokens) + " tokens" + (liveRate > 0 ? " \u00b7 " + Fmt.N(liveRate, 1) + " tok/s" : "") : "";
         }
 
         RichTextBox MakeRtb()
@@ -631,6 +643,8 @@ namespace StrataHome
             rq.Body = body;
             DateTime firstAt = DateTime.MinValue, thinkStart = DateTime.MinValue;
             int usageTokens = 0;
+            double engineRate = 0;                       // the engine's own decode speed, from the final chunk's timings
+            liveTokens = 0; liveRate = 0;
             rq.OnReasoning = delegate(string d)
             {
                 lock (m) { m.Reasoning += d; }
@@ -646,6 +660,7 @@ namespace StrataHome
                 dirty = true;
             };
             rq.OnUsage = delegate(Dictionary<string, object> u) { double? c = J.Dbl(u, "completion_tokens"); if (c != null) usageTokens = (int)c.Value; };
+            rq.OnTimings = delegate(Dictionary<string, object> t) { double? r = J.Dbl(t, "predicted_per_second"); if (r > 0) engineRate = r.Value; };
             running = rq;
             SetBusy(true);
             painter.Start();
@@ -660,10 +675,12 @@ namespace StrataHome
                     if (thinkStart != DateTime.MinValue && m.ThinkSecs == null) m.ThinkSecs = (DateTime.UtcNow - thinkStart).TotalSeconds;
                     if (usageTokens > 0 && firstAt != DateTime.MinValue)
                     {
+                        // tokens and speed always go together: the engine's decode speed when the server sent it, otherwise tokens over the time since the first one
                         double secs = (DateTime.UtcNow - firstAt).TotalSeconds;
-                        m.Meta = Fmt.N(usageTokens) + " tokens" + (secs > 0.25 ? " \u00b7 " + Fmt.N(usageTokens / secs, 1) + " tok/s" : "") + (m.Stopped ? " \u00b7 stopped" : "");
+                        double rate = engineRate > 0 ? engineRate : secs > 0 ? usageTokens / secs : 0;
+                        m.Meta = Fmt.N(usageTokens) + " tokens" + (rate > 0 ? " \u00b7 " + Fmt.N(rate, 1) + " tok/s" : "") + (m.Stopped ? " \u00b7 stopped" : "");
                     }
-                    else if (m.Stopped) m.Meta = "Stopped";
+                    else if (m.Stopped) m.Meta = liveTokens > 0 ? Fmt.N(liveTokens) + " tokens" + (liveRate > 0 ? " \u00b7 " + Fmt.N(liveRate, 1) + " tok/s" : "") + " \u00b7 stopped" : "Stopped";
                     if (error != null) w.Toast("error", "The request failed", error, 6000);
                     painter.Stop();
                     dirty = false;
@@ -710,6 +727,7 @@ namespace StrataHome
         public bool Busy { get { return busy; } }
 
         public int MessageCount { get { return messages.Count; } }
+        public string MetaTextOfLast { get { MsgView v; return LastMessage != null && views.TryGetValue(LastMessage, out v) ? v.Meta.Text : ""; } }
 
         public int ChipCount { get { return attachments.Count; } }
 

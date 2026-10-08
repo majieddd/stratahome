@@ -24,7 +24,10 @@ namespace StrataHome
         StackPanel engineHost, hwHost, apiHost;
         ToggleButton darkToggle;
         PasswordBox key;
-        Border cfgCard;
+        Border cfgCard, ctxCard;
+        WrapPanel ctxChips;
+        TextBlock ctxNow, ctxHint, ctxMsg;
+        string ctxSig = null;
         StackPanel cfgForm;
         TextBlock cfgFile, cfgMsg;
         string sig = "";
@@ -47,6 +50,7 @@ namespace StrataHome
             col.Children.Add(Section("This PC", hwHost, null));
             col.Children.Add(Section("Connect your tools", apiHost, "Any OpenAI- or Anthropic-compatible client works with these addresses."));
             col.Children.Add(BuildSettings());
+            col.Children.Add(BuildContextCard());
             col.Children.Add(BuildConfigCard());
             sv.Content = col;
             Root = sv;
@@ -115,6 +119,112 @@ namespace StrataHome
             return b;
         }
 
+        // ------------------------------------------------------------------ context length (--max-context in the run config)
+
+        FrameworkElement BuildContextCard()
+        {
+            StackPanel sp = new StackPanel();
+            Grid head = new Grid();
+            head.ColumnDefinitions.Add(Ui.Col(Ui.Star(1)));
+            head.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            head.Children.Add(Ui.At(Ui.Text("Context length", 16, "StInk", "bold"), 0, 0));
+            ctxNow = Ui.Text("", 12, "StInkMuted");
+            head.Children.Add(Ui.At(ctxNow, 0, 1));
+            sp.Children.Add(head);
+            TextBlock n = Ui.Text("How much one conversation can hold, in tokens. A longer context keeps more of a long chat or a big file in view, and uses more memory. The model was trained for up to 256K. It is used from the next start of the model.", 12, "StInkMuted", "regular", true);
+            n.Margin = new Thickness(0, 12, 0, 12);
+            sp.Children.Add(n);
+            Border seg = new Border { CornerRadius = new CornerRadius(14), Padding = new Thickness(4), BorderThickness = new Thickness(1), HorizontalAlignment = HorizontalAlignment.Left };
+            seg.SetResourceReference(Border.BackgroundProperty, "StSurface2");
+            seg.SetResourceReference(Border.BorderBrushProperty, "StLine");
+            ctxChips = new WrapPanel();
+            seg.Child = ctxChips;
+            sp.Children.Add(seg);
+            ctxHint = Ui.Text("", 12, "StInkMuted", "regular", true);
+            ctxHint.Margin = new Thickness(0, 10, 0, 0);
+            sp.Children.Add(ctxHint);
+            StackPanel act = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 16, 0, 0) };
+            Button restart = Ui.Btn("primary", "Save and restart", null, delegate { ApplyContext(true); });
+            Button save = Ui.Btn("secondary", "Save for next start", null, delegate { ApplyContext(false); });
+            save.Margin = new Thickness(10, 0, 0, 0);
+            act.Children.Add(restart);
+            act.Children.Add(save);
+            sp.Children.Add(act);
+            ctxMsg = Ui.Text("", 12, "StInkMuted", "regular", true);
+            ctxMsg.Margin = new Thickness(0, 10, 0, 0);
+            ctxMsg.Visibility = Visibility.Collapsed;
+            sp.Children.Add(ctxMsg);
+            ctxCard = Ui.Card(sp);
+            ctxCard.Margin = new Thickness(0, 0, 0, 20);
+            ctxCard.Visibility = Visibility.Collapsed;
+            return ctxCard;
+        }
+
+        int PickedContext()
+        {
+            foreach (object c in ctxChips.Children)
+            {
+                RadioButton rb = c as RadioButton;
+                if (rb != null && rb.IsChecked == true) return (int)rb.Tag;
+            }
+            return 0;
+        }
+
+        /// <summary>Shows the selected model's current --max-context and the sizes to pick; rebuilt only when that changes.</summary>
+        void RefreshContext()
+        {
+            ModelEntry m = w.SelectedModel;
+            string s = m == null ? "" : m.FileName + "|" + m.MaxContext;
+            if (s == ctxSig) return;
+            ctxSig = s;
+            ctxChips.Children.Clear();
+            if (m == null || m.MaxContext <= 0) { ctxCard.Visibility = Visibility.Collapsed; return; }
+            ctxCard.Visibility = Visibility.Visible;
+            List<int> sizes = new List<int>(RunConfig.Presets);
+            if (!sizes.Contains(m.MaxContext)) { sizes.Add(m.MaxContext); sizes.Sort(); }
+            foreach (int size in sizes)
+            {
+                RadioButton rb = new RadioButton { Style = Ui.Style("StSeg"), Content = StrataInstall.Tokens(size), GroupName = "ctx", Tag = size, MinWidth = 64, Margin = new Thickness(0, 0, 4, 0), Padding = new Thickness(10, 0, 10, 0) };
+                rb.IsChecked = size == m.MaxContext;
+                rb.Checked += delegate { UpdateContextHint(); };
+                ctxChips.Children.Add(rb);
+            }
+            ctxNow.Text = "now " + StrataInstall.Tokens(m.MaxContext) + " tokens";
+            UpdateContextHint();
+        }
+
+        void UpdateContextHint()
+        {
+            ModelEntry m = w.SelectedModel;
+            int pick = PickedContext();
+            if (m == null || pick <= 0) { ctxHint.Text = ""; return; }
+            double kb = RunConfig.KvKbPerToken(RunConfig.ArgValue(m.ConfigPath, "--kv"));
+            string t = pick.ToString("N0", System.Globalization.CultureInfo.InvariantCulture) + " tokens";
+            if (kb > 0) t += ", about " + Fmt.N(pick * kb / 1000000.0, 1) + " GB for the KV cache (" + (pick >= RunConfig.StreamFrom ? "mostly in RAM" : "in VRAM") + ")";
+            if (pick > 131072) t += ". Long contexts need more RAM; if the model fails to load, pick a smaller size";
+            if (pick != m.MaxContext) t += ". Changes from " + StrataInstall.Tokens(m.MaxContext);
+            ctxHint.Text = t + ".";
+        }
+
+        void SayContext(string text) { ctxMsg.Text = text; ctxMsg.Visibility = text.Length > 0 ? Visibility.Visible : Visibility.Collapsed; }
+
+        void ApplyContext(bool restart)
+        {
+            ModelEntry m = w.SelectedModel;
+            int pick = PickedContext();
+            if (m == null || pick <= 0) return;
+            if (pick == m.MaxContext) { SayContext("Already " + StrataInstall.Tokens(pick) + ": nothing to change."); return; }
+            string err = RunConfig.SetContext(m.ConfigPath, pick, Native.TotalRamGb());
+            if (err != null) { SayContext(""); w.Toast("error", "Not saved", err, 6000); return; }
+            w.LoadInstall();
+            w.Server.RefreshAll();
+            ctxSig = null;
+            RefreshContext();
+            SayContext("Saved " + StrataInstall.Tokens(pick) + ". The earlier file is kept as " + m.FileName + ".bak.");
+            if (restart) { w.Toast("info", "Restarting Strata", "Using a " + StrataInstall.Tokens(pick) + " context.", 4000); w.RestartServer(); }
+            else if (w.Launcher.IsActive) w.Toast("success", "Context saved", StrataInstall.Tokens(pick) + " is used from the next start.", 9000, "Restart now", delegate { w.RestartServer(); });
+        }
+
         FrameworkElement BuildConfigCard()
         {
             StackPanel sp = new StackPanel();
@@ -166,6 +276,7 @@ namespace StrataHome
         public void Render(Dictionary<string, object> m)
         {
             RefreshStatic();
+            RefreshContext();
             if (!cfgLoaded && w.Launcher.IsActive) LoadConfig();
             if (m == null) return;
             object eng = J.Get(m, "engine"), hw = J.Get(m, "hardware"), st = J.Get(m, "hardware_static");
@@ -302,6 +413,23 @@ namespace StrataHome
         }
 
         public int ConfigFieldCount { get { return cfgKeys.Count; } }
+
+        public void ChooseContextForTest(int ctx, bool restart)
+        {
+            foreach (object c in ctxChips.Children)
+            {
+                RadioButton rb = c as RadioButton;
+                if (rb != null && (int)rb.Tag == ctx) rb.IsChecked = true;
+            }
+            ApplyContext(restart);
+        }
+
+        public void ScrollTo(double y) { ScrollViewer sv = Root as ScrollViewer; if (sv != null) sv.ScrollToVerticalOffset(y); }
+
+        // for --uitest
+        public int ContextChipCount { get { return ctxChips.Children.Count; } }
+        public int ContextPicked { get { return PickedContext(); } }
+        public bool ContextCardVisible { get { return ctxCard.Visibility == Visibility.Visible; } }
 
         void SaveConfig()
         {

@@ -1,0 +1,15 @@
+Recorded installed-model run, collected October 8, 2026.
+Model: swift-1.5-iq2_xs; config points to Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf.
+GPU (nvidia-smi): NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB (marketed 24 GB).
+CPU (Windows CIM): Intel Core Ultra 9 275HX. RAM: 64 GB installed.
+Configured maximum context: 262144. Actual prompt length was not recorded.
+Installed file hashes were not matched to the current HF release; this is not a current-release benchmark claim.
+
+Sanitized excerpt from StrataHome logs/strata-last-run.log (no user prompt or paths):
+[strata] experts loaded: 33.02 GiB at 6.50 GiB/s (13 s so far)
+[strata] filling the GPU expert cache (12445 experts, 16.68 GiB of VRAM) ...
+[strata] thinking: 58 of max 16384 tokens, 108.8 tok/s, 1 s
+[strata] answering: 197 of max 16384 tokens, 128.1 tok/s, 2 s
+[strata] done: 265 tokens in 3 s (126.0 tok/s) (stop, cancel=False), expert cache 96.9% hit (+1.4% of the routed experts over PCIe)
+
+126.0 is the engine-reported generation rate, not 265 divided by the rounded 3-second log display. Includes thinking. One short run; no average, variance or all-quant sweep.

@@ -1,0 +1,4245 @@
+{
+  "retrieved_date": "2026-10-08",
+  "scope": "Four requested families; all eight GSQ-RCO tiers; both BF16 checkpoints; all 27 publisher standard Swift GGUF tiers; ten Unsloth normal-Qwen quants; three linked Swift accelerator formats. Not an exhaustive catalog of every third-party conversion. MTP and vision projectors excluded as standalone model tiers.",
+  "sources": {
+    "1": {
+      "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+      "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540",
+      "card_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next/blob/de4b8e4d43b917e7706784d8bb445c9af86a3540/README.md"
+    },
+    "2": {
+      "url": "https://huggingface.co/ukisai/Swift1.5-Qwen3.8-Flash-Next",
+      "revision": "0bd4fe22431372cdad1979267d3ab45aa7e6150a",
+      "card_url": "https://huggingface.co/ukisai/Swift1.5-Qwen3.8-Flash-Next/blob/0bd4fe22431372cdad1979267d3ab45aa7e6150a/README.md"
+    },
+    "3": {
+      "url": "https://huggingface.co/ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "revision": "ed59f92082b1e93c0e96d60a8b11aab089b52f09",
+      "card_url": "https://huggingface.co/ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/ed59f92082b1e93c0e96d60a8b11aab089b52f09/README.md"
+    },
+    "4": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "revision": "99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d",
+      "card_url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/README.md"
+    },
+    "5": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "revision": "0142554c963a8653912c0c8283f05f13f63653f3",
+      "card_url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF/blob/0142554c963a8653912c0c8283f05f13f63653f3/README.md"
+    },
+    "6": {
+      "url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF",
+      "revision": "766911a6b7369840a91dbcd95f9f997acaab6cd6",
+      "card_url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF/blob/766911a6b7369840a91dbcd95f9f997acaab6cd6/README.md"
+    },
+    "10": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AWQ",
+      "revision": "598afc96128f76a67117caf878f538d34f6f1e02",
+      "card_url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AWQ/blob/598afc96128f76a67117caf878f538d34f6f1e02/README.md"
+    },
+    "11": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AutoRound",
+      "revision": "177e8a382da63080bfd2875ab379fd8cb23e0dea",
+      "card_url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AutoRound/blob/177e8a382da63080bfd2875ab379fd8cb23e0dea/README.md"
+    },
+    "12": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-NVFP4",
+      "revision": "3ff0520224f264a2d0ac4ab56ece8f2f13aadb38",
+      "card_url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-NVFP4/blob/3ff0520224f264a2d0ac4ab56ece8f2f13aadb38/README.md"
+    },
+    "7": {
+      "url": "https://unsloth.ai/docs/models/qwen3.8-next",
+      "retrieved_at": "2026-10-08T18:31:32.488342+00:00"
+    },
+    "8": {
+      "url": "https://github.com/Niko1221/Strata/blob/82f46a8c8f475f001ad76d92f58f4a4f8ffb0253/docs/MODELS.md"
+    },
+    "9": {
+      "url": "https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv"
+    },
+    "13": {
+      "url": "https://github.com/Niko1221/Strata/blob/82f46a8c8f475f001ad76d92f58f4a4f8ffb0253/docs/UNSLOTH_Q4.md"
+    }
+  },
+  "variants": [
+    {
+      "group": "core",
+      "family": "Normal Qwen",
+      "tier": "BF16",
+      "model_id": "Qwen/Qwen3.8-Flash-Next",
+      "source": 1,
+      "size_bytes": 360000192888,
+      "files": [
+        {
+          "rfilename": "model-00001-of-00131.safetensors",
+          "size": 1040155944
+        },
+        {
+          "rfilename": "model-00002-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00003-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00004-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00005-of-00131.safetensors",
+          "size": 3355888504
+        },
+        {
+          "rfilename": "model-00006-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00007-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00008-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00009-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00010-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00011-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00012-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00013-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00014-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00015-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00016-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00017-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00018-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00019-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00020-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00021-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00022-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00023-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00024-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00025-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00026-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00027-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00028-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00029-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00030-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00031-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00032-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00033-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00034-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00035-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00036-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00037-of-00131.safetensors",
+          "size": 1742347160
+        },
+        {
+          "rfilename": "model-00038-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00039-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00040-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00041-of-00131.safetensors",
+          "size": 1941966288
+        },
+        {
+          "rfilename": "model-00042-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00043-of-00131.safetensors",
+          "size": 1839072016
+        },
+        {
+          "rfilename": "model-00044-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00045-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00046-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00047-of-00131.safetensors",
+          "size": 1716681904
+        },
+        {
+          "rfilename": "model-00048-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00049-of-00131.safetensors",
+          "size": 1935433152
+        },
+        {
+          "rfilename": "model-00050-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00051-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00052-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00053-of-00131.safetensors",
+          "size": 1839072024
+        },
+        {
+          "rfilename": "model-00054-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00055-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00056-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00057-of-00131.safetensors",
+          "size": 1941966280
+        },
+        {
+          "rfilename": "model-00058-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00059-of-00131.safetensors",
+          "size": 1716600048
+        },
+        {
+          "rfilename": "model-00060-of-00131.safetensors",
+          "size": 3471361528
+        },
+        {
+          "rfilename": "model-00061-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00062-of-00131.safetensors",
+          "size": 3510240000
+        },
+        {
+          "rfilename": "model-00063-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00064-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00065-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00066-of-00131.safetensors",
+          "size": 1719221392
+        },
+        {
+          "rfilename": "model-00067-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00068-of-00131.safetensors",
+          "size": 1935412552
+        },
+        {
+          "rfilename": "model-00069-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00070-of-00131.safetensors",
+          "size": 1832523520
+        },
+        {
+          "rfilename": "model-00071-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00072-of-00131.safetensors",
+          "size": 1839072128
+        },
+        {
+          "rfilename": "model-00073-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00074-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00075-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00076-of-00131.safetensors",
+          "size": 1938689480
+        },
+        {
+          "rfilename": "model-00077-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00078-of-00131.safetensors",
+          "size": 1832600344
+        },
+        {
+          "rfilename": "model-00079-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00080-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00081-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00082-of-00131.safetensors",
+          "size": 1935433136
+        },
+        {
+          "rfilename": "model-00083-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00084-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00085-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00086-of-00131.safetensors",
+          "size": 1941966296
+        },
+        {
+          "rfilename": "model-00087-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00088-of-00131.safetensors",
+          "size": 1839072024
+        },
+        {
+          "rfilename": "model-00089-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00090-of-00131.safetensors",
+          "size": 1835795216
+        },
+        {
+          "rfilename": "model-00091-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00092-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00093-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00094-of-00131.safetensors",
+          "size": 1935412928
+        },
+        {
+          "rfilename": "model-00095-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00096-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00097-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00098-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00099-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00100-of-00131.safetensors",
+          "size": 1716600224
+        },
+        {
+          "rfilename": "model-00101-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00102-of-00131.safetensors",
+          "size": 1935413160
+        },
+        {
+          "rfilename": "model-00103-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00104-of-00131.safetensors",
+          "size": 1832518272
+        },
+        {
+          "rfilename": "model-00105-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00106-of-00131.safetensors",
+          "size": 1863975680
+        },
+        {
+          "rfilename": "model-00107-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00108-of-00131.safetensors",
+          "size": 1900676064
+        },
+        {
+          "rfilename": "model-00109-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00110-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00111-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00112-of-00131.safetensors",
+          "size": 1935413176
+        },
+        {
+          "rfilename": "model-00113-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00114-of-00131.safetensors",
+          "size": 1832523512
+        },
+        {
+          "rfilename": "model-00115-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00116-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00117-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00118-of-00131.safetensors",
+          "size": 1716620424
+        },
+        {
+          "rfilename": "model-00119-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00120-of-00131.safetensors",
+          "size": 1948519840
+        },
+        {
+          "rfilename": "model-00121-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00122-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00123-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00124-of-00131.safetensors",
+          "size": 1729707128
+        },
+        {
+          "rfilename": "model-00125-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00126-of-00131.safetensors",
+          "size": 1935412520
+        },
+        {
+          "rfilename": "model-00127-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00128-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00129-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00130-of-00131.safetensors",
+          "size": 2974788136
+        },
+        {
+          "rfilename": "model-00131-of-00131.safetensors",
+          "size": 1271398528
+        }
+      ],
+      "hardware": "~360 GB checkpoint; multi-GPU/server-class capacity plus runtime headroom. Not a Strata installer option.",
+      "kld": null,
+      "quality": "BF16 reference; see model-level benchmarks.",
+      "decode": null
+    },
+    {
+      "group": "core",
+      "family": "Swift 1.5 normal",
+      "tier": "BF16",
+      "model_id": "ukisai/Swift1.5-Qwen3.8-Flash-Next",
+      "source": 2,
+      "size_bytes": 360000192888,
+      "files": [
+        {
+          "rfilename": "model-00001-of-00131.safetensors",
+          "size": 1040155944
+        },
+        {
+          "rfilename": "model-00002-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00003-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00004-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00005-of-00131.safetensors",
+          "size": 3355888504
+        },
+        {
+          "rfilename": "model-00006-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00007-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00008-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00009-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00010-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00011-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00012-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00013-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00014-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00015-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00016-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00017-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00018-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00019-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00020-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00021-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00022-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00023-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00024-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00025-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00026-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00027-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00028-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00029-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00030-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00031-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00032-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00033-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00034-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00035-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00036-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00037-of-00131.safetensors",
+          "size": 1742347160
+        },
+        {
+          "rfilename": "model-00038-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00039-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00040-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00041-of-00131.safetensors",
+          "size": 1941966288
+        },
+        {
+          "rfilename": "model-00042-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00043-of-00131.safetensors",
+          "size": 1839072016
+        },
+        {
+          "rfilename": "model-00044-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00045-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00046-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00047-of-00131.safetensors",
+          "size": 1716681904
+        },
+        {
+          "rfilename": "model-00048-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00049-of-00131.safetensors",
+          "size": 1935433152
+        },
+        {
+          "rfilename": "model-00050-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00051-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00052-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00053-of-00131.safetensors",
+          "size": 1839072024
+        },
+        {
+          "rfilename": "model-00054-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00055-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00056-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00057-of-00131.safetensors",
+          "size": 1941966280
+        },
+        {
+          "rfilename": "model-00058-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00059-of-00131.safetensors",
+          "size": 1716600048
+        },
+        {
+          "rfilename": "model-00060-of-00131.safetensors",
+          "size": 3471361528
+        },
+        {
+          "rfilename": "model-00061-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00062-of-00131.safetensors",
+          "size": 3510240000
+        },
+        {
+          "rfilename": "model-00063-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00064-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00065-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00066-of-00131.safetensors",
+          "size": 1719221392
+        },
+        {
+          "rfilename": "model-00067-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00068-of-00131.safetensors",
+          "size": 1935412552
+        },
+        {
+          "rfilename": "model-00069-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00070-of-00131.safetensors",
+          "size": 1832523520
+        },
+        {
+          "rfilename": "model-00071-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00072-of-00131.safetensors",
+          "size": 1839072128
+        },
+        {
+          "rfilename": "model-00073-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00074-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00075-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00076-of-00131.safetensors",
+          "size": 1938689480
+        },
+        {
+          "rfilename": "model-00077-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00078-of-00131.safetensors",
+          "size": 1832600344
+        },
+        {
+          "rfilename": "model-00079-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00080-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00081-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00082-of-00131.safetensors",
+          "size": 1935433136
+        },
+        {
+          "rfilename": "model-00083-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00084-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00085-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00086-of-00131.safetensors",
+          "size": 1941966296
+        },
+        {
+          "rfilename": "model-00087-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00088-of-00131.safetensors",
+          "size": 1839072024
+        },
+        {
+          "rfilename": "model-00089-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00090-of-00131.safetensors",
+          "size": 1835795216
+        },
+        {
+          "rfilename": "model-00091-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00092-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00093-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00094-of-00131.safetensors",
+          "size": 1935412928
+        },
+        {
+          "rfilename": "model-00095-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00096-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00097-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00098-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00099-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00100-of-00131.safetensors",
+          "size": 1716600224
+        },
+        {
+          "rfilename": "model-00101-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00102-of-00131.safetensors",
+          "size": 1935413160
+        },
+        {
+          "rfilename": "model-00103-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00104-of-00131.safetensors",
+          "size": 1832518272
+        },
+        {
+          "rfilename": "model-00105-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00106-of-00131.safetensors",
+          "size": 1863975680
+        },
+        {
+          "rfilename": "model-00107-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00108-of-00131.safetensors",
+          "size": 1900676064
+        },
+        {
+          "rfilename": "model-00109-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00110-of-00131.safetensors",
+          "size": 1716599840
+        },
+        {
+          "rfilename": "model-00111-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00112-of-00131.safetensors",
+          "size": 1935413176
+        },
+        {
+          "rfilename": "model-00113-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00114-of-00131.safetensors",
+          "size": 1832523512
+        },
+        {
+          "rfilename": "model-00115-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00116-of-00131.safetensors",
+          "size": 1832518280
+        },
+        {
+          "rfilename": "model-00117-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00118-of-00131.safetensors",
+          "size": 1716620424
+        },
+        {
+          "rfilename": "model-00119-of-00131.safetensors",
+          "size": 3355443376
+        },
+        {
+          "rfilename": "model-00120-of-00131.safetensors",
+          "size": 1948519840
+        },
+        {
+          "rfilename": "model-00121-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00122-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00123-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00124-of-00131.safetensors",
+          "size": 1729707128
+        },
+        {
+          "rfilename": "model-00125-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00126-of-00131.safetensors",
+          "size": 1935412520
+        },
+        {
+          "rfilename": "model-00127-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00128-of-00131.safetensors",
+          "size": 1832518264
+        },
+        {
+          "rfilename": "model-00129-of-00131.safetensors",
+          "size": 3355443368
+        },
+        {
+          "rfilename": "model-00130-of-00131.safetensors",
+          "size": 2974788136
+        },
+        {
+          "rfilename": "model-00131-of-00131.safetensors",
+          "size": 1271398528
+        }
+      ],
+      "hardware": "~360 GB checkpoint; multi-GPU/server-class capacity plus runtime headroom. Not a Strata installer option.",
+      "kld": null,
+      "quality": "BF16 reference; see model-level benchmarks.",
+      "decode": null
+    },
+    {
+      "group": "core",
+      "family": "Qwen GSQ-RCO",
+      "tier": "Q2_0",
+      "model_id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 3,
+      "size_bytes": 66423878624,
+      "files": [
+        {
+          "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf",
+          "size": 37623740192
+        },
+        {
+          "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+          "size": 28800138432
+        }
+      ],
+      "hardware": "Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.",
+      "kld": {
+        "value": 0.218335,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Qwen BF16",
+        "source": 9
+      },
+      "quality": {
+        "AIME25": 96.67,
+        "GPQA-D": 89.39,
+        "LCB v6": 81.14,
+        "Task average": 89.07
+      },
+      "decode": {
+        "tps": 94,
+        "source": 8,
+        "prefill_tps": 2650,
+        "long_context_tps": 76,
+        "hardware": "RTX 5070 12 GB; Ryzen 5 7600; 64 GB RAM; Strata.",
+        "notes": "4K answer / short chat; prefill measured at 32K prompt; Q2_0 engine 0.1.36, other tiers 0.1.26."
+      }
+    },
+    {
+      "group": "core",
+      "family": "Qwen GSQ-RCO",
+      "tier": "IQ2_XS",
+      "model_id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 3,
+      "size_bytes": 68026093024,
+      "files": [
+        {
+          "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+          "size": 39225954592
+        },
+        {
+          "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf",
+          "size": 28800138432
+        }
+      ],
+      "hardware": "Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.",
+      "kld": {
+        "value": 0.200267,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Qwen BF16",
+        "source": 9
+      },
+      "quality": {
+        "AIME25": 96.67,
+        "GPQA-D": 87.37,
+        "LCB v6": 83.43,
+        "Task average": 89.16
+      },
+      "decode": {
+        "tps": 79,
+        "source": 8,
+        "prefill_tps": 2090,
+        "long_context_tps": 63,
+        "hardware": "RTX 5070 12 GB; Ryzen 5 7600; 64 GB RAM; Strata.",
+        "notes": "4K answer / short chat; prefill measured at 32K prompt; Q2_0 engine 0.1.36, other tiers 0.1.26."
+      }
+    },
+    {
+      "group": "core",
+      "family": "Qwen GSQ-RCO",
+      "tier": "IQ3_XXS",
+      "model_id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 3,
+      "size_bytes": 75839998528,
+      "files": [
+        {
+          "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+          "size": 47039860096
+        },
+        {
+          "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf",
+          "size": 28800138432
+        }
+      ],
+      "hardware": "Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.",
+      "kld": {
+        "value": 0.114982,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Qwen BF16",
+        "source": 9
+      },
+      "quality": {
+        "AIME25": 100.0,
+        "GPQA-D": 91.41,
+        "LCB v6": 86.29,
+        "Task average": 92.57
+      },
+      "decode": {
+        "tps": 62,
+        "source": 8,
+        "prefill_tps": 1750,
+        "long_context_tps": 49,
+        "hardware": "RTX 5070 12 GB; Ryzen 5 7600; 64 GB RAM; Strata.",
+        "notes": "4K answer / short chat; prefill measured at 32K prompt; Q2_0 engine 0.1.36, other tiers 0.1.26."
+      }
+    },
+    {
+      "group": "core",
+      "family": "Qwen GSQ-RCO",
+      "tier": "IQ3_S",
+      "model_id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 3,
+      "size_bytes": 83617662656,
+      "files": [
+        {
+          "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+          "size": 54817524224
+        },
+        {
+          "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf",
+          "size": 28800138432
+        }
+      ],
+      "hardware": "Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.",
+      "kld": {
+        "value": 0.062341,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Qwen BF16",
+        "source": 9
+      },
+      "quality": {
+        "AIME25": 100.0,
+        "GPQA-D": 92.93,
+        "LCB v6": 86.86,
+        "Task average": 93.26
+      },
+      "decode": {
+        "tps": 53,
+        "source": 8,
+        "prefill_tps": 1620,
+        "long_context_tps": 46,
+        "hardware": "RTX 5070 12 GB; Ryzen 5 7600; 64 GB RAM; Strata.",
+        "notes": "4K answer / short chat; prefill measured at 32K prompt; Q2_0 engine 0.1.36, other tiers 0.1.26."
+      }
+    },
+    {
+      "group": "core",
+      "family": "Swift 1.5 GSQ-RCO",
+      "tier": "Q2_0",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 4,
+      "size_bytes": 66549952800,
+      "files": [
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf",
+          "size": 39799117984
+        },
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+          "size": 26750834816
+        }
+      ],
+      "hardware": "Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.",
+      "kld": {
+        "value": 0.234242,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Swift BF16",
+        "source": 9
+      },
+      "quality": "Quant task accuracy not reported in this source; KLD is not task accuracy.",
+      "decode": null
+    },
+    {
+      "group": "core",
+      "family": "Swift 1.5 GSQ-RCO",
+      "tier": "IQ2_XS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 4,
+      "size_bytes": 68152167168,
+      "files": [
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+          "size": 39788473344
+        },
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf",
+          "size": 28363693824
+        }
+      ],
+      "hardware": "Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.",
+      "kld": {
+        "value": 0.188117,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Swift BF16",
+        "source": 9
+      },
+      "quality": "Quant task accuracy not reported in this source; KLD is not task accuracy.",
+      "decode": {
+        "tps": 126.0,
+        "source": "local",
+        "notes": "One installed-model run, 265 generated tokens including thinking; not a sweep or a proof for the current HF release.",
+        "hardware": "RTX 5090 Laptop 24 GB; Core Ultra 9 275HX; 64 GB RAM; Strata; configured max context 262144, actual prompt length unrecorded."
+      }
+    },
+    {
+      "group": "core",
+      "family": "Swift 1.5 GSQ-RCO",
+      "tier": "IQ3_XXS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 4,
+      "size_bytes": 75966073120,
+      "files": [
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+          "size": 39785790560
+        },
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf",
+          "size": 36180282560
+        }
+      ],
+      "hardware": "Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.",
+      "kld": {
+        "value": 0.116077,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Swift BF16",
+        "source": 9
+      },
+      "quality": "Quant task accuracy not reported in this source; KLD is not task accuracy.",
+      "decode": null
+    },
+    {
+      "group": "core",
+      "family": "Swift 1.5 GSQ-RCO",
+      "tier": "IQ3_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+      "source": 4,
+      "size_bytes": 83743737120,
+      "files": [
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+          "size": 44900816736
+        },
+        {
+          "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf",
+          "size": 38842920384
+        }
+      ],
+      "hardware": "Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.",
+      "kld": {
+        "value": 0.062556,
+        "context": 512,
+        "corpus": "English C4 prose, 100 chunks",
+        "reference": "Swift BF16",
+        "source": 9
+      },
+      "quality": "Quant task accuracy not reported in this source; KLD is not task accuracy.",
+      "decode": null
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q8_0",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 188260769696,
+      "files": [
+        {
+          "rfilename": "Q8_0/Swift-1.5-Qwen3.8-Flash-Next-Q8_0-00001-of-00005.gguf",
+          "size": 699524416
+        },
+        {
+          "rfilename": "Q8_0/Swift-1.5-Qwen3.8-Flash-Next-Q8_0-00002-of-00005.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q8_0/Swift-1.5-Qwen3.8-Flash-Next-Q8_0-00003-of-00005.gguf",
+          "size": 44905193504
+        },
+        {
+          "rfilename": "Q8_0/Swift-1.5-Qwen3.8-Flash-Next-Q8_0-00004-of-00005.gguf",
+          "size": 44150177536
+        },
+        {
+          "rfilename": "Q8_0/Swift-1.5-Qwen3.8-Flash-Next-Q8_0-00005-of-00005.gguf",
+          "size": 44105612928
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~224 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.0297,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.022,
+        "long_context": 32768,
+        "top_token_agreement": "94.91%"
+      },
+      "quality": "Top-token agreement at 32K: 94.91%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 224,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q6_K",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 168113805248,
+      "files": [
+        {
+          "rfilename": "Q6_K/Swift-1.5-Qwen3.8-Flash-Next-Q6_K-00001-of-00005.gguf",
+          "size": 545566016
+        },
+        {
+          "rfilename": "Q6_K/Swift-1.5-Qwen3.8-Flash-Next-Q6_K-00002-of-00005.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q6_K/Swift-1.5-Qwen3.8-Flash-Next-Q6_K-00003-of-00005.gguf",
+          "size": 44411907360
+        },
+        {
+          "rfilename": "Q6_K/Swift-1.5-Qwen3.8-Flash-Next-Q6_K-00004-of-00005.gguf",
+          "size": 44558394624
+        },
+        {
+          "rfilename": "Q6_K/Swift-1.5-Qwen3.8-Flash-Next-Q6_K-00005-of-00005.gguf",
+          "size": 24197675936
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~192 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.0324,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.0252,
+        "long_context": 32768,
+        "top_token_agreement": "94.34%"
+      },
+      "quality": "Top-token agreement at 32K: 94.34%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 192,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q5_K_L",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 151061061568,
+      "files": [
+        {
+          "rfilename": "Q5_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_L-00001-of-00005.gguf",
+          "size": 699524416
+        },
+        {
+          "rfilename": "Q5_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_L-00002-of-00005.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q5_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_L-00003-of-00005.gguf",
+          "size": 44399498048
+        },
+        {
+          "rfilename": "Q5_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_L-00004-of-00005.gguf",
+          "size": 44603368576
+        },
+        {
+          "rfilename": "Q5_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_L-00005-of-00005.gguf",
+          "size": 6958409216
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~192 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.0788,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.0575,
+        "long_context": 32768,
+        "top_token_agreement": "91.61%"
+      },
+      "quality": "Top-token agreement at 32K: 91.61%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 192,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q4_K_L",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 139270930272,
+      "files": [
+        {
+          "rfilename": "Q4_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_L-00001-of-00004.gguf",
+          "size": 699524416
+        },
+        {
+          "rfilename": "Q4_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_L-00002-of-00004.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q4_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_L-00003-of-00004.gguf",
+          "size": 44612208064
+        },
+        {
+          "rfilename": "Q4_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_L-00004-of-00004.gguf",
+          "size": 39558936480
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1051,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.074,
+        "long_context": 32768,
+        "top_token_agreement": "90.14%"
+      },
+      "quality": "Top-token agreement at 32K: 90.14%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q5_K_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 134668639040,
+      "files": [
+        {
+          "rfilename": "Q5_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_M-00001-of-00004.gguf",
+          "size": 44580008800
+        },
+        {
+          "rfilename": "Q5_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_M-00002-of-00004.gguf",
+          "size": 44975799264
+        },
+        {
+          "rfilename": "Q5_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_M-00003-of-00004.gguf",
+          "size": 44521427968
+        },
+        {
+          "rfilename": "Q5_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_M-00004-of-00004.gguf",
+          "size": 591403008
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1641,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1386,
+        "long_context": 32768,
+        "top_token_agreement": "87.34%"
+      },
+      "quality": "Top-token agreement at 32K: 87.34%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q5_K_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 128104512224,
+      "files": [
+        {
+          "rfilename": "Q5_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_S-00001-of-00003.gguf",
+          "size": 45003631968
+        },
+        {
+          "rfilename": "Q5_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_S-00002-of-00003.gguf",
+          "size": 44956919360
+        },
+        {
+          "rfilename": "Q5_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q5_K_S-00003-of-00003.gguf",
+          "size": 38143960896
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1777,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1482,
+        "long_context": 32768,
+        "top_token_agreement": "86.92%"
+      },
+      "quality": "Top-token agreement at 32K: 86.92%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q4_K_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 119599029952,
+      "files": [
+        {
+          "rfilename": "Q4_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_M-00001-of-00003.gguf",
+          "size": 44648342368
+        },
+        {
+          "rfilename": "Q4_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_M-00002-of-00003.gguf",
+          "size": 44928589600
+        },
+        {
+          "rfilename": "Q4_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_M-00003-of-00003.gguf",
+          "size": 30022097984
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1512,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.11,
+        "long_context": 32768,
+        "top_token_agreement": "88.20%"
+      },
+      "quality": "Top-token agreement at 32K: 88.20%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q3_K_XL",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 119347361600,
+      "files": [
+        {
+          "rfilename": "Q3_K_XL/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_XL-00001-of-00004.gguf",
+          "size": 699524416
+        },
+        {
+          "rfilename": "Q3_K_XL/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_XL-00002-of-00004.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q3_K_XL/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_XL-00003-of-00004.gguf",
+          "size": 44985977344
+        },
+        {
+          "rfilename": "Q3_K_XL/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_XL-00004-of-00004.gguf",
+          "size": 19261598528
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.3718,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.325,
+        "long_context": 32768,
+        "top_token_agreement": "79.79%"
+      },
+      "quality": "Top-token agreement at 32K: 79.79%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q4_K_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 113135910592,
+      "files": [
+        {
+          "rfilename": "Q4_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_S-00001-of-00003.gguf",
+          "size": 44958237952
+        },
+        {
+          "rfilename": "Q4_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_S-00002-of-00003.gguf",
+          "size": 44615499136
+        },
+        {
+          "rfilename": "Q4_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q4_K_S-00003-of-00003.gguf",
+          "size": 23562173504
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~160 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1779,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1311,
+        "long_context": 32768,
+        "top_token_agreement": "87.01%"
+      },
+      "quality": "Top-token agreement at 32K: 87.01%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 160,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q4_1",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 111258575552,
+      "files": [
+        {
+          "rfilename": "Q4_1/Swift-1.5-Qwen3.8-Flash-Next-Q4_1-00001-of-00003.gguf",
+          "size": 44954809632
+        },
+        {
+          "rfilename": "Q4_1/Swift-1.5-Qwen3.8-Flash-Next-Q4_1-00002-of-00003.gguf",
+          "size": 44528290848
+        },
+        {
+          "rfilename": "Q4_1/Swift-1.5-Qwen3.8-Flash-Next-Q4_1-00003-of-00003.gguf",
+          "size": 21775475072
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.2532,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1812,
+        "long_context": 32768,
+        "top_token_agreement": "85.07%"
+      },
+      "quality": "Top-token agreement at 32K: 85.07%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q2_K_L",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 107147702080,
+      "files": [
+        {
+          "rfilename": "Q2_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q2_K_L-00001-of-00004.gguf",
+          "size": 699524416
+        },
+        {
+          "rfilename": "Q2_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q2_K_L-00002-of-00004.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q2_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q2_K_L-00003-of-00004.gguf",
+          "size": 44998709312
+        },
+        {
+          "rfilename": "Q2_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q2_K_L-00004-of-00004.gguf",
+          "size": 7049207040
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.5425,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.3867,
+        "long_context": 32768,
+        "top_token_agreement": "77.28%"
+      },
+      "quality": "Top-token agreement at 32K: 77.28%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q4_0",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 100599252672,
+      "files": [
+        {
+          "rfilename": "Q4_0/Swift-1.5-Qwen3.8-Flash-Next-Q4_0-00001-of-00003.gguf",
+          "size": 44772642144
+        },
+        {
+          "rfilename": "Q4_0/Swift-1.5-Qwen3.8-Flash-Next-Q4_0-00002-of-00003.gguf",
+          "size": 44997356288
+        },
+        {
+          "rfilename": "Q4_0/Swift-1.5-Qwen3.8-Flash-Next-Q4_0-00003-of-00003.gguf",
+          "size": 10829254240
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.2524,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.2593,
+        "long_context": 32768,
+        "top_token_agreement": "82.53%"
+      },
+      "quality": "Top-token agreement at 32K: 82.53%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ4_NL",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 100293527232,
+      "files": [
+        {
+          "rfilename": "IQ4_NL/Swift-1.5-Qwen3.8-Flash-Next-IQ4_NL-00001-of-00003.gguf",
+          "size": 44932939232
+        },
+        {
+          "rfilename": "IQ4_NL/Swift-1.5-Qwen3.8-Flash-Next-IQ4_NL-00002-of-00003.gguf",
+          "size": 44533986112
+        },
+        {
+          "rfilename": "IQ4_NL/Swift-1.5-Qwen3.8-Flash-Next-IQ4_NL-00003-of-00003.gguf",
+          "size": 10826601888
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1261,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.0926,
+        "long_context": 32768,
+        "top_token_agreement": "88.96%"
+      },
+      "quality": "Top-token agreement at 32K: 88.96%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ4_XS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 97681835744,
+      "files": [
+        {
+          "rfilename": "IQ4_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ4_XS-00001-of-00003.gguf",
+          "size": 44822920960
+        },
+        {
+          "rfilename": "IQ4_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ4_XS-00002-of-00003.gguf",
+          "size": 44822625408
+        },
+        {
+          "rfilename": "IQ4_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ4_XS-00003-of-00003.gguf",
+          "size": 8036289376
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.1305,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.0929,
+        "long_context": 32768,
+        "top_token_agreement": "88.91%"
+      },
+      "quality": "Top-token agreement at 32K: 88.91%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ3_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 93227374272,
+      "files": [
+        {
+          "rfilename": "IQ3_M/Swift-1.5-Qwen3.8-Flash-Next-IQ3_M-00001-of-00003.gguf",
+          "size": 44479066112
+        },
+        {
+          "rfilename": "IQ3_M/Swift-1.5-Qwen3.8-Flash-Next-IQ3_M-00002-of-00003.gguf",
+          "size": 44543324384
+        },
+        {
+          "rfilename": "IQ3_M/Swift-1.5-Qwen3.8-Flash-Next-IQ3_M-00003-of-00003.gguf",
+          "size": 4204983776
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.2005,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1482,
+        "long_context": 32768,
+        "top_token_agreement": "86.22%"
+      },
+      "quality": "Top-token agreement at 32K: 86.22%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q3_K_L",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 93191001792,
+      "files": [
+        {
+          "rfilename": "Q3_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_L-00001-of-00003.gguf",
+          "size": 44468948992
+        },
+        {
+          "rfilename": "Q3_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_L-00002-of-00003.gguf",
+          "size": 44521124064
+        },
+        {
+          "rfilename": "Q3_K_L/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_L-00003-of-00003.gguf",
+          "size": 4200928736
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.3842,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.33,
+        "long_context": 32768,
+        "top_token_agreement": "79.44%"
+      },
+      "quality": "Top-token agreement at 32K: 79.44%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q3_K_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 91957778144,
+      "files": [
+        {
+          "rfilename": "Q3_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_M-00001-of-00003.gguf",
+          "size": 44686672000
+        },
+        {
+          "rfilename": "Q3_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_M-00002-of-00003.gguf",
+          "size": 44582853152
+        },
+        {
+          "rfilename": "Q3_K_M/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_M-00003-of-00003.gguf",
+          "size": 2688252992
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.321,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.226,
+        "long_context": 32768,
+        "top_token_agreement": "82.73%"
+      },
+      "quality": "Top-token agreement at 32K: 82.73%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ3_XS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 91945490144,
+      "files": [
+        {
+          "rfilename": "IQ3_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ3_XS-00001-of-00003.gguf",
+          "size": 44684624000
+        },
+        {
+          "rfilename": "IQ3_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ3_XS-00002-of-00003.gguf",
+          "size": 44572613152
+        },
+        {
+          "rfilename": "IQ3_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ3_XS-00003-of-00003.gguf",
+          "size": 2688252992
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.2211,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.1644,
+        "long_context": 32768,
+        "top_token_agreement": "85.26%"
+      },
+      "quality": "Top-token agreement at 32K: 85.26%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q3_K_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 89441195616,
+      "files": [
+        {
+          "rfilename": "Q3_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_S-00001-of-00002.gguf",
+          "size": 44612250016
+        },
+        {
+          "rfilename": "Q3_K_S/Swift-1.5-Qwen3.8-Flash-Next-Q3_K_S-00002-of-00002.gguf",
+          "size": 44828945600
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.3253,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.2284,
+        "long_context": 32768,
+        "top_token_agreement": "82.59%"
+      },
+      "quality": "Top-token agreement at 32K: 82.59%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ3_XXS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 88021245536,
+      "files": [
+        {
+          "rfilename": "IQ3_XXS/Swift-1.5-Qwen3.8-Flash-Next-IQ3_XXS-00001-of-00002.gguf",
+          "size": 44875407904
+        },
+        {
+          "rfilename": "IQ3_XXS/Swift-1.5-Qwen3.8-Flash-Next-IQ3_XXS-00002-of-00002.gguf",
+          "size": 43145837632
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.2868,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.2185,
+        "long_context": 32768,
+        "top_token_agreement": "83.30%"
+      },
+      "quality": "Top-token agreement at 32K: 83.30%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "Q2_K",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 80926778976,
+      "files": [
+        {
+          "rfilename": "Q2_K/Swift-1.5-Qwen3.8-Flash-Next-Q2_K-00001-of-00002.gguf",
+          "size": 44565396736
+        },
+        {
+          "rfilename": "Q2_K/Swift-1.5-Qwen3.8-Flash-Next-Q2_K-00002-of-00002.gguf",
+          "size": 36361382240
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.5703,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.4091,
+        "long_context": 32768,
+        "top_token_agreement": "76.66%"
+      },
+      "quality": "Top-token agreement at 32K: 76.66%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ2_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 80369487424,
+      "files": [
+        {
+          "rfilename": "IQ2_M/Swift-1.5-Qwen3.8-Flash-Next-IQ2_M-00001-of-00002.gguf",
+          "size": 44868562304
+        },
+        {
+          "rfilename": "IQ2_M/Swift-1.5-Qwen3.8-Flash-Next-IQ2_M-00002-of-00002.gguf",
+          "size": 35500925120
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~128 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.3769,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.2759,
+        "long_context": 32768,
+        "top_token_agreement": "80.76%"
+      },
+      "quality": "Top-token agreement at 32K: 80.76%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 128,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ2_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 77825338976,
+      "files": [
+        {
+          "rfilename": "IQ2_S/Swift-1.5-Qwen3.8-Flash-Next-IQ2_S-00001-of-00002.gguf",
+          "size": 44663336864
+        },
+        {
+          "rfilename": "IQ2_S/Swift-1.5-Qwen3.8-Flash-Next-IQ2_S-00002-of-00002.gguf",
+          "size": 33162002112
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~96 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.4846,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.4331,
+        "long_context": 32768,
+        "top_token_agreement": "76.47%"
+      },
+      "quality": "Top-token agreement at 32K: 76.47%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 96,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ2_XS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 77737182816,
+      "files": [
+        {
+          "rfilename": "IQ2_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ2_XS-00001-of-00002.gguf",
+          "size": 44590909344
+        },
+        {
+          "rfilename": "IQ2_XS/Swift-1.5-Qwen3.8-Flash-Next-IQ2_XS-00002-of-00002.gguf",
+          "size": 33146273472
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~96 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.5136,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.4033,
+        "long_context": 32768,
+        "top_token_agreement": "76.93%"
+      },
+      "quality": "Top-token agreement at 32K: 76.93%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 96,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ2_XXS",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 75193034336,
+      "files": [
+        {
+          "rfilename": "IQ2_XXS/Swift-1.5-Qwen3.8-Flash-Next-IQ2_XXS-00001-of-00002.gguf",
+          "size": 44744501568
+        },
+        {
+          "rfilename": "IQ2_XXS/Swift-1.5-Qwen3.8-Flash-Next-IQ2_XXS-00002-of-00002.gguf",
+          "size": 30448532768
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~96 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.6052,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.4472,
+        "long_context": 32768,
+        "top_token_agreement": "75.58%"
+      },
+      "quality": "Top-token agreement at 32K: 75.58%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 96,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ1_M",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 72012848704,
+      "files": [
+        {
+          "rfilename": "IQ1_M/Swift-1.5-Qwen3.8-Flash-Next-IQ1_M-00001-of-00002.gguf",
+          "size": 44566676192
+        },
+        {
+          "rfilename": "IQ1_M/Swift-1.5-Qwen3.8-Flash-Next-IQ1_M-00002-of-00002.gguf",
+          "size": 27446172512
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~96 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 0.9067,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.6928,
+        "long_context": 32768,
+        "top_token_agreement": "69.57%"
+      },
+      "quality": "Top-token agreement at 32K: 69.57%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 96,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "swift-standard",
+      "family": "Swift 1.5 standard GGUF",
+      "tier": "IQ1_S",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GGUF",
+      "source": 5,
+      "size_bytes": 70104737376,
+      "files": [
+        {
+          "rfilename": "IQ1_S/Swift-1.5-Qwen3.8-Flash-Next-IQ1_S-00001-of-00002.gguf",
+          "size": 44730559648
+        },
+        {
+          "rfilename": "IQ1_S/Swift-1.5-Qwen3.8-Flash-Next-IQ1_S-00002-of-00002.gguf",
+          "size": 25374177728
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~96 GB total RAM+VRAM or unified memory. Assumes weight bytes + 16 GB reserve, rounded to 32 GB; not a tested minimum. Sparse paging may use less; large contexts may need more.",
+      "kld": {
+        "value": 1.1601,
+        "context": 512,
+        "corpus": "WikiText-2 test, 100 windows",
+        "reference": "Swift BF16",
+        "source": 5,
+        "long_context_value": 0.9343,
+        "long_context": 32768,
+        "top_token_agreement": "65.15%"
+      },
+      "quality": "Top-token agreement at 32K: 65.15%; not task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 96,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-IQ1_S",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 72546461344,
+      "files": [
+        {
+          "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00002-of-00003.gguf",
+          "size": 49990818368
+        },
+        {
+          "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00003-of-00003.gguf",
+          "size": 22544696352
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 76 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.39607,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "77.325%"
+      },
+      "quality": "Top-token agreement: 77.325%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 76,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-IQ1_M",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 74538755776,
+      "files": [
+        {
+          "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00002-of-00003.gguf",
+          "size": 49988981792
+        },
+        {
+          "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00003-of-00003.gguf",
+          "size": 24538827360
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 76 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.314739,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "79.691%"
+      },
+      "quality": "Top-token agreement: 79.691%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 76,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-Q2_K_XL",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 78869128864,
+      "files": [
+        {
+          "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00002-of-00003.gguf",
+          "size": 49979779296
+        },
+        {
+          "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00003-of-00003.gguf",
+          "size": 28878402944
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 80 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.224607,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "82.715%"
+      },
+      "quality": "Top-token agreement: 82.715%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 80,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-IQ3_XXS",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 81961823936,
+      "files": [
+        {
+          "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00002-of-00003.gguf",
+          "size": 49567921344
+        },
+        {
+          "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00003-of-00003.gguf",
+          "size": 32382955968
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 91 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.16512,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "85.414%"
+      },
+      "quality": "Top-token agreement: 85.414%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 91,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-Q3_K_XL",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 89986353824,
+      "files": [
+        {
+          "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00002-of-00003.gguf",
+          "size": 49983253824
+        },
+        {
+          "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00003-of-00003.gguf",
+          "size": 39992153376
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 91 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.106504,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "88.315%"
+      },
+      "quality": "Top-token agreement: 88.315%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 91,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-IQ4_XS",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 93682584224,
+      "files": [
+        {
+          "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf",
+          "size": 49835229856
+        },
+        {
+          "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf",
+          "size": 43836407744
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 97 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.08363,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "89.554%"
+      },
+      "quality": "Top-token agreement: 89.554%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 97,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-Q4_K_XL",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 111334654784,
+      "files": [
+        {
+          "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00002-of-00004.gguf",
+          "size": 49859583136
+        },
+        {
+          "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00003-of-00004.gguf",
+          "size": 49376141504
+        },
+        {
+          "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00004-of-00004.gguf",
+          "size": 12087983520
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 115 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.046893,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "92.255%"
+      },
+      "quality": "Top-token agreement: 92.255%; not benchmark task accuracy.",
+      "decode": {
+        "tps_range": [
+          7,
+          8.5
+        ],
+        "source": "strata-q4",
+        "hardware": "RTX 5070 12 GB; 64 GB RAM; SSD-paged experts, 40 GiB expert budget.",
+        "notes": "Separate Strata workload/configuration; not comparable to short-chat GSQ table."
+      },
+      "memory_plan": {
+        "total_gb": 115,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-Q5_K_XL",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 158286406650,
+      "files": [
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00001-of-00006.gguf",
+          "size": 10946618
+        },
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00002-of-00006.gguf",
+          "size": 682434912
+        },
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00003-of-00006.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00004-of-00006.gguf",
+          "size": 49990245824
+        },
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00005-of-00006.gguf",
+          "size": 49882416192
+        },
+        {
+          "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00006-of-00006.gguf",
+          "size": 3320101792
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 164 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.030415,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "93.680%"
+      },
+      "quality": "Top-token agreement: 93.680%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 164,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "UD-Q6_K_XL",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 169165382688,
+      "files": [
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00001-of-00006.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00002-of-00006.gguf",
+          "size": 682434912
+        },
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00003-of-00006.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00004-of-00006.gguf",
+          "size": 49814108512
+        },
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00005-of-00006.gguf",
+          "size": 49419317344
+        },
+        {
+          "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00006-of-00006.gguf",
+          "size": 14838313984
+        }
+      ],
+      "hardware": "Conservative full-file-resident plan (estimate): ~192 GB RAM+VRAM or unified memory. Weight bytes + 16 GB reserve rounded to 32 GB; not a tested minimum; paging/context alter needs.",
+      "kld": {
+        "value": 0.027091,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "94.089%"
+      },
+      "quality": "Top-token agreement: 94.089%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 192,
+        "kind": "derived conservative estimate, not minimum",
+        "formula": "ceil((decimal weight GB + 16) / 32) * 32"
+      }
+    },
+    {
+      "group": "normal-community",
+      "family": "Normal Qwen / Unsloth GGUF",
+      "tier": "Q8_0",
+      "model_id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "source": 6,
+      "size_bytes": 188225033248,
+      "files": [
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+          "size": 10946624
+        },
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00002-of-00006.gguf",
+          "size": 682434912
+        },
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf",
+          "size": 54400261312
+        },
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00004-of-00006.gguf",
+          "size": 49446841216
+        },
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00005-of-00006.gguf",
+          "size": 49668930400
+        },
+        {
+          "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00006-of-00006.gguf",
+          "size": 34015618784
+        }
+      ],
+      "hardware": "Unsloth MTP guide: about 200 GB total RAM+VRAM or unified memory for this bit tier [7]; context/OS headroom still matters. Strata SSD-paging can run with less, at a speed cost.",
+      "kld": {
+        "value": 0.026574,
+        "corpus": "Unsloth guide; corpus/context not specified in displayed table",
+        "context": null,
+        "reference": "Qwen source",
+        "source": 7,
+        "top_token_agreement": "94.122%"
+      },
+      "quality": "Top-token agreement: 94.122%; not benchmark task accuracy.",
+      "decode": null,
+      "memory_plan": {
+        "total_gb": 200,
+        "kind": "publisher approximate MTP memory by bit tier",
+        "source": 7
+      }
+    },
+    {
+      "group": "accelerators",
+      "family": "Swift 1.5 non-GGUF",
+      "tier": "AWQ W4A16",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AWQ",
+      "source": 10,
+      "size_bytes": 177249648728,
+      "files": [
+        {
+          "rfilename": "embedding-model-00006-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00007-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00008-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00009-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00010-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00011-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00012-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00013-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00014-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00015-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00016-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00017-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00018-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00019-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00020-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00021-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00022-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00023-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00024-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00025-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00026-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00027-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00028-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00029-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00030-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00031-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00032-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00033-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00034-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00035-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00036-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00001-of-00019.safetensors",
+          "size": 4001006440
+        },
+        {
+          "rfilename": "model-00002-of-00019.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00003-of-00019.safetensors",
+          "size": 4002440096
+        },
+        {
+          "rfilename": "model-00004-of-00019.safetensors",
+          "size": 4002411080
+        },
+        {
+          "rfilename": "model-00005-of-00019.safetensors",
+          "size": 3997150720
+        },
+        {
+          "rfilename": "model-00006-of-00019.safetensors",
+          "size": 4001768592
+        },
+        {
+          "rfilename": "model-00007-of-00019.safetensors",
+          "size": 4002396256
+        },
+        {
+          "rfilename": "model-00008-of-00019.safetensors",
+          "size": 4002073608
+        },
+        {
+          "rfilename": "model-00009-of-00019.safetensors",
+          "size": 4002396112
+        },
+        {
+          "rfilename": "model-00010-of-00019.safetensors",
+          "size": 4002396240
+        },
+        {
+          "rfilename": "model-00011-of-00019.safetensors",
+          "size": 4002396240
+        },
+        {
+          "rfilename": "model-00012-of-00019.safetensors",
+          "size": 4002073600
+        },
+        {
+          "rfilename": "model-00013-of-00019.safetensors",
+          "size": 4002396112
+        },
+        {
+          "rfilename": "model-00014-of-00019.safetensors",
+          "size": 4002396608
+        },
+        {
+          "rfilename": "model-00015-of-00019.safetensors",
+          "size": 4002396712
+        },
+        {
+          "rfilename": "model-00016-of-00019.safetensors",
+          "size": 4002503144
+        },
+        {
+          "rfilename": "model-00017-of-00019.safetensors",
+          "size": 4002396376
+        },
+        {
+          "rfilename": "model-00018-of-00019.safetensors",
+          "size": 4002396240
+        },
+        {
+          "rfilename": "model-00019-of-00019.safetensors",
+          "size": 1601836056
+        },
+        {
+          "rfilename": "model_mtp.safetensors",
+          "size": 5214305424
+        }
+      ],
+      "hardware": "Compatible vLLM/runtime and capacity for listed weight files plus cache; no tested minimum found.",
+      "kld": null,
+      "quality": "No quant-specific task score or KLD located; card repeats BF16 benchmarks.",
+      "decode": null
+    },
+    {
+      "group": "accelerators",
+      "family": "Swift 1.5 non-GGUF",
+      "tier": "AutoRound W4A16",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-W4A16-AutoRound",
+      "source": 11,
+      "size_bytes": 177237111728,
+      "files": [
+        {
+          "rfilename": "model-00001-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00002-of-00081.safetensors",
+          "size": 2951071312
+        },
+        {
+          "rfilename": "model-00003-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00004-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00005-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00006-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00007-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00008-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00009-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00010-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00011-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00012-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00013-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00014-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00015-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00016-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00017-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00018-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00019-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00020-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00021-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00022-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00023-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00024-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00025-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00026-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00027-of-00081.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "model-00028-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00029-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00030-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00031-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00032-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00033-of-00081.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-00034-of-00081.safetensors",
+          "size": 1692108480
+        },
+        {
+          "rfilename": "model-00035-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00036-of-00081.safetensors",
+          "size": 1376101696
+        },
+        {
+          "rfilename": "model-00037-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00038-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00039-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00040-of-00081.safetensors",
+          "size": 1376101696
+        },
+        {
+          "rfilename": "model-00041-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00042-of-00081.safetensors",
+          "size": 1377483080
+        },
+        {
+          "rfilename": "model-00043-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00044-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00045-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00046-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00047-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00048-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00049-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00050-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00051-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00052-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00053-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00054-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00055-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00056-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00057-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00058-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00059-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00060-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00061-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00062-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00063-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00064-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00065-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00066-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00067-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00068-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00069-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00070-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00071-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00072-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00073-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00074-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00075-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00076-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00077-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00078-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00079-of-00081.safetensors",
+          "size": 1377487720
+        },
+        {
+          "rfilename": "model-00080-of-00081.safetensors",
+          "size": 1376106336
+        },
+        {
+          "rfilename": "model-00081-of-00081.safetensors",
+          "size": 3453825000
+        },
+        {
+          "rfilename": "model_mtp.safetensors",
+          "size": 5214305424
+        }
+      ],
+      "hardware": "Compatible vLLM/runtime and capacity for listed weight files plus cache; no tested minimum found.",
+      "kld": null,
+      "quality": "No quant-specific task score or KLD located; card repeats BF16 benchmarks.",
+      "decode": null
+    },
+    {
+      "group": "accelerators",
+      "family": "Swift 1.5 non-GGUF",
+      "tier": "NVFP4",
+      "model_id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-NVFP4",
+      "source": 12,
+      "size_bytes": 186395943704,
+      "files": [
+        {
+          "rfilename": "embedding-mixed.safetensors",
+          "size": 3200016000
+        },
+        {
+          "rfilename": "embedding-model-00006-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00007-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00008-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00009-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00010-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00011-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00012-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00013-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00014-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00015-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00016-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00017-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00018-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00019-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00020-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00021-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00022-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00023-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00024-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00025-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00026-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00027-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00028-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00029-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00030-of-00131.safetensors",
+          "size": 3200016032
+        },
+        {
+          "rfilename": "embedding-model-00031-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00032-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00033-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00034-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00035-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "embedding-model-00036-of-00131.safetensors",
+          "size": 3200016040
+        },
+        {
+          "rfilename": "model-layer-00000.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00001.safetensors",
+          "size": 1636882816
+        },
+        {
+          "rfilename": "model-layer-00002.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00003.safetensors",
+          "size": 1558177344
+        },
+        {
+          "rfilename": "model-layer-00004.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00005.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00006.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00007.safetensors",
+          "size": 1558177344
+        },
+        {
+          "rfilename": "model-layer-00008.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00009.safetensors",
+          "size": 1571201568
+        },
+        {
+          "rfilename": "model-layer-00010.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00011.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00012.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00013.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00014.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00015.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00016.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00017.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00018.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00019.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00020.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00021.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00022.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00023.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00024.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00025.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00026.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00027.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00028.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00029.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00030.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00031.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00032.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00033.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00034.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00035.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00036.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00037.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00038.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00039.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00040.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00041.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00042.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00043.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-layer-00044.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00045.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00046.safetensors",
+          "size": 1571207736
+        },
+        {
+          "rfilename": "model-layer-00047.safetensors",
+          "size": 1558183512
+        },
+        {
+          "rfilename": "model-tail.safetensors",
+          "size": 8668130456
+        }
+      ],
+      "hardware": "Native NVFP4 needs compatible NVIDIA Blackwell runtime; listed weight size exceeds one 24 GB GPU. Add cache/runtime headroom.",
+      "kld": null,
+      "quality": "No quant-specific task score or KLD located; card repeats BF16 benchmarks.",
+      "decode": null
+    }
+  ],
+  "bf16_benchmarks": [
+    {
+      "benchmark": "GPQA-Diamond",
+      "base": "89.80%",
+      "swift": "89.60%",
+      "base_tokens": "17,683",
+      "swift_tokens": "7,823",
+      "source": 2
+    },
+    {
+      "benchmark": "MMLU-Pro",
+      "base": "87.75%",
+      "swift": "87.20%",
+      "base_tokens": "3,528",
+      "swift_tokens": "1,519",
+      "source": 2
+    },
+    {
+      "benchmark": "IFBench",
+      "base": "73.20%",
+      "swift": "70.13%",
+      "base_tokens": "8,310",
+      "swift_tokens": "4,411",
+      "source": 2
+    },
+    {
+      "benchmark": "LiveCodeBench v6",
+      "base": "88.40%",
+      "swift": "90.39%",
+      "base_tokens": "17,833",
+      "swift_tokens": "9,849",
+      "source": 2
+    },
+    {
+      "benchmark": "Terminal-Bench 2.1*",
+      "base": "67.64%",
+      "swift": "69.66%",
+      "base_tokens": "40,591",
+      "swift_tokens": "45,428",
+      "source": 2
+    }
+  ],
+  "gsq_kld_reporting": [
+    {
+      "tier": "IQ2_XS",
+      "domain": "prose_c4",
+      "kld": "0.188117",
+      "reported_error": "0.001955",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.200267",
+      "starter_kld": "0.215863",
+      "delta_vs_ista_pct": "-6.066900687582077",
+      "delta_vs_starter_pct": "-12.853522836243359"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "code_codeparrot",
+      "kld": "0.174294",
+      "reported_error": "0.002979",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.184403",
+      "starter_kld": "0.193624",
+      "delta_vs_ista_pct": "-5.4820149346811125",
+      "delta_vs_starter_pct": "-9.983266537206125"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "math_gsm8k",
+      "kld": "0.120991",
+      "reported_error": "0.002643",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.132848",
+      "starter_kld": "0.146175",
+      "delta_vs_ista_pct": "-8.925237865831626",
+      "delta_vs_starter_pct": "-17.228664272276383"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "multilingual_mc4_de",
+      "kld": "0.166814",
+      "reported_error": "0.00467",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.158851",
+      "starter_kld": "0.185316",
+      "delta_vs_ista_pct": "5.012873699252762",
+      "delta_vs_starter_pct": "-9.984027283127206"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "multilingual_mc4_fr",
+      "kld": "0.213379",
+      "reported_error": "0.005505",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.227306",
+      "starter_kld": "0.241407",
+      "delta_vs_ista_pct": "-6.126983009687381",
+      "delta_vs_starter_pct": "-11.610268136383784"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "multilingual_mc4_es",
+      "kld": "0.119114",
+      "reported_error": "0.004094",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.126496",
+      "starter_kld": "0.135836",
+      "delta_vs_ista_pct": "-5.835757652415885",
+      "delta_vs_starter_pct": "-12.310433169410185"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "multilingual_mc4_zh",
+      "kld": "0.264923",
+      "reported_error": "0.005239",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.296037",
+      "starter_kld": "0.289135",
+      "delta_vs_ista_pct": "-10.510172714897115",
+      "delta_vs_starter_pct": "-8.373942967817783"
+    },
+    {
+      "tier": "IQ2_XS",
+      "domain": "fresh_c4_en_shard6",
+      "kld": "0.186271",
+      "reported_error": "0.001944",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.198573",
+      "starter_kld": "",
+      "delta_vs_ista_pct": "-6.195202771776631",
+      "delta_vs_starter_pct": ""
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "code_codeparrot",
+      "kld": "0.235256",
+      "reported_error": "0.003868",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.219545",
+      "starter_kld": "0.228021",
+      "delta_vs_ista_pct": "7.156163884397282",
+      "delta_vs_starter_pct": "3.1729533683301003"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "fresh_c4_en_shard6",
+      "kld": "0.236228",
+      "reported_error": "0.002652",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.218501",
+      "starter_kld": "",
+      "delta_vs_ista_pct": "8.113006347797036",
+      "delta_vs_starter_pct": ""
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "math_gsm8k",
+      "kld": "0.149809",
+      "reported_error": "0.003194",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.163066",
+      "starter_kld": "0.202867",
+      "delta_vs_ista_pct": "-8.129836998515938",
+      "delta_vs_starter_pct": "-26.15408124534794"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "multilingual_mc4_de",
+      "kld": "0.219444",
+      "reported_error": "0.00608",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.192854",
+      "starter_kld": "0.248268",
+      "delta_vs_ista_pct": "13.78763209474525",
+      "delta_vs_starter_pct": "-11.610034317753392"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "multilingual_mc4_es",
+      "kld": "0.148757",
+      "reported_error": "0.004586",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.144779",
+      "starter_kld": "0.171527",
+      "delta_vs_ista_pct": "2.7476360521899057",
+      "delta_vs_starter_pct": "-13.274878007544011"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "multilingual_mc4_fr",
+      "kld": "0.300467",
+      "reported_error": "0.007617",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.2717",
+      "starter_kld": "0.337115",
+      "delta_vs_ista_pct": "10.587780640412214",
+      "delta_vs_starter_pct": "-10.871067736529083"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "multilingual_mc4_zh",
+      "kld": "0.385924",
+      "reported_error": "0.007076",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.446938",
+      "starter_kld": "0.376247",
+      "delta_vs_ista_pct": "-13.651557934210112",
+      "delta_vs_starter_pct": "2.5719806403772028"
+    },
+    {
+      "tier": "Q2_0",
+      "domain": "prose_c4",
+      "kld": "0.234242",
+      "reported_error": "0.00257",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.218335",
+      "starter_kld": "0.270309",
+      "delta_vs_ista_pct": "7.285593239746269",
+      "delta_vs_starter_pct": "-13.34287796558754"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "prose_c4",
+      "kld": "0.116077",
+      "reported_error": "0.001601",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.114982",
+      "starter_kld": "0.125842",
+      "delta_vs_ista_pct": "0.9523229722913085",
+      "delta_vs_starter_pct": "-7.7597304556507485"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "code_codeparrot",
+      "kld": "0.118707",
+      "reported_error": "0.002266",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.117015",
+      "starter_kld": "0.122811",
+      "delta_vs_ista_pct": "1.4459684655813376",
+      "delta_vs_starter_pct": "-3.3417202042162475"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "math_gsm8k",
+      "kld": "0.086821",
+      "reported_error": "0.002149",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.094208",
+      "starter_kld": "0.103453",
+      "delta_vs_ista_pct": "-7.841159986413048",
+      "delta_vs_starter_pct": "-16.076865823127417"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "multilingual_mc4_de",
+      "kld": "0.1091",
+      "reported_error": "0.003632",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.104781",
+      "starter_kld": "0.12331",
+      "delta_vs_ista_pct": "4.12193050266747",
+      "delta_vs_starter_pct": "-11.523801800340605"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "multilingual_mc4_fr",
+      "kld": "0.133624",
+      "reported_error": "0.003993",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.130922",
+      "starter_kld": "0.152166",
+      "delta_vs_ista_pct": "2.063824261774183",
+      "delta_vs_starter_pct": "-12.18537649672069"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "multilingual_mc4_es",
+      "kld": "0.073681",
+      "reported_error": "0.002812",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.073858",
+      "starter_kld": "0.080745",
+      "delta_vs_ista_pct": "-0.23964905629721978",
+      "delta_vs_starter_pct": "-8.748529320700971"
+    },
+    {
+      "tier": "IQ3_XXS",
+      "domain": "multilingual_mc4_zh",
+      "kld": "0.174102",
+      "reported_error": "0.004177",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.183406",
+      "starter_kld": "0.169308",
+      "delta_vs_ista_pct": "-5.072898378460899",
+      "delta_vs_starter_pct": "2.831525976327187"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "prose_c4",
+      "kld": "0.062556",
+      "reported_error": "0.000816",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.062341",
+      "starter_kld": "0.07367",
+      "delta_vs_ista_pct": "0.34487736802425356",
+      "delta_vs_starter_pct": "-15.086195194787566"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "code_codeparrot",
+      "kld": "0.069016",
+      "reported_error": "0.001395",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.069075",
+      "starter_kld": "0.078276",
+      "delta_vs_ista_pct": "-0.08541440463265074",
+      "delta_vs_starter_pct": "-11.82993510143595"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "math_gsm8k",
+      "kld": "0.05496",
+      "reported_error": "0.001441",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.057079",
+      "starter_kld": "0.065384",
+      "delta_vs_ista_pct": "-3.712398605441574",
+      "delta_vs_starter_pct": "-15.942738284595613"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "multilingual_mc4_de",
+      "kld": "0.063634",
+      "reported_error": "0.002354",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.061909",
+      "starter_kld": "0.075633",
+      "delta_vs_ista_pct": "2.7863477038879605",
+      "delta_vs_starter_pct": "-15.864768024539563"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "multilingual_mc4_fr",
+      "kld": "0.07676",
+      "reported_error": "0.002782",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.070573",
+      "starter_kld": "0.092368",
+      "delta_vs_ista_pct": "8.766808836240486",
+      "delta_vs_starter_pct": "-16.89762688376928"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "multilingual_mc4_es",
+      "kld": "0.042848",
+      "reported_error": "0.002029",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.043018",
+      "starter_kld": "0.048054",
+      "delta_vs_ista_pct": "-0.3951834115951543",
+      "delta_vs_starter_pct": "-10.8336454821659"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "multilingual_mc4_zh",
+      "kld": "0.095915",
+      "reported_error": "0.002657",
+      "chunks": "25",
+      "context": "512",
+      "ista_kld": "0.103355",
+      "starter_kld": "0.10152",
+      "delta_vs_ista_pct": "-7.198490639059554",
+      "delta_vs_starter_pct": "-5.521079590228525"
+    },
+    {
+      "tier": "IQ3_S",
+      "domain": "fresh_c4_en_shard6",
+      "kld": "0.067801",
+      "reported_error": "0.001056",
+      "chunks": "100",
+      "context": "512",
+      "ista_kld": "0.067419",
+      "starter_kld": "0.076638",
+      "delta_vs_ista_pct": "0.5666058529494555",
+      "delta_vs_starter_pct": "-11.530833268091543"
+    }
+  ]
+}

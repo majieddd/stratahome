@@ -17,9 +17,11 @@ namespace StrataHome
         DateTime nextCheck = DateTime.UtcNow.AddSeconds(15), idleSince = DateTime.MinValue;
         string checkedDir = "", failedTag = "";
         bool requested;
+        internal Func<string, string> CheckRelease;
         public bool Busy, Checking, Available;
+        public bool ManualRequested { get { return requested; } }
         public string Latest = "", Status = "No update check yet.";
-        public StrataUpdater(MainWindow window) { w = window; }
+        public StrataUpdater(MainWindow window) { w = window; CheckRelease = delegate(string dir) { return RunHelper(dir, "--check", false); }; }
 
         void Post(Action action) { w.Dispatcher.BeginInvoke(action); }
         void Changed() { w.Server.RefreshState(); w.Chat.RefreshState(); w.About.Root.IsEnabled = !Busy; w.Drawer.Root.IsEnabled = !Busy; }
@@ -38,19 +40,23 @@ namespace StrataHome
         {
             if (Busy || Checking || w.Opt.UiTest) return;
             if (checkedDir != w.Launcher.Dir) { Available = false; Latest = ""; requested = false; failedTag = ""; checkedDir = w.Launcher.Dir; nextCheck = DateTime.UtcNow.AddSeconds(15); idleSince = DateTime.MinValue; }
-            if (w.Settings.AutoUpdateStrata && DateTime.UtcNow >= nextCheck) { CheckNow(); return; }
+            if (w.Settings.AutoUpdateStrata && DateTime.UtcNow >= nextCheck) { Check(false, false); return; }
             if (!Available || (!requested && (!w.Settings.AutoUpdateStrata || failedTag == Latest))) return;
             RunState s = w.Launcher.State;
-            bool stopped = s == RunState.Stopped;
+            bool stopped = s == RunState.Stopped || s == RunState.Error;
             bool ready = s == RunState.Ready || s == RunState.Unloaded || (requested && s == RunState.External);
             bool idle = !w.Chat.Busy && (stopped || (ready && IdleMetrics(w.Metrics.Last, DateTime.UtcNow)));
             if (!idle) { idleSince = DateTime.MinValue; return; }
             if (idleSince == DateTime.MinValue) idleSince = DateTime.UtcNow;
-            if ((DateTime.UtcNow - idleSince).TotalSeconds < 30) return;
+            if (!IdleDelaySatisfied(requested, (DateTime.UtcNow - idleSince).TotalSeconds)) return;
             Apply(stopped);
         }
 
-        public void CheckNow()
+        public static bool IdleDelaySatisfied(bool manual, double idleSeconds) { return manual || idleSeconds >= 30; }
+
+        public void CheckNow() { Check(false, true); }
+
+        void Check(bool updateAfterCheck, bool notify)
         {
             if (Checking || Busy) return;
             nextCheck = DateTime.UtcNow.AddHours(6);
@@ -62,7 +68,7 @@ namespace StrataHome
             {
                 try
                 {
-                    string output = RunHelper(dir, "--check", false);
+                    string output = CheckRelease(dir);
                     object result = new JavaScriptSerializer().DeserializeObject(output);
                     Post(delegate
                     {
@@ -71,21 +77,25 @@ namespace StrataHome
                         Latest = J.Str(result, "latest") ?? "";
                         Available = J.Bool(result, "available");
                         idleSince = DateTime.MinValue;
-                        Status = Available ? "Strata " + Latest + " available. Waiting for 30 seconds without requests."
-                                           : "Strata " + J.Str(result, "installed") + " is up to date.";
+                        requested = Available && (requested || updateAfterCheck);
+                        Status = Available ? "Strata " + Latest + " available. " + (requested ? "Waiting for Strata to be idle." : "Automatic updates wait for 30 seconds without requests. Select Update now to install when idle.")
+                                           : "Strata is up to date. Installed: " + J.Str(result, "installed") + ". Latest: " + Latest + ".";
                         Log(Status);
                         Changed();
+                        if (notify && !requested) w.Toast("success", Available ? "Strata update available" : "Strata is up to date", Status, 6000);
                     });
                 }
-                catch (Exception ex) { Log("Could not check for updates: " + ex.Message); Post(delegate { Checking = false; Available = false; Status = "Could not check for updates: " + ex.Message; Changed(); }); }
+                catch (Exception ex) { Log("Could not check for updates: " + ex.Message); Post(delegate { Checking = false; Available = false; Status = "Could not check for updates: " + ex.Message; Changed(); if (notify) w.Toast("warn", "Update check failed", Status, 7000); }); }
             });
         }
 
         public void UpdateNow()
         {
-            if (!Available || Busy || Checking) return;
-            requested = true; idleSince = DateTime.MinValue;
-            Status = "Update queued. Waiting for 30 seconds without requests."; Changed();
+            if (Busy || Checking || requested) return;
+            if (!Available) { Check(true, true); return; }
+            requested = true;
+            Status = "Update queued. Waiting for Strata to be idle.";
+            Log(Status); Changed();
         }
 
         object FreshMetrics(int port, string key)
@@ -103,7 +113,7 @@ namespace StrataHome
             string dir = w.Launcher.Dir, tag = Latest, mode = w.Settings.Mode, key = w.Settings.ApiKey;
             int idle = w.Settings.IdleMinutes;
             ModelEntry model = w.SelectedModel;
-            if (model == null) return;
+            if (model == null) { requested = false; Status = "Select an installed model before updating."; Changed(); return; }
             Busy = true; requested = false; Status = "Updating Strata " + tag + "..."; Changed();
             ThreadPool.QueueUserWorkItem(delegate
             {
@@ -182,7 +192,7 @@ namespace StrataHome
         static string BackupDir { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "StrataHome", "updates", "backups"); } }
         string RunHelper(string dir, string args, bool log)
         {
-            string helperDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "StrataHome", "updates", "0.3.0");
+            string helperDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "StrataHome", "updates", "0.3.1");
             Directory.CreateDirectory(helperDir);
             string helper = Path.Combine(helperDir, "strata_update.py");
             using (Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("strata_update.py"))

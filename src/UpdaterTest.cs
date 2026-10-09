@@ -33,6 +33,9 @@ namespace StrataHome
             check("missing sample defers update", !StrataUpdater.IdleMetrics(null, now));
             check("missing queue field defers update", !StrataUpdater.IdleMetrics(metrics("idle", stamp, null), now));
             check("future timestamp defers update", !StrataUpdater.IdleMetrics(metrics("idle", stamp + 30, 0), now));
+            check("manual update does not wait 30 seconds once idle", StrataUpdater.IdleDelaySatisfied(true, 0));
+            check("automatic update waits for a quiet period", !StrataUpdater.IdleDelaySatisfied(false, 29.9));
+            check("automatic update proceeds after 30 idle seconds", StrataUpdater.IdleDelaySatisfied(false, 30));
             check("Windows trailing slash quoted", StrataUpdater.Quote("C:\\a b\\") == "\"C:\\a b\\\\\"");
             check("Windows quote escaped", StrataUpdater.Quote("a\"b") == "\"a\\\"b\"");
             return failures == 0 ? 0 : 1;

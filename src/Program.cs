@@ -9,8 +9,8 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("StrataHome")]
 [assembly: AssemblyDescription("An unofficial tray launcher for Strata, with its own window in the look of the Strata web app.")]
 [assembly: AssemblyProduct("StrataHome")]
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.0")]
+[assembly: AssemblyVersion("0.3.0.0")]
+[assembly: AssemblyFileVersion("0.3.0.0")]
 
 namespace StrataHome
 {
@@ -20,6 +20,7 @@ namespace StrataHome
         static int Main(string[] args)
         {
             if (Has(args, "--probe")) return Probe();
+            if (Has(args, "--updater-selftest")) return UpdaterTest.Run();
             if (Has(args, "--selftest")) return SelfTest.Run();
 
             Options opt = new Options();
@@ -27,7 +28,8 @@ namespace StrataHome
             opt.NoStart = Has(args, "--no-start");
             opt.Drawer = Has(args, "--drawer");
             opt.RestartTest = Has(args, "--uitest-restart");
-            opt.UiTest = Has(args, "--uitest") || opt.RestartTest;
+            opt.UiSmoke = Has(args, "--uitest-ui");
+            opt.UiTest = Has(args, "--uitest") || opt.RestartTest || opt.UiSmoke;
             string size = ValueOf(args, "--size");                       // e.g. 900x700 (for the layout checks)
             if (size != null && size.Contains("x"))
             {

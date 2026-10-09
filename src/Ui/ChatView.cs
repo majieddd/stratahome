@@ -595,6 +595,7 @@ namespace StrataHome
         public void Send()
         {
             if (busy) return;
+            if (w.Updater.Busy) { w.Toast("warn", "Strata is updating", "Your message is kept. Send it after the update finishes.", 4500); return; }
             string text = input.Text.Trim();
             if (text.Length == 0 && attachments.Count == 0) return;
             RunState s = w.Launcher.State;

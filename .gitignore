@@ -8,3 +8,5 @@ assets/shot-attach.png
 assets/shot-managed.png
 *.log
 release/
+__pycache__/
+*.pyc

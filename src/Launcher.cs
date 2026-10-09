@@ -71,6 +71,10 @@ namespace StrataHome
             lock (ring) { return ring.ToArray(); }
         }
 
+        /// <summary>The config to launch with. Empty = the model's own. Set it to a derived copy to run a chosen
+        /// engine build; the model's own config file is never rewritten by this.</summary>
+        public string EngineConfig = "";
+
         // ---------------------------------------------------------------- start / stop
 
         public void Start(ModelEntry model, string mode, int idleMinutes)
@@ -105,17 +109,7 @@ namespace StrataHome
                 return;
             }
 
-            StringBuilder a = new StringBuilder();
-            a.Append(Q(StrataInstall.ServerPath(Dir)));
-            if (model.Mock) a.Append(" --engine mock");
-            else a.Append(" --engine strata --config ").Append(Q(model.ConfigPath));
-            a.Append(" --port ").Append(model.Port);
-            string host = (Host ?? "").Trim();
-            if (host.Length > 0 && host != "127.0.0.1") a.Append(" --host ").Append(host);
-            string key = (ServerKey ?? "").Trim();
-            if (key.Length > 0) a.Append(" --api-key ").Append(Q(key));
-            if (mode == "idle" || mode == "ondemand") a.Append(" --idle-unload ").Append(Math.Max(1, idleMinutes) * 60);
-            if (mode == "ondemand") a.Append(" --lazy");             // no --open: no browser, ever
+            StringBuilder a = ArgsFor(Dir, model, mode, idleMinutes, Host, ServerKey, EngineConfig);
 
             ProcessStartInfo psi = new ProcessStartInfo(StrataInstall.PythonPath(Dir), a.ToString());
             psi.WorkingDirectory = Dir;
@@ -433,7 +427,28 @@ namespace StrataHome
             return "netsh advfirewall firewall add rule name=\"StrataHome " + port + "\" dir=in action=allow protocol=TCP localport=" + port;
         }
 
-        static string Q(string s) { return "\"" + s + "\""; }
+        /// <summary>
+        /// The command line for starting Strata: the server script, the config to run (the derived copy when an
+        /// older engine build is chosen), the port, the network host and key when sharing, and the idle behaviour.
+        /// Split out of Start so the launch path can be checked without starting anything.
+        /// </summary>
+        public static StringBuilder ArgsFor(string dir, ModelEntry model, string mode, int idleMinutes, string host, string key, string engineConfig)
+        {
+            StringBuilder a = new StringBuilder();
+            a.Append(Q(StrataInstall.ServerPath(dir)));
+            if (model.Mock) a.Append(" --engine mock");
+            else a.Append(" --engine strata --config ").Append(Q(engineConfig.Length > 0 ? engineConfig : model.ConfigPath));
+            a.Append(" --port ").Append(model.Port);
+            string h = (host ?? "").Trim();
+            if (h.Length > 0 && h != "127.0.0.1") a.Append(" --host ").Append(h);
+            string k = (key ?? "").Trim();
+            if (k.Length > 0) a.Append(" --api-key ").Append(Q(k));
+            if (mode == "idle" || mode == "ondemand") a.Append(" --idle-unload ").Append(Math.Max(1, idleMinutes) * 60);
+            if (mode == "ondemand") a.Append(" --lazy");             // no --open: no browser, ever
+            return a;
+        }
+
+        public static string Q(string s) { return "\"" + s + "\""; }
 
         public static bool PortOpen(int port)
         {

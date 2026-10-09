@@ -42,6 +42,8 @@ namespace StrataHome
         public int IdleMinutes = 10;
         public bool AutoStartServer = true;      // start Strata when this app opens
         public bool AutoUpdateStrata = true;     // stable official releases, applied only while idle
+        public bool AutoUpdateLauncher = true;   // StrataHome's own releases: checked, downloaded, and put in on quit
+        public string EngineChoice = "current";   // "current" = the install's engine; else a Strata version to run
         public bool KeepRunning = false;         // leave Strata running when this app exits
         public string Effort = "high";           // thinking: none | low | medium | high (the web app's default is high)
         public string Theme = "system";          // system | light | dark
@@ -72,6 +74,8 @@ namespace StrataHome
                 s.IdleMinutes = Math.Max(1, Math.Min(1440, Int(d, "idleMinutes", s.IdleMinutes)));
                 s.AutoStartServer = Bool(d, "autoStartServer", s.AutoStartServer);
                 s.AutoUpdateStrata = Bool(d, "autoUpdateStrata", s.AutoUpdateStrata);
+                s.AutoUpdateLauncher = Bool(d, "autoUpdateLauncher", s.AutoUpdateLauncher);
+                s.EngineChoice = Str(d, "engineChoice", s.EngineChoice);
                 s.KeepRunning = Bool(d, "keepRunning", s.KeepRunning);
                 s.Effort = Str(d, "effort", s.Effort);
                 s.Theme = Str(d, "theme", s.Theme);
@@ -102,6 +106,8 @@ namespace StrataHome
                 d["idleMinutes"] = IdleMinutes;
                 d["autoStartServer"] = AutoStartServer;
                 d["autoUpdateStrata"] = AutoUpdateStrata;
+                d["autoUpdateLauncher"] = AutoUpdateLauncher;
+                d["engineChoice"] = EngineChoice;
                 d["keepRunning"] = KeepRunning;
                 d["effort"] = Effort;
                 d["theme"] = Theme;

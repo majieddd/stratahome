@@ -70,6 +70,23 @@ If nothing arrives from the other computer, Windows Firewall is the usual reason
 
 Sharing a model on a network lets other machines use your GPU. Keep the API key switched on for anything beyond a trusted home network, and switch sharing off when you are done.
 
+## Updating StrataHome itself
+
+**Server > Strata updates** updates Strata. The card below it, **StrataHome updates**, updates the launcher app itself from [StrataHome's releases](https://github.com/majieddd/stratahome/releases), the same way:
+
+- **Automatically check StrataHome** is on by default. Checks run on startup and every six hours.
+- **Check now** and **Update StrataHome** work with automatic checks switched off. The button says **Up to date** when current and stays usable to check again; repeated clicks cannot start two checks.
+- **Update StrataHome** downloads the release's `StrataHome.exe` and checks its SHA-256 against the digest GitHub publishes for that asset. A download that does not match, or a release with no published digest, is refused and nothing is staged.
+- A running exe cannot replace itself, so the verified file is staged and **put in when you use Exit** (the button says **Installed on Exit**). The version you had is kept in `%LOCALAPPDATA%\StrataHome\updates\launcher-before-<version>\StrataHome.exe` so it can be put back by hand. A staged swap left by a crash goes in at the next startup.
+- Nothing is downloaded while Strata is serving a request, and the app refuses to exit mid-download.
+
+## Performance by Strata version
+
+**Monitor > Performance by Strata version** keeps the average **prefill** and **decode** tokens per second for every Strata version that has served you, per model, newest version first, and compares the running version with the one before it. It answers "is this version actually slower for me than the previous one".
+
+- Prefill is prompt tokens the engine actually read (not the ones the conversation cache held) over its own read time; decode is generated tokens over its own generation time. Averages are totals over every request that version served, so a 2,000-token answer counts more than a 2-token one.
+- Every finished request the server reports is recorded once, in `%LOCALAPPDATA%\StrataHome\perf\requests.jsonl`, under the version that served it. The file is kept across updates, so the older version's numbers stay for the comparison.
+
 ## Automatic Strata updates
 
 Use **Server > Strata updates** in version 0.3.1. It checks official stable releases on startup and every six hours while the app runs, verifies downloads, saves a recovery copy, and applies updates after 30 seconds without requests. It restarts the same model with the same context and memory mode. **Update now** rechecks the release even when already current and shows the installed and latest versions. Manual updates start as soon as Strata is idle; automatic updates keep the 30-second quiet period. You can switch automatic updates off there. See [how updates and recovery work](UPDATING.md).
@@ -100,15 +117,15 @@ This writes `dist\StrataHome.exe` (`build.cmd dev` writes `dist\dev\StrataHome.e
 StrataHome.exe --selftest
 ```
 
-runs 14 automated lifecycle checks against Strata's built-in mock engine (no model, no GPU, port 18095) and writes the result to `%LOCALAPPDATA%\StrataHome\logs\selftest.txt`. It covers start, stop, "no browser flag", "no window", clean-up when the app exits, `KeepRunning`, attaching to a running server, a busy port, crash detection and restart. Exit code 0 means everything passed.
+runs 50 automated lifecycle checks against Strata's built-in mock engine (no model, no GPU, port 18095) and writes the result to `%LOCALAPPDATA%\StrataHome\logs\selftest.txt`. It covers start, stop, "no browser flag", "no window", clean-up when the app exits, `KeepRunning`, attaching to a running server, a busy port, crash detection and restart, the shared/keyed server, version comparison, the SHA-256 gate on a launcher download, the file swap on quit, the engine builds in the install, the derived config an older build runs from, and the command line the launcher builds. Exit code 0 means everything passed.
 
 ```
 StrataHome.exe --instance test --uitest
 ```
 
-drives the real window against a running Strata and writes `logs\uitest.txt`: 28 checks that click every tab and the theme button, open and close the Sampling drawer, render a sample of Markdown, feed the Monitor a full and an empty `/metrics`, send a chat message and stop another one mid-answer, attach a file the model has to read, and check the status pill. It uses your running server (or starts it) and removes the test conversation afterwards.
+drives the real window against a running Strata and writes `logs\uitest.txt`: 41 checks that click every tab and the theme button, open and close the Sampling drawer, render a sample of Markdown, feed the Monitor a full and an empty `/metrics`, drive the performance card from canned request samples, check the network card, the Strata updates card, the StrataHome updates card and the Strata engine chooser, send a chat message and stop another one mid-answer, attach a file the model has to read, and check the status pill. It uses your running server (or starts it) and restores every setting it touches.
 
-Other flags: `--minimized` (start in the tray), `--no-start` (do not start Strata on launch), `--mode always|idle|ondemand` and `--idle-minutes N` (memory mode for this launch; saved like any change made in the window), `--instance NAME` (run a second copy next to the real one), `--tab chat|monitor|about|server`, `--theme light|dark`, `--size WxH`, `--probe` (write what it found to `logs\probe.txt`), and for screenshots `--screenshot <png>` with `--delay SECONDS`, `--prompt "text"` (send one message first) and `--drawer`. Screenshots show the real window with your home folder replaced by `C:\Users\you`; they are what the images on this page are made from.
+Other flags: `--minimized` (start in the tray), `--no-start` (do not start Strata on launch), `--mode always|idle|ondemand` and `--idle-minutes N` (memory mode for this launch; saved like any change made in the window), `--instance NAME` (run a second copy next to the real one), `--tab chat|monitor|about|server`, `--theme light|dark`, `--size WxH`, `--probe` (write what it found to `logs\probe.txt`), `--launcher-check` (run the real StrataHome release check and write `logs\launcher-check.txt`; add `--launcher-download` to also download the release asset and verify its SHA-256, staging nothing), and for screenshots `--screenshot <png>` with `--delay SECONDS`, `--prompt "text"` (send one message first) and `--drawer`. Screenshots show the real window with your home folder replaced by `C:\Users\you`; they are what the images on this page are made from.
 
 ## Where things are stored
 

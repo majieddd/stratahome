@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -136,6 +137,101 @@ namespace StrataHome
             check("a request with the key is accepted", HttpCode("http://127.0.0.1:" + NetPort + "/metrics", "sk-selftest-key") == 200);
             l.Stop();
             check("the shared server stops cleanly", !Launcher.PortOpen(NetPort) && l.State == RunState.Stopped);
+
+            // 8. the launcher updating itself: version compare, SHA-256 gate, and the swap on quit
+            check("0.3.2 is newer than 0.3.1", LauncherUpdater.Compare("0.3.2", "0.3.1") == 1);
+            check("0.3.10 is newer than 0.3.9", LauncherUpdater.Compare("0.3.10", "0.3.9") == 1);
+            check("v0.3.1 equals 0.3.1", LauncherUpdater.Compare("v0.3.1", "0.3.1") == 0);
+            check("0.3.1 is not newer than 0.3.2", LauncherUpdater.Compare("0.3.1", "0.3.2") == -1);
+            check("a release tag normalizes to the version", LauncherUpdater.Normalize("v0.3.2") == "0.3.2");
+
+            string fake = Path.Combine(Path.GetTempPath(), "stratahome-fake-new.exe");
+            File.WriteAllText(fake, "NEW BUILD");
+            string hash = LauncherUpdater.Sha256(fake);
+            LauncherReleaseInfo rel = new LauncherReleaseInfo();
+            rel.tag = "v9.9.9";
+            rel.url = "file:///" + fake.Replace('\\', '/');
+            rel.sha256 = hash;
+            string message;
+            string staged = LauncherUpdater.Download(rel, out message);
+            check("a download whose SHA-256 matches the release is staged", staged != null && File.Exists(staged) && File.Exists(LauncherUpdater.PendingFile));
+            try { File.Delete(LauncherUpdater.PendingFile); } catch { }
+            rel.sha256 = "0000000000000000000000000000000000000000000000000000000000000000";
+            string stagedBad = LauncherUpdater.Download(rel, out message);
+            check("a download whose SHA-256 does not match is refused", stagedBad == null && message.IndexOf("SHA-256") >= 0 && !File.Exists(LauncherUpdater.PendingFile));
+            rel.sha256 = "";
+            string stagedNoHash = LauncherUpdater.Download(rel, out message);
+            check("a release with no published SHA-256 is refused", stagedNoHash == null && message.IndexOf("SHA-256") >= 0 && !File.Exists(LauncherUpdater.PendingFile));
+
+            // the swap: the running exe is kept as a recovery copy, the staged file goes in, the pending file is cleared
+            rel.sha256 = hash;
+            string fakeExe = Path.Combine(Path.GetTempPath(), "stratahome-fake-old.exe");
+            File.WriteAllText(fakeExe, "OLD BUILD");
+            LauncherUpdater.ExePathOverride = fakeExe;
+            staged = LauncherUpdater.Download(rel, out message);
+            bool applied = LauncherUpdater.ApplyPending(out message);
+            check("the swap installs the staged file", applied && File.ReadAllText(fakeExe) == "NEW BUILD");
+            check("the swap keeps the version being replaced", File.ReadAllText(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-before-9.9.9", "StrataHome.exe")) == "OLD BUILD");
+            check("the swap clears the pending file", !File.Exists(LauncherUpdater.PendingFile));
+
+            // the detached helper: it waits for the app's exit marker to go, then swaps and restarts
+            File.WriteAllText(fakeExe, "OLD BUILD");
+            File.WriteAllText(fake, "NEW BUILD 2");
+            rel.sha256 = LauncherUpdater.Sha256(fake);
+            staged = LauncherUpdater.Download(rel, out message);
+            string marker = Path.Combine(Path.GetTempPath(), "stratahome-uitest-marker.txt");
+            File.WriteAllText(marker, "closing");
+            string script = LauncherUpdater.SpawnSwap(staged, fakeExe, "9.9.8", marker);
+            File.Delete(marker);      // the app closing deletes its marker: the helper's cue to swap
+            DateTime end = DateTime.UtcNow.AddSeconds(25);
+            bool swapped = false;
+            while (DateTime.UtcNow < end)
+            {
+                if (File.Exists(fakeExe) && File.ReadAllText(fakeExe) == "NEW BUILD 2") { swapped = true; break; }
+                Thread.Sleep(300);
+            }
+            check("the detached helper swaps the file after the app closes", swapped);
+            check("the helper clears the pending file", !File.Exists(LauncherUpdater.PendingFile));
+            check("the helper keeps the version being replaced", File.ReadAllText(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-before-9.9.8", "StrataHome.exe")) == "OLD BUILD");
+            LauncherUpdater.ExePathOverride = "";
+            try { File.Delete(fake); } catch { }
+            try { File.Delete(fakeExe); } catch { }
+            try { Directory.Delete(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-before-9.9.9"), true); } catch { }
+            try { Directory.Delete(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-before-9.9.8"), true); } catch { }
+            try { Directory.Delete(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-9.9.9"), true); } catch { }
+            try { Directory.Delete(Path.Combine(LauncherUpdater.UpdatesDir, "launcher-9.9.8"), true); } catch { }
+
+            // 9. choosing which Strata engine build to run
+            List<EngineBuild> builds = EngineBuilds.List(dir);
+            check("the engine builds in the install are listed", builds.Count >= 1);
+            check("the installed build is marked current", builds.Count > 0 && builds[0].IsCurrent && File.Exists(builds[0].Exe));
+            check("each build reports its version from BUILD.json", builds.Count > 0 && builds[0].Version.Length > 0);
+            check("the newest build sorts first", builds.Count < 2 || PerfLog.CompareVersion(builds[0].Version, builds[1].Version) >= 0);
+
+            List<ModelEntry> models = StrataInstall.Models(dir);
+            ModelEntry real = null;
+            foreach (ModelEntry m in models) if (!m.Mock) { real = m; break; }
+            if (real == null) { log.AppendLine("SKIP  no real model config in the install"); return 0; }
+            string original = File.ReadAllText(real.ConfigPath);
+            string msg;
+            check("the current choice launches the model's own config", ServerView.ConfigForChoice(real, "current", dir, out msg) == real.ConfigPath);
+            if (builds.Count >= 2)
+            {
+                string derived = ServerView.ConfigForChoice(real, builds[1].Version, dir, out msg);
+                check("an older choice writes a derived config", derived != null && derived != real.ConfigPath && File.Exists(derived));
+                check("the derived config runs the chosen build", derived != null && RunConfig.ArgExe(derived) == builds[1].Exe);
+                check("the derived config keeps the model's own settings", derived != null && RunConfig.ArgValue(derived, "--max-context") == RunConfig.ArgValue(real.ConfigPath, "--max-context"));
+                check("the model's own config file is untouched", File.ReadAllText(real.ConfigPath) == original);
+                check("the current build's exe is the install's engine", RunConfig.ArgExe(real.ConfigPath) == Path.Combine(dir, "engine", "strata.exe"));
+                string launch = Launcher.ArgsFor(dir, real, "keep", 10, "", "", real.ConfigPath).ToString();
+                check("the current choice launches the model's own config path", launch.IndexOf(Launcher.Q(real.ConfigPath)) >= 0);
+                string derivedLaunch = Launcher.ArgsFor(dir, real, "keep", 10, "", "", derived).ToString();
+                check("an older choice launches the derived config", derivedLaunch.IndexOf(Launcher.Q(derived)) >= 0 && derivedLaunch.IndexOf(Launcher.Q(real.ConfigPath)) < 0);
+                check("the launch line keeps the port and the sharing flags",
+                    derivedLaunch.IndexOf(" --port " + real.Port) >= 0
+                    && Launcher.ArgsFor(dir, real, "keep", 10, "0.0.0.0", "k1", derived).ToString().IndexOf(" --host 0.0.0.0") >= 0
+                    && Launcher.ArgsFor(dir, real, "keep", 10, "0.0.0.0", "k1", derived).ToString().IndexOf(Launcher.Q("k1")) >= 0);
+            }
             return 0;
         }
 

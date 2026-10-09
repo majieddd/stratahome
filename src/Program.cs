@@ -9,8 +9,8 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("StrataHome")]
 [assembly: AssemblyDescription("An unofficial tray launcher for Strata, with its own window in the look of the Strata web app.")]
 [assembly: AssemblyProduct("StrataHome")]
-[assembly: AssemblyVersion("0.3.2.0")]
-[assembly: AssemblyFileVersion("0.3.2.0")]
+[assembly: AssemblyVersion("0.3.3.0")]
+[assembly: AssemblyFileVersion("0.3.3.0")]
 
 namespace StrataHome
 {
@@ -20,6 +20,7 @@ namespace StrataHome
         static int Main(string[] args)
         {
             if (Has(args, "--probe")) return Probe();
+            if (Has(args, "--launcher-check")) return LauncherCheck(Has(args, "--launcher-download"));
             if (Has(args, "--updater-selftest")) return UpdaterTest.Run();
             if (Has(args, "--selftest")) return SelfTest.Run();
 
@@ -58,6 +59,8 @@ namespace StrataHome
 
                 Paths.Diag("start: " + System.Windows.Forms.Application.ExecutablePath + " " + string.Join(" ", args) + " | user " + Environment.UserName +
                            " | logs " + Paths.Logs + " | settings " + Paths.Roaming);
+                // a staged launcher swap left by a crash between the download and the quit goes in now
+                LauncherUpdater.ApplyPendingAtStartup();
                 Application app = new Application();
                 app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 app.DispatcherUnhandledException += delegate(object s, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) { LogCrash(e.Exception); e.Handled = true; };
@@ -133,6 +136,40 @@ namespace StrataHome
             Directory.CreateDirectory(Paths.Logs);
             File.WriteAllText(Path.Combine(Paths.Logs, "probe.txt"), sb.ToString());
             return dir != null ? 0 : 2;
+        }
+
+        /// <summary>--launcher-check: run the real release check for StrataHome's own updates and write the result.
+        /// Exit 0 when a release was read, 2 when the network/release page was unreachable. With --launcher-download
+        /// it also downloads the release asset and verifies its SHA-256, staging nothing.</summary>
+        static int LauncherCheck(bool download)
+        {
+            LauncherReleaseInfo info = LauncherUpdater.Check();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("current: " + LauncherUpdater.CurrentVersion);
+            if (info == null) sb.AppendLine("check: unreachable (no release read)");
+            else
+            {
+                sb.AppendLine("tag: " + info.tag + "  latest-vs-current: " + LauncherUpdater.Compare(LauncherUpdater.Normalize(info.tag), LauncherUpdater.CurrentVersion));
+                sb.AppendLine("asset: " + info.url);
+                sb.AppendLine("sha256: " + (info.sha256.Length > 0 ? info.sha256 : "(none published)"));
+                sb.AppendLine("notes: " + info.Notes().Replace("\n", " | "));
+                if (download)
+                {
+                    string message;
+                    string staged = LauncherUpdater.Download(info, out message);
+                    sb.AppendLine("download: " + (staged == null ? "refused - " + message : "verified and staged at " + staged));
+                    if (staged != null)
+                    {
+                        sb.AppendLine("staged sha256: " + LauncherUpdater.Sha256(staged));
+                        sb.AppendLine("matches the published digest: " + (LauncherUpdater.Sha256(staged) == info.sha256));
+                        // this probe is not an install: drop the staged file and the pending marker
+                        try { File.Delete(staged); File.Delete(LauncherUpdater.PendingFile); } catch { }
+                    }
+                }
+            }
+            Directory.CreateDirectory(Paths.Logs);
+            File.WriteAllText(Path.Combine(Paths.Logs, "launcher-check.txt"), sb.ToString());
+            return info != null ? 0 : 2;
         }
 
         static void LogCrash(Exception ex)

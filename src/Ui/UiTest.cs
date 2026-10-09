@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows;
@@ -148,6 +149,68 @@ namespace StrataHome
                 return null;
             });
             Add("monitor survives empty data", delegate { w.Monitor.Render(new Dictionary<string, object>()); }, null, 0, delegate { return null; });
+            // ---- performance by Strata version (the Monitor card), driven from canned /metrics samples
+            Add("perf: start from an empty log in a temp file", delegate
+            {
+                perfPath = Path.Combine(Path.GetTempPath(), "stratahome-uitest-perf.jsonl");
+                try { if (File.Exists(perfPath)) File.Delete(perfPath); } catch { }
+                perfRealLines = File.Exists(PerfLog.FilePath) ? CountLines(PerfLog.FilePath) : 0;
+                PerfLog.PathOverride = perfPath;
+                PerfLog.ResetForTest();
+                w.Monitor.RenderPerf("0.1.41");
+            }, null, 0, delegate { return w.Monitor.PerfRowsForTest.Count == 0 && w.Monitor.PerfNoteForTest.IndexOf("Nothing recorded") >= 0 ? null : "the card is not in the empty state"; });
+            Add("perf: one version's averages come from the engine's own times", delegate
+            {
+                w.Monitor.Render(Sample("0.1.41",
+                    "{\"time\":1000.5,\"finish\":\"stop\",\"prompt_tokens\":1000,\"reused\":0,\"prompt_ms\":200,\"output_tokens\":100,\"engine_generated\":100,\"decode_ms\":1000}," +
+                    "{\"time\":1001.5,\"finish\":\"stop\",\"prompt_tokens\":500,\"reused\":0,\"prompt_ms\":100,\"output_tokens\":50,\"engine_generated\":50,\"decode_ms\":500}"));
+            }, null, 0, delegate
+            {
+                List<string> rows = w.Monitor.PerfRowsForTest;
+                string want = "0.1.41|" + Fmt.N(5000) + "|" + Fmt.N(100);
+                return rows.Count == 1 && rows[0] == want ? null : "rows: " + string.Join(" / ", rows.ToArray()) + ", expected " + want;
+            });
+            Add("perf: a second version gets its own row, newest first", delegate
+            {
+                w.Monitor.Render(Sample("0.1.40", "{\"time\":900.5,\"finish\":\"stop\",\"prompt_tokens\":1000,\"reused\":0,\"prompt_ms\":250,\"output_tokens\":100,\"engine_generated\":100,\"decode_ms\":2000}"));
+            }, null, 0, delegate
+            {
+                List<string> rows = w.Monitor.PerfRowsForTest;
+                string want = "0.1.41|" + Fmt.N(5000) + "|" + Fmt.N(100) + " , 0.1.40|" + Fmt.N(4000) + "|" + Fmt.N(50);
+                string got = rows.Count == 2 ? rows[0] + " , " + rows[1] : "count " + rows.Count;
+                return got == want ? null : "rows: " + got + ", expected " + want;
+            });
+            Add("perf: the note compares the running version with the one before it", delegate { w.Monitor.RenderPerf("0.1.41"); }, null, 0, delegate
+            {
+                string note = w.Monitor.PerfNoteForTest;
+                if (note.IndexOf(Fmt.N(4000)) < 0) return "the previous version's prefill is missing: " + note;
+                if (note.IndexOf("25") < 0) return "the prefill difference (+25%) is missing: " + note;
+                if (note.IndexOf("100") < 0) return "the decode difference (+100%) is missing: " + note;
+                return null;
+            });
+            Add("perf: re-reporting the same requests records them once", delegate
+            {
+                w.Monitor.Render(Sample("0.1.41",
+                    "{\"time\":1000.5,\"finish\":\"stop\",\"prompt_tokens\":1000,\"reused\":0,\"prompt_ms\":200,\"output_tokens\":100,\"engine_generated\":100,\"decode_ms\":1000}," +
+                    "{\"time\":1001.5,\"finish\":\"stop\",\"prompt_tokens\":500,\"reused\":0,\"prompt_ms\":100,\"output_tokens\":50,\"engine_generated\":50,\"decode_ms\":500}"));
+            }, null, 0, delegate
+            {
+                List<string> rows = w.Monitor.PerfRowsForTest;
+                string want = "0.1.41|" + Fmt.N(5000) + "|" + Fmt.N(100) + " , 0.1.40|" + Fmt.N(4000) + "|" + Fmt.N(50);
+                string got = rows.Count == 2 ? rows[0] + " , " + rows[1] : "count " + rows.Count;
+                return got == want ? null : "the averages moved on a repeat report: " + got;
+            });
+            Add("perf: restore the real log file", delegate
+            {
+                PerfLog.ResetForTest();
+                PerfLog.PathOverride = "";
+                try { if (File.Exists(perfPath)) File.Delete(perfPath); } catch { }
+            }, null, 0, delegate
+            {
+                if (PerfLog.PathOverride.Length > 0) return "the log path is not restored";
+                int now = File.Exists(PerfLog.FilePath) ? CountLines(PerfLog.FilePath) : 0;
+                return now == perfRealLines ? null : "the real log changed during the test: " + perfRealLines + " -> " + now;
+            });
             Add("server page lists the installed models", delegate { w.Server.RefreshAll(); }, null, 0,
                 delegate { return w.Server.ModelRowCount == Math.Max(1, w.Models.Count) ? null : "model rows: " + w.Server.ModelRowCount; });
             Add("server: the network card exists", delegate { return w.Server.NetworkControlsPresent ? null : "missing network controls"; });
@@ -226,6 +289,102 @@ namespace StrataHome
                     w.Updater.CheckRelease = originalCheck;
                     return !w.Updater.ManualRequested && !w.Updater.Available ? null : "manual request was not cleared when no update exists";
                 });
+            Add("server: the StrataHome card exists", delegate { return w.Server.SelfControlsPresent ? null : "missing StrataHome update controls"; });
+            bool selfWas = w.Settings.AutoUpdateLauncher;
+            Func<LauncherReleaseInfo> originalSelfCheck = w.SelfUpdater.CheckRelease;
+            int selfChecks = 0, selfToasts = 0;
+            Add("server: StrataHome checks are not started twice by repeated clicks", delegate
+            {
+                w.SelfUpdater.CheckRelease = delegate
+                {
+                    System.Threading.Thread.Sleep(150);
+                    System.Threading.Interlocked.Increment(ref selfChecks);
+                    LauncherReleaseInfo info = new LauncherReleaseInfo();
+                    info.tag = "v0.0.1"; info.name = "old"; info.body = "";
+                    info.url = "https://example.invalid/StrataHome.exe"; info.sha256 = "";
+                    return info;
+                };
+                w.SelfUpdater.Available = false; w.SelfUpdater.Latest = "";
+                w.Server.RefreshState(); selfToasts = w.ToastCount;
+                w.Server.SelfUpdateButtonForTest.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                w.Server.SelfUpdateButtonForTest.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }, delegate { return !w.SelfUpdater.Checking; }, 5000, delegate
+            {
+                if (selfChecks != 1) return "repeated clicks started " + selfChecks + " checks";
+                if (w.SelfUpdater.Status.IndexOf("Installed: " + LauncherUpdater.CurrentVersion + ". Latest: 0.0.1.") < 0) return "installed/latest versions are missing: " + w.SelfUpdater.Status;
+                if (w.ToastCount <= selfToasts) return "no visible result was shown";
+                return null;
+            });
+            Add("server: a current version says Up to date and stays usable", delegate
+            {
+                w.Server.RefreshState();
+                return w.Server.SelfUpdateButtonForTest.IsEnabled && (string)w.Server.SelfUpdateButtonForTest.Content == "Up to date" ? null
+                    : "button is disabled or has an unclear label: " + w.Server.SelfUpdateButtonForTest.Content;
+            });
+            Add("server: a newer release says Update StrataHome and names both versions", delegate
+            {
+                w.SelfUpdater.CheckRelease = delegate
+                {
+                    LauncherReleaseInfo info = new LauncherReleaseInfo();
+                    info.tag = "v99.0.0"; info.name = "new"; info.body = "";
+                    info.url = "https://example.invalid/StrataHome.exe"; info.sha256 = "";
+                    return info;
+                };
+                w.SelfUpdater.CheckNow();
+            }, delegate { return !w.SelfUpdater.Checking; }, 5000, delegate
+            {
+                if (!w.SelfUpdater.Available) return "the newer release is not marked available";
+                if (w.SelfUpdater.Status.IndexOf("StrataHome 99.0.0 is available (you have " + LauncherUpdater.CurrentVersion + ")") < 0) return "the versions are not named: " + w.SelfUpdater.Status;
+                w.Server.RefreshState();
+                return (string)w.Server.SelfUpdateButtonForTest.Content == "Update StrataHome" ? null : "button label: " + w.Server.SelfUpdateButtonForTest.Content;
+            });
+            Add("server: a staged update says it goes in on Exit", delegate
+            {
+                w.SelfUpdater.Staged = true;
+                w.Server.RefreshState();
+                return w.Server.SelfUpdateButtonForTest.IsEnabled && (string)w.Server.SelfUpdateButtonForTest.Content == "Installed on Exit" ? null
+                    : "button is disabled or has an unclear label: " + w.Server.SelfUpdateButtonForTest.Content;
+            });
+            Add("server: StrataHome restore the checker, toggle and staged state", delegate
+            {
+                w.SelfUpdater.Staged = false;
+                w.SelfUpdater.Available = false;
+                w.SelfUpdater.Latest = "";
+                w.SelfUpdater.CheckRelease = originalSelfCheck;
+                w.Settings.AutoUpdateLauncher = selfWas;
+                w.SaveSettings();
+                w.Server.RefreshState();
+            }, null, 0, delegate
+            {
+                return w.SelfUpdater.CheckRelease == originalSelfCheck && !w.SelfUpdater.Staged && !w.SelfUpdater.Available && w.Settings.AutoUpdateLauncher == selfWas
+                    ? null : "the StrataHome card was not restored";
+            });
+            Add("server: the Strata engine card lists the builds with their averages", delegate
+            {
+                engineWas = w.Settings.EngineChoice;
+                w.Server.RefreshEngine();
+                return w.Server.EngineControlsPresent && w.Server.EngineRowCountForTest >= 1 ? null : "engine rows: " + w.Server.EngineRowCountForTest;
+            });
+            Add("server: the installed build is the checked one when nothing else is chosen", delegate
+            {
+                w.Settings.EngineChoice = "current";
+                w.Server.RefreshEngine();
+                return w.Server.EngineCheckedForTest == "current" ? null : "checked: " + w.Server.EngineCheckedForTest;
+            });
+            Add("server: choosing an older build saves the choice and names the copy it runs from", delegate
+            {
+                string older = w.Server.EngineOtherKeyForTest;
+                if (older.Length == 0) { log.AppendLine("SKIP  only one engine build in this install"); return null; }
+                w.Server.CheckEngineForTest(older);
+                return w.Settings.EngineChoice == older && w.Server.EngineCheckedForTest == older && w.Server.EngineStatusForTest.IndexOf("engine-configs") >= 0 ? null
+                    : "saved " + w.Settings.EngineChoice + ", checked " + w.Server.EngineCheckedForTest + ", status: " + w.Server.EngineStatusForTest;
+            });
+            Add("server: restore the engine choice", delegate
+            {
+                w.Settings.EngineChoice = engineWas;
+                w.SaveSettings();
+                w.Server.RefreshEngine();
+            }, null, 0, delegate { return w.Settings.EngineChoice == engineWas ? null : "the engine choice was not restored"; });
             if (w.Opt.UiSmoke) return;
             bool live = w.Launcher.State == RunState.Ready || w.Launcher.State == RunState.External || w.Launcher.State == RunState.Unloaded;
             if (!live) { log.AppendLine("SKIP  the chat and server tests need a running Strata (state: " + w.Launcher.State + ")"); return; }
@@ -308,8 +467,22 @@ namespace StrataHome
 
 
         string md = "";
+        string perfPath = "";
+        int perfRealLines;
+        string engineWas = "";
+
+        static int CountLines(string path)
+        {
+            try { return File.ReadLines(path).Count(); } catch { return 0; }
+        }
         int toasts;
         DateTime waitFrom;
+
+        /// <summary>A /metrics sample with the given engine version and request rows, for the perf card tests.</summary>
+        static Dictionary<string, object> Sample(string version, string requestsJson)
+        {
+            return new JavaScriptSerializer().DeserializeObject("{\"engine\":{\"version\":\"" + version + "\",\"model\":\"test\"},\"live\":{\"state\":\"idle\",\"queued\":0},\"requests\":[" + requestsJson + "]}") as Dictionary<string, object>;
+        }
 
         bool Waited(int ms)
         {

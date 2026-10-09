@@ -640,7 +640,7 @@ namespace StrataHome
 
             ChatRequest rq = new ChatRequest();
             rq.Url = w.Launcher.ApiUrl + "/chat/completions";
-            rq.ApiKey = st.ApiKey;
+            rq.ApiKey = w.EffectiveKey;
             rq.Body = body;
             DateTime firstAt = DateTime.MinValue, thinkStart = DateTime.MinValue;
             int usageTokens = 0;

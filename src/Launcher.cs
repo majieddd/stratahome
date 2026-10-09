@@ -18,6 +18,7 @@ namespace StrataHome
         public bool Loaded;
         public int MaxContext;
         public string Model = "";
+        public bool ApiKeyRequired;
     }
 
     /// <summary>
@@ -42,7 +43,10 @@ namespace StrataHome
 
         public string Dir = "";
         public bool KeepRunning;
+        public string Host = "127.0.0.1";        // 127.0.0.1 = this PC only; 0.0.0.0 = also other computers
+        public string ServerKey = "";            // when set, the server requires it on /v1/* (--api-key)
         public ModelEntry Model;
+
         public RunState State = RunState.Stopped;
         public string Detail = "";
         public bool Loaded;
@@ -106,6 +110,10 @@ namespace StrataHome
             if (model.Mock) a.Append(" --engine mock");
             else a.Append(" --engine strata --config ").Append(Q(model.ConfigPath));
             a.Append(" --port ").Append(model.Port);
+            string host = (Host ?? "").Trim();
+            if (host.Length > 0 && host != "127.0.0.1") a.Append(" --host ").Append(host);
+            string key = (ServerKey ?? "").Trim();
+            if (key.Length > 0) a.Append(" --api-key ").Append(Q(key));
             if (mode == "idle" || mode == "ondemand") a.Append(" --idle-unload ").Append(Math.Max(1, idleMinutes) * 60);
             if (mode == "ondemand") a.Append(" --lazy");             // no --open: no browser, ever
 
@@ -127,7 +135,7 @@ namespace StrataHome
             p.ErrorDataReceived += delegate(object s, DataReceivedEventArgs e) { if (e.Data != null) Emit(e.Data); };
             p.Exited += OnExited;
 
-            Emit("[launcher] " + psi.FileName + " " + psi.Arguments);
+            Emit("[launcher] " + psi.FileName + " " + RedactKey(psi.Arguments));
             try
             {
                 stopping = false;
@@ -345,6 +353,86 @@ namespace StrataHome
 
         static string Trim(string s, int n) { return s.Length <= n ? s : s.Substring(0, n - 1) + "\u2026"; }
 
+        /// <summary>The command line as it goes to the log: the API key never appears in it.</summary>
+        public static string RedactKey(string args)
+        {
+            if (string.IsNullOrEmpty(args)) return args;
+            return System.Text.RegularExpressions.Regex.Replace(args, "(--api-key )\"[^\"]*\"", "$1\"redacted\"");
+        }
+
+        public bool Shared { get { return (Host ?? "").Trim() == "0.0.0.0" || (Host ?? "").Trim() == "::"; } }
+
+        /// <summary>The URLs another computer on the network types in, newest first ("" when the server is local only).</summary>
+        public List<string> NetworkUrls()
+        {
+            List<string> r = new List<string>();
+            if (!Shared) return r;
+            foreach (string ip in LanAddresses()) r.Add("http://" + ip + ":" + Port + "/v1");
+            return r;
+        }
+
+        /// <summary>This PC's IPv4 addresses on its networks, without loopback/link-local (what another device types).</summary>
+        public static List<string> LanAddresses()
+        {
+            List<string> first = new List<string>(), rest = new List<string>();
+            try
+            {
+                // the address of the default route; sends nothing (UDP connect on an unconnected socket)
+                using (Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                {
+                    s.Connect("10.255.255.255", 1);
+                    string ip = ((IPEndPoint)s.LocalEndPoint).Address.ToString();
+                    if (Usable(ip)) first.Add(ip);
+                }
+            }
+            catch { }
+            try
+            {
+                foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+                {
+                    string s = ip.ToString();
+                    if (Usable(s) && !first.Contains(s) && !rest.Contains(s)) rest.Add(s);
+                }
+            }
+            catch { }
+            rest.Sort(StringComparer.Ordinal);
+            first.AddRange(rest);
+            return first;
+        }
+
+        static bool Usable(string ip)
+        {
+            return !string.IsNullOrEmpty(ip) && !ip.StartsWith("127.") && !ip.StartsWith("169.254.") && !ip.StartsWith("0.");
+        }
+
+        /// <summary>The Windows firewall rule that lets the network reach the port. It needs admin rights, so this
+        /// asks Windows for them (a UAC prompt) and runs nothing when the user turns it down.</summary>
+        public static string OpenFirewall(int port)
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo("netsh",
+                    "advfirewall firewall add rule name=\"StrataHome " + port + "\" dir=in action=allow protocol=TCP localport=" + port);
+                psi.UseShellExecute = true;
+                psi.Verb = "runas";                       // the UAC prompt; netsh needs admin rights
+                using (Process p = Process.Start(psi))
+                {
+                    p.WaitForExit(60000);
+                    return p.ExitCode == 0 ? "ok" : "netsh exited with code " + p.ExitCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                string m = ex.Message;
+                return m.IndexOf("cancelled", StringComparison.OrdinalIgnoreCase) >= 0 ? "The Windows permission prompt was cancelled: nothing was changed." : m;
+            }
+        }
+
+        public static string FirewallRuleCommand(int port)
+        {
+            return "netsh advfirewall firewall add rule name=\"StrataHome " + port + "\" dir=in action=allow protocol=TCP localport=" + port;
+        }
+
         static string Q(string s) { return "\"" + s + "\""; }
 
         public static bool PortOpen(int port)
@@ -379,6 +467,7 @@ namespace StrataHome
                     if (!d.TryGetValue("service", out v) || !"strata".Equals(v as string)) return null;
                     Health h = new Health();
                     if (d.TryGetValue("loaded", out v) && v is bool) h.Loaded = (bool)v;
+                    if (d.TryGetValue("api_key", out v) && v is bool) h.ApiKeyRequired = (bool)v;
                     if (d.TryGetValue("max_context", out v) && v != null) h.MaxContext = Convert.ToInt32(v);
                     if (d.TryGetValue("model", out v) && v is string) h.Model = (string)v;
                     return h;
@@ -396,6 +485,8 @@ namespace StrataHome
                 req.Proxy = null;
                 req.Timeout = timeoutMs;
                 req.ContentLength = 0;
+                string k = (ServerKey ?? "").Trim();
+                if (k.Length > 0) req.Headers["Authorization"] = "Bearer " + k;
                 using (HttpWebResponse r = (HttpWebResponse)req.GetResponse())
                 using (StreamReader sr = new StreamReader(r.GetResponseStream(), Encoding.UTF8))
                     return sr.ReadToEnd();

@@ -52,6 +52,9 @@ namespace StrataHome
         public string Seed = "";                 // empty = random
         public bool ShowThinking = true;
         public string ApiKey = "";               // only for a server that was started with one
+        public bool ShareOnNetwork = false;      // listen on 0.0.0.0 so other computers can reach the model
+        public bool RequireKey = false;          // require an API key on /v1/* (only offered with ShareOnNetwork)
+        public string ShareKey = "";             // the key the server is started with; clients send it as their key
 
         static string FilePath { get { return Path.Combine(Paths.Roaming, "settings.json"); } }
 
@@ -79,6 +82,9 @@ namespace StrataHome
                 s.Seed = Str(d, "seed", s.Seed);
                 s.ShowThinking = Bool(d, "showThinking", s.ShowThinking);
                 s.ApiKey = Str(d, "apiKey", s.ApiKey);
+                s.ShareOnNetwork = Bool(d, "shareOnNetwork", s.ShareOnNetwork);
+                s.RequireKey = Bool(d, "requireKey", s.RequireKey);
+                s.ShareKey = Str(d, "shareKey", s.ShareKey);
             }
             catch { }
             return s;
@@ -106,6 +112,9 @@ namespace StrataHome
                 d["seed"] = Seed;
                 d["showThinking"] = ShowThinking;
                 d["apiKey"] = ApiKey;
+                d["shareOnNetwork"] = ShareOnNetwork;
+                d["requireKey"] = RequireKey;
+                d["shareKey"] = ShareKey;
                 File.WriteAllText(FilePath, new JavaScriptSerializer().Serialize(d));
                 Paths.Diag("settings saved: " + FilePath);
             }

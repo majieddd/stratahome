@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -28,7 +29,13 @@ namespace StrataHome
         readonly List<RadioButton> modeRows = new List<RadioButton>();
         TextBox idleBox;
         Grid idleRow;
-        ToggleButton tAuto, tWin, tKeep;
+        ToggleButton tAuto, tWin, tKeep, tShare, tKey;
+        TextBox keyBox;
+        StackPanel sharePanel;
+        TextBlock shareNote;
+        StackPanel shareUrls;
+        Button btnFirewall, btnGen, btnCopyKey;
+        Grid keyRow;
         TextBox log;
         bool building;
 
@@ -43,6 +50,7 @@ namespace StrataHome
             col.Margin = new Thickness(24);
             col.Children.Add(Spaced(BuildStatus()));
             col.Children.Add(Spaced(BuildModel()));
+            col.Children.Add(Spaced(BuildNetwork()));
             col.Children.Add(Spaced(BuildOptions()));
             col.Children.Add(Spaced(BuildUpdates()));
             col.Children.Add(BuildLog());
@@ -160,6 +168,171 @@ namespace StrataHome
             return Ui.Card(sp);
         }
 
+        // ------------------------------------------------------------------ network
+
+        FrameworkElement BuildNetwork()
+        {
+            StackPanel sp = new StackPanel();
+            sp.Children.Add(Ui.Text("Network", 16, "StInk", "bold"));
+            tShare = Ui.Toggle(w.Settings.ShareOnNetwork, delegate(bool on) { ShareToggled(on); });
+            sp.Children.Add(Row("Serve the model on the network",
+                "Off: only this PC (127.0.0.1). On: other computers on your network reach the same model over your LAN IP, the way LM Studio's network server does. Applies the next time Strata starts.", tShare));
+
+            sharePanel = new StackPanel { Margin = new Thickness(0, 4, 0, 0) };
+
+            tKey = Ui.Toggle(w.Settings.RequireKey, delegate(bool on) { KeyToggled(on); });
+            sp.Children.Add(Row("Require an API key", "Optional. Off: anyone who can reach this PC can use the model. On: every request must send the key below (Authorization: Bearer <key> or x-api-key).", tKey));
+
+            keyRow = new Grid { Margin = new Thickness(0, 12, 0, 0) };
+            keyRow.ColumnDefinitions.Add(Ui.Col(Ui.Star(1)));
+            keyRow.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            keyRow.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            keyBox = new TextBox { Style = Ui.Style("StInput"), Height = 38, FontFamily = Fonts.Mono, FontSize = 13 };
+            keyBox.Text = w.Settings.ShareKey;
+            keyBox.TextChanged += delegate
+            {
+                if (building) return;
+                w.Settings.ShareKey = keyBox.Text.Trim();
+                w.SaveSettings();
+                ApplyKeyToLauncher();
+            };
+            keyRow.Children.Add(Ui.At(keyBox, 0, 0));
+            Button gen = btnGen = Ui.Btn("secondary", "Generate", null, delegate
+            {
+                keyBox.Text = NewKey();
+                w.Settings.ShareKey = keyBox.Text;
+                w.SaveSettings();
+                ApplyKeyToLauncher();
+                w.Toast("success", "New key", "Clients must send it as their API key. Restart Strata for it to take effect.", 4000);
+            });
+            gen.Height = 38; gen.Margin = new Thickness(10, 0, 0, 0);
+            keyRow.Children.Add(Ui.At(gen, 0, 1));
+            Button copyKey = btnCopyKey = Ui.IconButton("copy", "Copy the key", delegate { Ui.Copy(keyBox.Text.Trim()); w.Toast("success", "Copied", "The key is on your clipboard.", 2000); });
+            copyKey.Width = copyKey.Height = 38; copyKey.Margin = new Thickness(8, 0, 0, 0);
+            keyRow.Children.Add(Ui.At(copyKey, 0, 2));
+            sharePanel.Children.Add(keyRow);
+
+            shareNote = Ui.Text("", 13, "StWarnText", "regular", true);
+            shareNote.Margin = new Thickness(0, 14, 0, 0);
+            sharePanel.Children.Add(shareNote);
+
+            shareUrls = new StackPanel { Margin = new Thickness(0, 10, 0, 0) };
+            sharePanel.Children.Add(shareUrls);
+
+            Grid fw = new Grid { Margin = new Thickness(0, 12, 0, 0) };
+            fw.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            fw.ColumnDefinitions.Add(Ui.Col(Ui.Star(1)));
+            btnFirewall = Ui.Btn("secondary", "Allow through Windows Firewall", null, delegate { OpenFirewall(); });
+            btnFirewall.Height = 36; btnFirewall.FontSize = 13;
+            fw.Children.Add(Ui.At(btnFirewall, 0, 0));
+            TextBlock fwn = Ui.Text("Windows blocks incoming connections until the port is allowed. This asks Windows for permission (it shows its normal prompt) and opens TCP on the port for private networks.", 12, "StInkMuted", "regular", true);
+            fwn.Margin = new Thickness(12, 0, 0, 0); fwn.VerticalAlignment = VerticalAlignment.Center;
+            fw.Children.Add(Ui.At(fwn, 0, 1));
+            sharePanel.Children.Add(fw);
+
+            sp.Children.Add(sharePanel);
+            return Ui.Card(sp);
+        }
+
+        void ShareToggled(bool on)
+        {
+            w.Settings.ShareOnNetwork = on;
+            w.SaveSettings();
+            ApplyKeyToLauncher();
+            RefreshShare();
+            if (w.Launcher.IsActive)
+                w.Toast("warn", "Restart to apply", on
+                    ? "Stop and start Strata (or Restart) to serve on the network."
+                    : "Stop and start Strata to go back to this PC only.", 6000);
+            else if (on && w.Settings.RequireKey && w.Settings.ShareKey.Length == 0)
+            {
+                keyBox.Text = NewKey();
+                w.Settings.ShareKey = keyBox.Text;
+                w.SaveSettings();
+            }
+        }
+
+        void KeyToggled(bool on)
+        {
+            w.Settings.RequireKey = on;
+            if (on && w.Settings.ShareKey.Length == 0)
+            {
+                keyBox.Text = NewKey();
+                w.Settings.ShareKey = keyBox.Text;
+            }
+            w.SaveSettings();
+            ApplyKeyToLauncher();
+            RefreshShare();
+            if (w.Launcher.IsActive) w.Toast("warn", "Restart to apply", "Stop and start Strata for the key setting to take effect.", 6000);
+        }
+
+        void ApplyKeyToLauncher()
+        {
+            w.Launcher.ServerKey = w.Settings.RequireKey ? w.Settings.ShareKey.Trim() : "";
+        }
+
+        static string NewKey()
+        {
+            byte[] b = new byte[20];
+            using (System.Security.Cryptography.RNGCryptoServiceProvider rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                rng.GetBytes(b);
+            return "sk-" + Convert.ToBase64String(b).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        }
+
+        void OpenFirewall()
+        {
+            btnFirewall.IsEnabled = false;
+            int port = w.Launcher.Port;
+            System.Threading.ThreadPool.QueueUserWorkItem(delegate
+            {
+                string r = Launcher.OpenFirewall(port);
+                w.Dispatcher.Invoke(new Action(delegate
+                {
+                    btnFirewall.IsEnabled = true;
+                    if (r == "ok") w.Toast("success", "Firewall rule added", "TCP port " + port + " is open on private networks.", 5000);
+                    else w.Toast("warn", "The rule was not added", r + "  You can run this in an admin PowerShell:  " + Launcher.FirewallRuleCommand(port), 9000);
+                }));
+            });
+        }
+
+        void RefreshShare()
+        {
+            bool share = w.Settings.ShareOnNetwork;
+            tShare.IsChecked = share;
+            tKey.IsChecked = w.Settings.RequireKey;
+            sharePanel.Visibility = share ? Visibility.Visible : Visibility.Collapsed;
+            keyRow.Visibility = w.Settings.RequireKey ? Visibility.Visible : Visibility.Collapsed;
+            shareNote.Text = share && !w.Settings.RequireKey
+                ? "No API key: anyone who can reach this PC can use the model. A key is recommended once the server is on the network."
+                : share && w.Settings.RequireKey && w.Settings.ShareKey.Length == 0
+                    ? "No key written yet: press Generate, or the server starts without a key."
+                    : "";
+            shareUrls.Children.Clear();
+            if (share)
+            {
+                List<string> urls = w.Launcher.NetworkUrls();
+                if (urls.Count > 0)
+                {
+                    shareUrls.Children.Add(Ui.Text("From another computer (OpenAI base URL):", 13, "StInkMuted", "regular", true));
+                    foreach (string u in urls)
+                    {
+                        string copyText = u;
+                        Grid row = new Grid { Margin = new Thickness(0, 4, 0, 0) };
+                        row.ColumnDefinitions.Add(Ui.Col(Ui.Star(1)));
+                        row.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+                        TextBlock t = Ui.Mono(u, 13, "StInkSoft");
+                        t.VerticalAlignment = VerticalAlignment.Center;
+                        row.Children.Add(Ui.At(t, 0, 0));
+                        Button cb = Ui.IconButton("copy", "Copy", delegate { Ui.Copy(copyText); w.Toast("success", "Copied", copyText, 2000); });
+                        cb.Width = cb.Height = 28; cb.Margin = new Thickness(6, 0, 0, 0);
+                        row.Children.Add(Ui.At(cb, 0, 1));
+                        shareUrls.Children.Add(row);
+                    }
+                }
+                else shareUrls.Children.Add(Ui.Text(w.Launcher.IsActive ? "From another computer: this PC has no network address yet." : "From another computer: start Strata to see the address.", 13, "StInkMuted", "regular", true));
+            }
+        }
+
         // ------------------------------------------------------------------ options
 
         FrameworkElement BuildOptions()
@@ -259,6 +432,12 @@ namespace StrataHome
 
         public int ModelRowCount { get { return modelRows.Children.Count; } }
         public bool UpdateControlsPresent { get { return btnCheck != null && btnUpdate != null && tUpdate != null && updateStatus != null; } }
+        public bool NetworkControlsPresent { get { return tShare != null && tKey != null && keyBox != null && btnFirewall != null && btnGen != null && btnCopyKey != null; } }
+        public bool SharePanelVisibleForTest { get { return sharePanel.Visibility == Visibility.Visible; } }
+        public bool KeyRowVisibleForTest { get { return keyRow.Visibility == Visibility.Visible; } }
+        public string KeyValueForTest { get { return keyBox.Text.Trim(); } }
+        public void ShareForTest(bool on) { ShareToggled(on); }
+        public void KeyForTest(bool on) { KeyToggled(on); }
         public Button UpdateButtonForTest { get { return btnUpdate; } }
         public bool UpdateControlsLocked { get { return !btnStart.IsEnabled && !btnStop.IsEnabled && !btnRestart.IsEnabled && !btnGpu.IsEnabled && !changeFolder.IsEnabled && !btnCheck.IsEnabled && !btnUpdate.IsEnabled; } }
 
@@ -312,6 +491,7 @@ namespace StrataHome
                 tAuto.IsChecked = w.Settings.AutoStartServer;
                 tKeep.IsChecked = w.Settings.KeepRunning;
                 tWin.IsChecked = GetWindowsStartup();
+                RefreshShare();
             }
             finally { building = false; }
             RefreshState();
@@ -341,6 +521,12 @@ namespace StrataHome
             changeFolder.IsEnabled = !active && !w.Updater.Checking;
             tKeep.IsEnabled = !updating;
             tUpdate.IsEnabled = !updating;
+            tShare.IsEnabled = !active;
+            tKey.IsEnabled = !active;
+            keyBox.IsEnabled = !active;
+            btnGen.IsEnabled = !active;
+            btnCopyKey.IsEnabled = !active;
+            btnFirewall.IsEnabled = !updating;
             btnCheck.IsEnabled = !updating && !w.Updater.Checking;
             btnUpdate.IsEnabled = !updating && !w.Updater.Checking && !w.Updater.ManualRequested;
             btnUpdate.Content = updating ? "Updating..." : w.Updater.Checking ? "Checking..." : w.Updater.ManualRequested ? "Waiting for idle..." : !w.Updater.Available && w.Updater.Latest.Length > 0 ? "Up to date" : "Update now";

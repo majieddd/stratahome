@@ -40,7 +40,7 @@ Snapshot: October 8, 2026. File sizes are decimal GB, summed from the Hugging Fa
 | **Chat** | Streaming answers with Markdown (headings, lists, tables, code blocks with a copy button), a collapsible "Thought for 1.2 s" block for the model's reasoning, tokens and tok/s under each answer, attach a text file (or drop one), New chat with Undo, save the chat as Markdown. The **Sampling** drawer sets thinking (none / low / medium / high), temperature, top-p, top-k, max tokens and seed, and can share them with other apps. The conversation is kept on this PC. |
 | **Monitor** | The same live meters as the web app, refreshed every second: model state (idle, reading the prompt, generating, queued, error) with a progress bar, decode and prefill speed, GPU load, VRAM, GPU temperature, power, PCIe link and traffic, CPU, disk, context fill gauge, experts held in VRAM, system RAM, and a table of recent requests (prompt, reused, output, tok/s, VRAM hit rate, duration). |
 | **About** | The loaded model and engine (context, KV cache, experts in VRAM, speculation), this PC's GPU / CPU / RAM, copy-ready OpenAI and Anthropic base URLs for your other tools, the API key field, dark / light theme, and the model's own run settings read from Strata's `/config` and saved back to it. |
-| **Server** | Start, Stop, Restart, **Free GPU**, **Copy API URL**; the model list; the memory mode (keep the model loaded, unload when idle after N minutes, or load on the first request); and the options below. |
+| **Server** | Start, Stop, Restart, **Free GPU**, **Copy API URL**; the model list; the memory mode (keep the model loaded, unload when idle after N minutes, or load on the first request); **Serve the model on the network** with an optional **API key** (see below); and the options below. |
 
 Light and dark themes, the Outfit font and the emerald accent are taken from Strata's web app. The window also keeps a **tray icon** that shows the state (Stopped, Starting, Loading, Ready, Idle, Problem); closing the window sends it to the tray.
 
@@ -59,6 +59,16 @@ Light and dark themes, the Outfit font and the emerald accent are taken from Str
 | **Start with Windows** | Optional, off by default. Starts minimized to the tray. |
 
 Chat uses localhost. Update checks and downloads contact official Strata releases on GitHub; Strata's updater also installs Python dependencies. StrataHome sends no telemetry or chat content to those services.
+
+## Serving the model on the network
+
+**Server > Network > Serve the model on the network** is off by default: the server listens on `127.0.0.1` and only this PC can reach it. Switched on, Strata listens on `0.0.0.0` and every computer on your network can use the same model over the OpenAI and Anthropic APIs, the way LM Studio's network server works. The card shows the address to type on the other computer (e.g. `http://192.168.1.15:8080/v1`), with a copy button. Applies the next time Strata starts.
+
+**Require an API key** is a second switch, and it is optional. Off, anyone who can reach this PC can use the model (the card says so). On, every request must send the key as `Authorization: Bearer <key>` or `x-api-key`; **Generate** writes a random one, and the card copies it. Clients put it in the usual "API key" field of their app. The key is kept in `%APPDATA%\StrataHome\settings.json`, never appears in the Server log, and the app sends it on its own requests, so Chat and Monitor keep working with a key switched on.
+
+If nothing arrives from the other computer, Windows Firewall is the usual reason: press **Allow through Windows Firewall** (it shows Windows' normal permission prompt and opens TCP on the port for private networks), and make sure the network is set to *Private* in Windows' network settings.
+
+Sharing a model on a network lets other machines use your GPU. Keep the API key switched on for anything beyond a trusted home network, and switch sharing off when you are done.
 
 ## Automatic Strata updates
 

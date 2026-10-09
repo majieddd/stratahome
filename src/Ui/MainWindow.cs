@@ -116,7 +116,7 @@ namespace StrataHome
             Launcher.LogLine += delegate(string l) { pendingLog.Enqueue(l); };
             Metrics.Updated += OnMetrics;
             Metrics.Lost += delegate { UpdatePill(); };
-            Metrics.Start(delegate { return Launcher.Port; }, delegate { return Settings.ApiKey; },
+            Metrics.Start(delegate { return Launcher.Port; }, delegate { return EffectiveKey; },
                           delegate { return Launcher.IsActive && Launcher.State != RunState.Stopping; });
 
             DispatcherTimer tick = new DispatcherTimer();
@@ -372,8 +372,14 @@ namespace StrataHome
         {
             if (SelectedModel != null) Settings.Config = SelectedModel.FileName;
             Launcher.KeepRunning = Settings.KeepRunning;
+            Launcher.Host = Settings.ShareOnNetwork ? "0.0.0.0" : "127.0.0.1";
+            Launcher.ServerKey = Settings.RequireKey ? Settings.ShareKey.Trim() : "";
             Settings.Save();
         }
+
+        /// <summary>The key this app sends with its own requests: the one typed on the About page, or the one this
+        /// app started the server with (a server this app launched with a key needs that key back).</summary>
+        public string EffectiveKey { get { return Settings.ApiKey.Length > 0 ? Settings.ApiKey : Launcher.ServerKey; } }
 
         public void SetTheme(bool dark, bool save)
         {

@@ -83,7 +83,7 @@ namespace StrataHome
             sp.Children.Add(lab);
             key = new PasswordBox();
             key.Style = Ui.Style("StPasswordBox");
-            key.Password = w.Settings.ApiKey;
+            key.Password = w.EffectiveKey;
             key.LostKeyboardFocus += delegate
             {
                 string k = key.Password.Trim();
@@ -260,12 +260,17 @@ namespace StrataHome
 
         void RefreshStatic()
         {
-            Fill(apiHost, new List<string[]>
+            List<string[]> rows = new List<string[]>
             {
                 new string[] { "OpenAI base URL", w.Launcher.ApiUrl, "copy" },
                 new string[] { "Anthropic base URL", "http://127.0.0.1:" + w.Launcher.Port, "copy" },
                 new string[] { "Model name", w.Launcher.ServedModel.Length > 0 ? w.Launcher.ServedModel : (w.SelectedModel != null ? w.SelectedModel.ModelName : ""), "copy" }
-            });
+            };
+            List<string> net = w.Launcher.NetworkUrls();
+            if (net.Count > 0)
+                rows.Add(new string[] { "From the network", string.Join(", ", net), "copy" });
+            rows.Add(new string[] { "API key", w.Launcher.ServerKey.Length > 0 ? "required (the one on the Server tab)" : "none", null });
+            Fill(apiHost, rows);
         }
 
         static void Fill(StackPanel host, List<string[]> rows)
@@ -318,7 +323,7 @@ namespace StrataHome
         {
             HttpWebRequest r = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + w.Launcher.Port + "/config");
             r.Method = method; r.Proxy = null; r.Timeout = 5000;
-            if (!string.IsNullOrEmpty(w.Settings.ApiKey)) r.Headers["Authorization"] = "Bearer " + w.Settings.ApiKey;
+            if (!string.IsNullOrEmpty(w.EffectiveKey)) r.Headers["Authorization"] = "Bearer " + w.EffectiveKey;
             return r;
         }
 

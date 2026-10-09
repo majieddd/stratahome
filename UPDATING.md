@@ -12,7 +12,7 @@ Before changing source or engine files, a recovery copy is saved under `%LOCALAP
 
 Update checks require GitHub access. Downloads and Strata's dependency installer also need network access. Offline or rate-limited checks leave the existing installation usable and retry at the next scheduled check. A failed release is not automatically installed again in the same app session; select **Update now** to retry. Keep the app running until an installation finishes.
 
-This updates **Strata**, not StrataHome itself. New launcher versions remain available from [StrataHome releases](https://github.com/majieddd/stratahome/releases).
+This updates **Strata**, not StrataHome itself. StrataHome updates **itself** from [StrataHome releases](https://github.com/majieddd/stratahome/releases) under **Server > StrataHome updates**: it checks on startup and every six hours, verifies the download's SHA-256 against the digest GitHub publishes, stages the verified file, and puts it in when you use Exit (a running exe cannot replace itself). The version being replaced is kept in `%LOCALAPPDATA%\StrataHome\updates\launcher-before-<version>\StrataHome.exe`. A staged swap left by a crash goes in at the next startup. Nothing downloads while Strata is serving, and the app refuses to exit mid-download. Automatic checks are on by default and can be switched off there.
 
 ## Developer checks
 

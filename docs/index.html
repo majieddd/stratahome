@@ -350,13 +350,13 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       <p class="promise">Run Strata from the Windows tray. No console window, no browser tab, no batch files.</p>
       <p class="sub">A native desktop app in the look of Strata’s web interface: streaming Chat, live Monitor, About and Server controls. Keep the tray icon; skip the browser.</p>
       <div class="cta">
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.1/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.3/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download for Windows
         </a>
         <a class="link-ink" href="https://github.com/majieddd/stratahome">View the source on GitHub</a>
       </div>
-      <p class="cta-meta">v0.3.1 &middot; 427,520 bytes &middot; Windows 10/11</p>
+      <p class="cta-meta">v0.3.3 &middot; 486,400 bytes &middot; Windows 10/11</p>
       <p class="honest">It needs an existing Strata install, and the .exe is unsigned, so Windows SmartScreen may warn you. Both are explained under <a href="#install">Install</a> and <a href="#verify">Verify</a>.</p>
     </div>
     <figure class="hero-fig">
@@ -440,7 +440,26 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
           </dd>
         </div>
         <div class="row">
-          <dt>Automatic Strata updates</dt><dd><p>Enabled by default. Checks official stable releases on startup and every six hours while StrataHome runs. After 30 seconds without requests, it verifies downloads, keeps a recovery copy, updates Strata and restarts the same model. Check now and Update now are in the Server tab. Manual updates start as soon as Strata is idle. When current, the button says Up to date and can recheck; the result shows installed and latest versions. <a href="https://github.com/majieddd/stratahome/blob/main/UPDATING.md">Update and recovery details</a>.</p></dd></div><div class="row"><dt>When you exit</dt>
+          <dt>Automatic Strata updates</dt><dd><p>Enabled by default. Checks official stable releases on startup and every six hours while StrataHome runs. After 30 seconds without requests, it verifies downloads, keeps a recovery copy, updates Strata and restarts the same model. Check now and Update now are in the Server tab. Manual updates start as soon as Strata is idle. When current, the button says Up to date and can recheck; the result shows installed and latest versions. <a href="https://github.com/majieddd/stratahome/blob/main/UPDATING.md">Update and recovery details</a>.</p></dd></div><div class="row"><dt>StrataHome updates itself</dt>
+          <dd>
+            <p><b>Server &gt; StrataHome updates</b> checks StrataHome&rsquo;s own releases the same way, on startup and every six hours. Update StrataHome downloads the release file, verifies its SHA-256 against the digest GitHub publishes, and puts the new file in when you use Exit &mdash; a running program cannot replace itself. The version you had is kept so it can be put back by hand, and a staged swap left by a crash goes in at the next startup. Nothing downloads while the model is serving, and the app refuses to exit mid-download.</p>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Serve the model on your network</dt>
+          <dd>
+            <p>Off by default. Switching it on binds the server to all network addresses, so other computers on your network can use your GPU at <code>http://your-lan-address:8080/v1</code>, the same way LM Studio shares a model. The card shows the address to give them, with a copy button.</p>
+            <p>An API key is optional. Off, anyone who can reach your PC can use the model. On, requests must send the key as <code>Authorization: Bearer &hellip;</code> or <code>x-api-key</code>. The key is never written to the Server log, and the app sends its own key so Chat, Monitor and the Server controls keep working.</p>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Performance by Strata version</dt>
+          <dd>
+            <p>The Monitor keeps average prefill and decode tokens per second for every Strata version that has served you, per model, newest first, and compares the running version with the one before it. It answers &ldquo;is this version actually slower for me&rdquo;.</p>
+            <p><b>Server &gt; Strata engine</b> lists the engine builds your install has &mdash; the installed one and the one kept before the last update &mdash; each with the averages it earned, and runs the build you pick from a copy of the model&rsquo;s config. The model&rsquo;s own config file is never rewritten.</p>
+          </dd>
+        </div>
+        <div class="row"><dt>When you exit</dt>
           <dd>
             <p>Closing the window sends it to the tray. Exiting the app stops a server it started through a Windows job object, unless you choose to leave Strata running.</p>
             <p>If you want it to keep running, tick &ldquo;Leave Strata running when this app exits&rdquo;.</p>
@@ -639,9 +658,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
         <span class="n" aria-hidden="true">2</span>
         <div>
           <h3>Download StrataHome.exe and put it anywhere.</h3>
-          <p>One file, 427,520 bytes. Nothing to install.</p>
+          <p>One file, 486,400 bytes. Nothing to install.</p>
         </div>
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.1/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.3/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download
         </a>
@@ -683,11 +702,11 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       </div>
     </div>
     <dl class="manifest">
-      <div class="m sha"><dt>SHA-256</dt><dd>da55376394057dd30c0bc3e9141fd95799910c2861a4ec9bc0d0a00d1298fa2b<small>For StrataHome.exe v0.3.1.</small></dd></div>
-      <div class="m"><dt>Size</dt><dd>427,520 bytes, a single .exe</dd></div>
+      <div class="m sha"><dt>SHA-256</dt><dd>4dc16d94649253ab19a5334cbfad206f0628164644f8e5ef9eca18d031ec90ce<small>For StrataHome.exe v0.3.3.</small></dd></div>
+      <div class="m"><dt>Size</dt><dd>486,400 bytes, a single .exe</dd></div>
       <div class="m"><dt>Memory</dt><dd>WPF desktop window; closing to the tray trims its working set</dd></div>
-      <div class="m"><dt>Network</dt><dd>localhost chat; GitHub updates and dependency downloads; no telemetry</dd></div>
-      <div class="m"><dt>Checks</dt><dd>14 lifecycle, 11 updater recovery and 15 idle-policy checks<small>Run <code>StrataHome.exe --updater-selftest</code>, <code>StrataHome.exe --selftest</code> and <code>StrataHome.exe --instance test --uitest</code>. The separate <code>--uitest-restart</code> adds four context save/restart/restore checks and restarts Strata twice.</small></dd></div>
+      <div class="m"><dt>Network</dt><dd>localhost chat; optional LAN sharing with an API key; GitHub updates and dependency downloads; no telemetry</dd></div>
+      <div class="m"><dt>Checks</dt><dd>50 lifecycle, 11 updater recovery, 15 idle-policy and 41 window checks<small>Run <code>StrataHome.exe --updater-selftest</code>, <code>StrataHome.exe --selftest</code> and <code>StrataHome.exe --instance test --uitest</code>. The separate <code>--uitest-restart</code> adds four context save/restart/restore checks and restarts Strata twice. <code>--launcher-check</code> runs the real StrataHome release check.</small></dd></div>
       <div class="m"><dt>Build</dt><dd><code>build.cmd</code>, using the C# compiler that ships with Windows, no SDK</dd></div>
       <div class="m"><dt>Source</dt><dd><a href="https://github.com/majieddd/stratahome">github.com/majieddd/stratahome</a></dd></div>
     </dl>
@@ -729,10 +748,10 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
   <div class="wrap">
     <div class="foot-cta">
       <div>
-        <h2>Get StrataHome v0.3.1</h2>
-        <p class="cta-meta">427,520 bytes &middot; Windows 10/11 &middot; needs an existing Strata install</p>
+        <h2>Get StrataHome v0.3.3</h2>
+        <p class="cta-meta">486,400 bytes &middot; Windows 10/11 &middot; needs an existing Strata install</p>
       </div>
-      <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.1/StrataHome.exe">
+      <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.3/StrataHome.exe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
         Download for Windows
       </a>

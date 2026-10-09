@@ -37,6 +37,7 @@ namespace StrataHome
         string tempFile;
 
         string cfgResult;
+        bool shareWas, keyWas;
 
         public UiTest(MainWindow window) { w = window; }
 
@@ -149,6 +150,24 @@ namespace StrataHome
             Add("monitor survives empty data", delegate { w.Monitor.Render(new Dictionary<string, object>()); }, null, 0, delegate { return null; });
             Add("server page lists the installed models", delegate { w.Server.RefreshAll(); }, null, 0,
                 delegate { return w.Server.ModelRowCount == Math.Max(1, w.Models.Count) ? null : "model rows: " + w.Server.ModelRowCount; });
+            Add("server: the network card exists", delegate { return w.Server.NetworkControlsPresent ? null : "missing network controls"; });
+            Add("server: sharing on shows the key row and the LAN panel", delegate
+            {
+                shareWas = w.Settings.ShareOnNetwork; keyWas = w.Settings.RequireKey;
+                w.Server.ShareForTest(true);
+                w.Server.KeyForTest(true);
+                return w.Server.SharePanelVisibleForTest && w.Server.KeyRowVisibleForTest && w.Server.KeyValueForTest.StartsWith("sk-") ? null
+                    : "share panel: " + w.Server.SharePanelVisibleForTest + ", key row: " + w.Server.KeyRowVisibleForTest + ", key: " + (w.Server.KeyValueForTest.Length > 0 ? "set" : "empty");
+            });
+            Add("server: sharing off hides the panel, and the settings are put back", delegate
+            {
+                w.Server.ShareForTest(false);
+                bool hidden = !w.Server.SharePanelVisibleForTest;
+                w.Server.ShareForTest(shareWas);
+                w.Server.KeyForTest(keyWas);
+                return hidden && w.Settings.ShareOnNetwork == shareWas && w.Settings.RequireKey == keyWas
+                    ? null : "panel hidden: " + hidden + ", share back: " + (w.Settings.ShareOnNetwork == shareWas) + ", key back: " + (w.Settings.RequireKey == keyWas);
+            });
             Add("toast appears and goes away", delegate { toasts = w.ToastCount; w.Toast("info", "uitest", "hello", 700); }, null, 0, delegate { return w.ToastCount == toasts + 1 ? null : "toast not shown"; });
             Add("toast is removed after its time", null, delegate { return w.ToastCount == toasts; }, 3000, delegate { return null; });
             // ---- the context length option (on a copy of a run config, never the real one)

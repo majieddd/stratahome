@@ -115,7 +115,49 @@ namespace StrataHome
             check("start works again after a crash", WaitFor(l, RunState.Ready, 40));
             l.Stop();
             check("final state is clean", !Launcher.PortOpen(Port));
+
+            // 7. shared on the network with an API key (the Server tab's Network card)
+            ModelEntry mock2 = new ModelEntry();
+            mock2.Mock = true; mock2.Port = NetPort; mock2.ModelName = "mock";
+            if (Launcher.PortOpen(NetPort)) { log.AppendLine("SKIP  port " + NetPort + " is busy"); return 0; }
+            l = New(dir);
+            l.Host = "0.0.0.0";
+            l.ServerKey = "sk-selftest-key";
+            l.Start(mock2, "always", 10);
+            check("shared server reaches Ready", WaitFor(l, RunState.Ready, 40));
+            string netLine = FirstLine(l);
+            check("command line has --host 0.0.0.0", netLine.IndexOf("--host 0.0.0.0", StringComparison.Ordinal) >= 0);
+            check("command line has --api-key", netLine.IndexOf("--api-key", StringComparison.Ordinal) >= 0);
+            check("the log never shows the key", netLine.IndexOf("sk-selftest-key", StringComparison.Ordinal) < 0 && netLine.IndexOf("redacted", StringComparison.Ordinal) >= 0);
+            Health hn = Launcher.Probe(NetPort);
+            check("health says a key is required", hn != null && hn.ApiKeyRequired);
+            check("the LAN URLs list the port", l.NetworkUrls().Count > 0 && l.NetworkUrls()[0].EndsWith(":" + NetPort + "/v1"));
+            check("a request without the key is refused", HttpCode("http://127.0.0.1:" + NetPort + "/metrics", null) == 401);
+            check("a request with the key is accepted", HttpCode("http://127.0.0.1:" + NetPort + "/metrics", "sk-selftest-key") == 200);
+            l.Stop();
+            check("the shared server stops cleanly", !Launcher.PortOpen(NetPort) && l.State == RunState.Stopped);
             return 0;
+        }
+
+        const int NetPort = 18096;
+
+        static int HttpCode(string url, string key)
+        {
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.Proxy = null;
+                req.Timeout = 4000;
+                req.KeepAlive = false;
+                if (key != null) req.Headers["Authorization"] = "Bearer " + key;
+                using (HttpWebResponse r = (HttpWebResponse)req.GetResponse()) return (int)r.StatusCode;
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse r = ex.Response as HttpWebResponse;
+                return r != null ? (int)r.StatusCode : 0;
+            }
+            catch { return 0; }
         }
 
         static Launcher New(string dir)

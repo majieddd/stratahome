@@ -253,7 +253,7 @@ namespace StrataHome
         {
             HttpWebRequest r = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + w.Launcher.Port + "/settings");
             r.Method = method; r.Proxy = null; r.Timeout = 5000;
-            if (!string.IsNullOrEmpty(w.Settings.ApiKey)) r.Headers["Authorization"] = "Bearer " + w.Settings.ApiKey;
+            if (!string.IsNullOrEmpty(w.EffectiveKey)) r.Headers["Authorization"] = "Bearer " + w.EffectiveKey;
             return r;
         }
 

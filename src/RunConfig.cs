@@ -54,6 +54,19 @@ namespace StrataHome
             return null;
         }
 
+        /// <summary>The engine binary a config runs ("exe"), normalized for comparison.</summary>
+        public static string ArgExe(string path)
+        {
+            try
+            {
+                Dictionary<string, object> root = Load(path);
+                if (root == null) return null;
+                string exe = Convert.ToString(root["exe"]);
+                return string.IsNullOrEmpty(exe) ? null : Path.GetFullPath(exe);
+            }
+            catch { return null; }
+        }
+
         /// <summary>Sets --max-context. From 64K up on a PC with plenty of RAM it also turns on KV streaming (--kv-resident 32768), and
         /// below 64K it removes it, as Strata's setup writes it. Returns null when saved, otherwise what went wrong (nothing is changed then).</summary>
         public static string SetContext(string path, int ctx, double ramGb)

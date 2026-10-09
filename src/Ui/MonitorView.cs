@@ -32,6 +32,9 @@ namespace StrataHome
         Border ccCard;
         Button showAll;
         StackPanel ccFactsHost;
+        StackPanel perfHost;
+        TextBlock perfNote, perfSum;
+        Border perfCard;
         bool wide = true;
 
         static readonly string[][] Metrics = new string[][]
@@ -65,6 +68,8 @@ namespace StrataHome
             col.Children.Add(BuildRow());
             col.Children.Add(Gap(20));
             col.Children.Add(BuildCacheCard());
+            col.Children.Add(Gap(20));
+            col.Children.Add(BuildPerfCard());
             sv.Content = col;
             Root = sv;
             sv.SizeChanged += delegate { Layout(sv.ActualWidth); };
@@ -298,7 +303,106 @@ namespace StrataHome
             return ccCard;
         }
 
-        // ------------------------------------------------------------------ responsive layout (the web app's 1000 px breakpoint)
+        // ------------------------------------------------------------------ performance by Strata version
+
+        FrameworkElement BuildPerfCard()
+        {
+            StackPanel sp = new StackPanel();
+            Grid head = new Grid();
+            head.ColumnDefinitions.Add(Ui.Col(Ui.Star(1)));
+            head.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            head.Children.Add(Ui.At(Title("Performance by Strata version"), 0, 0));
+            perfSum = Ui.Text("", 12, "StInkMuted");
+            head.Children.Add(Ui.At(perfSum, 0, 1));
+            sp.Children.Add(head);
+
+            Grid grid = new Grid();
+            grid.Margin = new Thickness(0, 12, 0, 0);
+            grid.ColumnDefinitions.Add(Ui.Col(Ui.Star(2.2)));
+            grid.ColumnDefinitions.Add(Ui.Col(Ui.Star(3)));
+            grid.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            grid.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            grid.ColumnDefinitions.Add(Ui.Col(Ui.Auto));
+            grid.RowDefinitions.Add(Ui.Row(Ui.Auto));
+            grid.RowDefinitions.Add(Ui.Row(Ui.Auto));
+            grid.RowDefinitions.Add(Ui.Row(Ui.Auto));
+            string[] heads = new string[] { "Strata version", "Model", "Requests", "Prefill tok/s", "Decode tok/s" };
+            for (int i = 0; i < heads.Length; i++)
+            {
+                TextBlock t = Ui.Text(heads[i], 12, "StInkMuted", "medium");
+                if (i >= 2) t.TextAlignment = TextAlignment.Right;
+                grid.Children.Add(Ui.At(t, i, 0));
+            }
+            Border line = new Border { Height = 1, BorderThickness = new Thickness(0, 1, 0, 0) };
+            grid.Children.Add(Ui.At(line, 0, 1));
+            perfHost = new StackPanel();
+            grid.Children.Add(Ui.At(perfHost, 0, 2));
+            sp.Children.Add(grid);
+
+            perfNote = Ui.Text("", 12, "StInkMuted", "regular", true);
+            perfNote.Margin = new Thickness(0, 12, 0, 0);
+            sp.Children.Add(perfNote);
+            perfCard = Ui.Card(sp);
+            return perfCard;
+        }
+
+        /// <summary>Redraw the table from the recorded requests. Called on every metrics poll, so a version's
+        /// numbers appear as soon as that version has served something.</summary>
+        public void RenderPerf(string currentVersion)
+        {
+            List<PerfSummary> list = PerfLog.Summaries();
+            perfHost.Children.Clear();
+            perfSum.Text = list.Count == 0 ? "" : list.Count + (list.Count == 1 ? " configuration" : " configurations");
+            GridLength[] cols = new GridLength[] { Ui.Star(2.2), Ui.Star(3), Ui.Auto, Ui.Auto, Ui.Auto };
+            for (int i = 0; i < list.Count; i++)
+            {
+                PerfSummary s = list[i];
+                Grid row = new Grid();
+                row.Margin = new Thickness(0, 6, 0, 0);
+                for (int c = 0; c < cols.Length; c++) row.ColumnDefinitions.Add(Ui.Col(cols[c]));
+                row.Children.Add(Ui.At(Ui.Text(s.Version == "" ? "unknown" : s.Version, 13, "StInk", "medium"), 0, 0));
+                row.Children.Add(Ui.At(Ui.Text(s.Model, 12, "StInkMuted", "regular", true), 1, 0));
+                row.Children.Add(Ui.At(Right(Ui.Text(Fmt.N(s.Requests), 12, "StInkMuted", "medium")), 2, 0));
+                row.Children.Add(Ui.At(Right(Ui.Text(s.PrefillTokS > 0 ? Fmt.N(s.PrefillTokS) : "\u2013", 13, "StInk", "medium")), 3, 0));
+                row.Children.Add(Ui.At(Right(Ui.Text(s.DecodeTokS > 0 ? Fmt.N(s.DecodeTokS) : "\u2013", 13, "StInk", "medium")), 4, 0));
+                perfHost.Children.Add(row);
+            }
+            if (list.Count == 0)
+                perfNote.Text = "Nothing recorded yet. It fills as you use the model: every finished request is kept in " + PerfLog.FilePath + ", counted under the Strata version that served it.";
+            else
+            {
+                string note = "Prefill is prompt tokens over the engine's own read time, decode is generated tokens over its own generation time, so a long answer counts more than a short one. " +
+                               "Averages cover every request that version served, newest version first.";
+                PerfSummary current = PerfLog.ForVersion(currentVersion);
+                if (current != null)
+                {
+                    PerfSummary prev = null;
+                    foreach (PerfSummary s in list) if (s.Version != current.Version) { prev = s; break; }
+                    if (prev != null && prev.DecodeTokS > 0 && prev.PrefillTokS > 0)
+                        note += " The version before it averaged " + Fmt.N(prev.PrefillTokS) + " prefill / " + Fmt.N(prev.DecodeTokS) + " decode, so this one is " +
+                                Fmt.N(100 * (current.PrefillTokS - prev.PrefillTokS) / prev.PrefillTokS) + "% prefill and " +
+                                Fmt.N(100 * (current.DecodeTokS - prev.DecodeTokS) / prev.DecodeTokS) + "% decode against it.";
+                }
+                perfNote.Text = note;
+            }
+        }
+
+        /// <summary>Test hook: the perf table as "version|prefill|decode" rows, newest first.</summary>
+        public List<string> PerfRowsForTest
+        {
+            get
+            {
+                List<string> rows = new List<string>();
+                foreach (PerfSummary s in PerfLog.Summaries()) rows.Add(s.Version + "|" + Fmt.N(s.PrefillTokS) + "|" + Fmt.N(s.DecodeTokS));
+                return rows;
+            }
+        }
+
+        public string PerfNoteForTest { get { return perfNote.Text; } }
+
+        public void ScrollTo(double y) { ScrollViewer sv = Root as ScrollViewer; if (sv != null) sv.ScrollToVerticalOffset(y); }
+
+        static TextBlock Right(TextBlock t) { t.TextAlignment = TextAlignment.Right; return t; }
 
         void Layout(double width)
         {
@@ -352,6 +456,8 @@ namespace StrataHome
             object last = reqs.Count > 0 ? reqs[0] : null;
             string state = J.Str(live, "state") ?? "idle";
             double queued = J.Dbl(live, "queued") ?? 0;
+            PerfLog.Record(m);
+            RenderPerf(J.Str(eng, "version"));
 
             // model state
             string on = queued > 0 ? "queued" : state;

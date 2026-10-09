@@ -37,6 +37,7 @@ namespace StrataHome
         public readonly MetricsPoller Metrics = new MetricsPoller();
         public readonly Options Opt;
         public readonly StrataUpdater Updater;
+        public readonly LauncherSelfUpdater SelfUpdater;
         public List<ModelEntry> Models = new List<ModelEntry>();
         public ModelEntry SelectedModel;
 
@@ -62,6 +63,7 @@ namespace StrataHome
         {
             Opt = opt;
             Updater = new StrataUpdater(this);
+            SelfUpdater = new LauncherSelfUpdater(this);
             if (opt.Mode == "always" || opt.Mode == "idle" || opt.Mode == "ondemand") Settings.Mode = opt.Mode;
             if (opt.IdleMinutes > 0) Settings.IdleMinutes = Math.Min(1440, opt.IdleMinutes);
             Paths.Diag("settings in effect: mode " + Settings.Mode + ", idle " + Settings.IdleMinutes + " min, auto-start " + Settings.AutoStartServer);
@@ -351,6 +353,7 @@ namespace StrataHome
             if (sb != null) Server.AppendLog(sb.ToString());
             Server.UpdateUptime();
             Updater.Tick();
+            SelfUpdater.Tick();
         }
 
         // ------------------------------------------------------------------ install + settings
@@ -398,6 +401,10 @@ namespace StrataHome
             ModelEntry m = SelectedModel;
             string mode = Settings.Mode;
             int idle = Settings.IdleMinutes;
+            string message;
+            string cfg = ServerView.ConfigForChoice(m, Settings.EngineChoice, Launcher.Dir, out message);
+            if (cfg == null) { Toast("warn", "Engine choice refused", message, 8000); return; }
+            Launcher.EngineConfig = cfg;
             ThreadPool.QueueUserWorkItem(delegate { Launcher.Start(m, mode, idle); });
         }
 
@@ -410,6 +417,10 @@ namespace StrataHome
             ModelEntry m = SelectedModel;
             string mode = Settings.Mode;
             int idle = Settings.IdleMinutes;
+            string message;
+            string cfg = ServerView.ConfigForChoice(m, Settings.EngineChoice, Launcher.Dir, out message);
+            if (cfg == null) { Toast("warn", "Engine choice refused", message, 8000); return; }
+            Launcher.EngineConfig = cfg;
             ThreadPool.QueueUserWorkItem(delegate { Launcher.Stop(); Launcher.Start(m, mode, idle); });
         }
 
@@ -518,12 +529,15 @@ namespace StrataHome
         public void ExitApp()
         {
             if (Updater.Busy) { Toast("warn", "Strata is updating", "Wait for the update to finish before exiting.", 5000); return; }
+            if (SelfUpdater.Busy) { Toast("warn", "StrataHome is downloading", "Wait for the download to finish before exiting.", 5000); return; }
             exiting = true;
             SaveSettings();
             Metrics.Stop();
             if (tray != null) tray.Dispose();
             Launcher.KeepRunning = Settings.KeepRunning;
             Launcher.Dispose();
+            SelfUpdater.SwapOnExit();      // a running exe cannot replace itself: the helper waits for this app to close
+            if (SelfUpdater.ExitMarker.Length > 0) { try { System.IO.File.Delete(SelfUpdater.ExitMarker); } catch { } }
             Application.Current.Shutdown();
         }
 
@@ -552,6 +566,7 @@ namespace StrataHome
             {
                 Tick();
                 if (Opt.ScrollY > 0 && tab == "about") About.ScrollTo(Opt.ScrollY);
+                if (Opt.ScrollY > 0 && tab == "monitor") Monitor.ScrollTo(Opt.ScrollY);
                 Server.Redact();
                 Chat.Redact();
                 DispatcherTimer settle = new DispatcherTimer();

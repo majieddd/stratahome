@@ -22,9 +22,12 @@ namespace StrataHome
 
         Ellipse dot;
         TextBlock stateText, detailText, folderText, uptimeText, endpointText;
-        Button btnStart, btnStop, btnRestart, btnGpu, btnCheck, btnUpdate, changeFolder;
-        TextBlock updateStatus;
-        ToggleButton tUpdate;
+        Button btnStart, btnStop, btnRestart, btnGpu, btnCheck, btnUpdate, btnSelfCheck, btnSelfUpdate, changeFolder;
+        TextBlock updateStatus, selfStatus;
+        ToggleButton tUpdate, tSelfUpdate;
+        StackPanel engineRows;
+        TextBlock engineStatus;
+        readonly List<RadioButton> engineRadioRows = new List<RadioButton>();
         StackPanel modelRows;
         readonly List<RadioButton> modeRows = new List<RadioButton>();
         TextBox idleBox;
@@ -50,6 +53,7 @@ namespace StrataHome
             col.Margin = new Thickness(24);
             col.Children.Add(Spaced(BuildStatus()));
             col.Children.Add(Spaced(BuildModel()));
+            col.Children.Add(Spaced(BuildEngine()));
             col.Children.Add(Spaced(BuildNetwork()));
             col.Children.Add(Spaced(BuildOptions()));
             col.Children.Add(Spaced(BuildUpdates()));
@@ -166,6 +170,95 @@ namespace StrataHome
             idleRow.Children.Add(Ui.At(b2, 0, 2));
             sp.Children.Add(idleRow);
             return Ui.Card(sp);
+        }
+
+        // ------------------------------------------------------------------ which Strata engine build to run
+
+        FrameworkElement BuildEngine()
+        {
+            StackPanel sp = new StackPanel();
+            sp.Children.Add(Ui.Text("Strata engine", 16, "StInk", "bold"));
+            TextBlock note = Ui.Text("Run a previous Strata build when the newer one is slower for you. Each row shows the prefill and decode averages that build earned. Applies the next time Strata starts.", 13, "StInkMuted", "regular", true);
+            note.Margin = new Thickness(0, 6, 0, 10);
+            sp.Children.Add(note);
+            engineRows = new StackPanel();
+            sp.Children.Add(engineRows);
+            engineStatus = Ui.Text("", 12, "StInkMuted", "regular", true);
+            engineStatus.Margin = new Thickness(0, 10, 0, 0);
+            sp.Children.Add(engineStatus);
+            RefreshEngine();
+            return Ui.Card(sp);
+        }
+
+        /// <summary>Rebuild the rows from the engine builds the install has, newest first.</summary>
+        public void RefreshEngine()
+        {
+            if (engineRows == null) return;
+            engineRows.Children.Clear();
+            engineRadioRows.Clear();
+            List<EngineBuild> builds = EngineBuilds.List(w.Launcher.Dir);
+            if (builds.Count == 0)
+            {
+                engineStatus.Text = "No engine builds found in the Strata folder.";
+                return;
+            }
+            bool wasBuilding = building;
+            building = true;
+            for (int i = 0; i < builds.Count; i++)
+            {
+                EngineBuild b = builds[i];
+                string key = b.IsCurrent ? "current" : b.Version;
+                RadioButton r = new RadioButton();
+                r.Style = Ui.Style("StRadioRow");
+                r.GroupName = "engine";
+                r.Tag = key;
+                StackPanel c = new StackPanel();
+                string label = b.Name + (b.IsCurrent ? "  (installed)" : "  (kept from before the last update)");
+                c.Children.Add(Ui.Text(label, 14, "StInk", "bold"));
+                PerfSummary s = b.Averages;
+                string perf = s == null ? "no requests recorded for this version yet"
+                    : "prefill " + Fmt.N(s.PrefillTokS) + " tok/s, decode " + Fmt.N(s.DecodeTokS) + " tok/s over " + Fmt.N(s.Requests) + " requests";
+                TextBlock p = Ui.Text(perf, 12, "StInkMuted", "regular", true);
+                c.Children.Add(p);
+                r.Content = c;
+                r.Margin = new Thickness(0, 0, 0, 8);
+                r.IsChecked = w.Settings.EngineChoice == key;
+                string captured = key;
+                r.Checked += delegate
+                {
+                    if (building) return;
+                    w.Settings.EngineChoice = captured;
+                    w.SaveSettings();
+                    w.Toast("success", "Strata engine set to " + captured, "Applies the next time Strata starts.", 6000);
+                };
+                engineRadioRows.Add(r);
+                engineRows.Children.Add(r);
+            }
+            building = wasBuilding;
+            EngineBuild chosen = Find(w.Settings.EngineChoice, builds);
+            engineStatus.Text = chosen == null
+                ? "The saved choice (" + w.Settings.EngineChoice + ") is not in this folder. Using the installed engine."
+                : "Running " + chosen.Name + ". The model's own config file is never rewritten: a chosen older build runs from a copy in %APPDATA%\\StrataHome\\engine-configs.";
+        }
+
+        static EngineBuild Find(string choice, List<EngineBuild> builds)
+        {
+            foreach (EngineBuild b in builds)
+                if (b.IsCurrent && choice == "current") return b;
+            foreach (EngineBuild b in builds) if (b.Version == choice) return b;
+            return null;
+        }
+
+        /// <summary>The config to launch the selected model with, for the saved engine choice. Null with a message
+        /// when a derived config cannot be written.</summary>
+        public static string ConfigForChoice(ModelEntry model, string choice, string dir, out string message)
+        {
+            message = "";
+            if (model == null || model.Mock) return model == null ? "" : model.ConfigPath;
+            List<EngineBuild> builds = EngineBuilds.List(dir);
+            EngineBuild chosen = Find(choice, builds);
+            if (chosen == null || chosen.IsCurrent) return model.ConfigPath;
+            return EngineBuilds.WriteVariant(model.ConfigPath, chosen.Exe, out message);
         }
 
         // ------------------------------------------------------------------ network
@@ -391,7 +484,23 @@ namespace StrataHome
             btnUpdate.Margin = new Thickness(10, 0, 0, 0);
             buttons.Children.Add(btnCheck); buttons.Children.Add(btnUpdate);
             sp.Children.Add(buttons);
-            sp.Children.Add(Ui.Text("Keeps your models and settings. A recovery copy is saved before each update. This updates Strata; launcher updates are available on StrataHome's release page.", 12, "StInkMuted", "regular", true));
+            sp.Children.Add(Ui.Text("Keeps your models and settings. A recovery copy is saved before each update. This updates Strata; launcher updates are in the card below.", 12, "StInkMuted", "regular", true));
+
+            // the launcher updates itself the same way, from StrataHome's own GitHub releases
+            sp.Children.Add(new Border { Height = 1, Margin = new Thickness(0, 24, 0, 16), BorderThickness = new Thickness(0, 1, 0, 0) });
+            sp.Children.Add(Ui.Text("StrataHome updates", 16, "StInk", "bold"));
+            tSelfUpdate = Ui.Toggle(w.Settings.AutoUpdateLauncher, delegate(bool on) { w.Settings.AutoUpdateLauncher = on; w.SaveSettings(); });
+            sp.Children.Add(Row("Automatically check StrataHome", "Checks StrataHome's releases on startup and every six hours. Nothing is installed while Strata is serving a request, and the new file is put in when this app quits.", tSelfUpdate));
+            selfStatus = Ui.Text(w.SelfUpdater.Status, 13, "StInkSoft", "regular", true);
+            selfStatus.Margin = new Thickness(0, 16, 0, 12);
+            sp.Children.Add(selfStatus);
+            StackPanel selfButtons = new StackPanel { Orientation = Orientation.Horizontal };
+            btnSelfCheck = Ui.Btn("secondary", "Check now", null, delegate { w.SelfUpdater.CheckNow(); });
+            btnSelfUpdate = Ui.Btn("primary", "Update StrataHome", null, delegate { w.SelfUpdater.UpdateNow(); });
+            btnSelfUpdate.Margin = new Thickness(10, 0, 0, 0);
+            selfButtons.Children.Add(btnSelfCheck); selfButtons.Children.Add(btnSelfUpdate);
+            sp.Children.Add(selfButtons);
+            sp.Children.Add(Ui.Text("Version " + LauncherUpdater.CurrentVersion + ". The download's SHA-256 is checked against the release before anything is staged; the version you had is kept in updates\\launcher-before-<version> so it can be put back. Use Exit to install a staged update.", 12, "StInkMuted", "regular", true));
             return Ui.Card(sp);
         }
 
@@ -432,6 +541,31 @@ namespace StrataHome
 
         public int ModelRowCount { get { return modelRows.Children.Count; } }
         public bool UpdateControlsPresent { get { return btnCheck != null && btnUpdate != null && tUpdate != null && updateStatus != null; } }
+        public bool SelfControlsPresent { get { return btnSelfCheck != null && btnSelfUpdate != null && tSelfUpdate != null && selfStatus != null; } }
+        public bool EngineControlsPresent { get { return engineRows != null && engineStatus != null && engineRadioRows.Count > 0; } }
+        public int EngineRowCountForTest { get { return engineRadioRows.Count; } }
+        public string EngineCheckedForTest
+        {
+            get
+            {
+                foreach (RadioButton r in engineRadioRows) if (r.IsChecked == true) return Convert.ToString(r.Tag);
+                return "";
+            }
+        }
+        public void CheckEngineForTest(string key)
+        {
+            foreach (RadioButton r in engineRadioRows) if (Convert.ToString(r.Tag) == key) { r.IsChecked = true; return; }
+        }
+        public string EngineStatusForTest { get { return engineStatus.Text; } }
+        /// <summary>The key of a row that is not the installed build, or "" when there is only one.</summary>
+        public string EngineOtherKeyForTest
+        {
+            get
+            {
+                foreach (RadioButton r in engineRadioRows) if (Convert.ToString(r.Tag) != "current") return Convert.ToString(r.Tag);
+                return "";
+            }
+        }
         public bool NetworkControlsPresent { get { return tShare != null && tKey != null && keyBox != null && btnFirewall != null && btnGen != null && btnCopyKey != null; } }
         public bool SharePanelVisibleForTest { get { return sharePanel.Visibility == Visibility.Visible; } }
         public bool KeyRowVisibleForTest { get { return keyRow.Visibility == Visibility.Visible; } }
@@ -439,6 +573,7 @@ namespace StrataHome
         public void ShareForTest(bool on) { ShareToggled(on); }
         public void KeyForTest(bool on) { KeyToggled(on); }
         public Button UpdateButtonForTest { get { return btnUpdate; } }
+        public Button SelfUpdateButtonForTest { get { return btnSelfUpdate; } }
         public bool UpdateControlsLocked { get { return !btnStart.IsEnabled && !btnStop.IsEnabled && !btnRestart.IsEnabled && !btnGpu.IsEnabled && !changeFolder.IsEnabled && !btnCheck.IsEnabled && !btnUpdate.IsEnabled; } }
 
         public void AppendLog(string s)
@@ -532,6 +667,14 @@ namespace StrataHome
             btnUpdate.Content = updating ? "Updating..." : w.Updater.Checking ? "Checking..." : w.Updater.ManualRequested ? "Waiting for idle..." : !w.Updater.Available && w.Updater.Latest.Length > 0 ? "Up to date" : "Update now";
             btnUpdate.ToolTip = "Recheck official releases and install a newer version when Strata is idle.";
             updateStatus.Text = w.Updater.Status;
+            selfStatus.Text = w.SelfUpdater.Status;
+            btnSelfCheck.IsEnabled = !w.SelfUpdater.Busy && !w.SelfUpdater.Checking;
+            btnSelfUpdate.IsEnabled = !w.SelfUpdater.Busy && !w.SelfUpdater.Checking;
+            btnSelfUpdate.Content = w.SelfUpdater.Busy ? "Downloading..." : w.SelfUpdater.Staged ? "Installed on Exit" : w.SelfUpdater.Available ? "Update StrataHome" : w.SelfUpdater.Latest.Length > 0 ? "Up to date" : "Update StrataHome";
+            btnSelfUpdate.ToolTip = "Download the release and verify its SHA-256. The new file is put in when this app quits.";
+            tSelfUpdate.IsEnabled = !w.SelfUpdater.Busy;
+            foreach (RadioButton r in engineRadioRows) r.IsEnabled = !active;
+            RefreshEngine();
             btnGpu.Content = l.Loaded ? "Free GPU" : "Load now";
             foreach (UIElement u in modelRows.Children) u.IsEnabled = !active;
             foreach (RadioButton r in modeRows) r.IsEnabled = !active;

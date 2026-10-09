@@ -170,6 +170,43 @@ namespace StrataHome
                 try { w.Updater.Busy = true; w.Server.RefreshState(); return w.Server.UpdateControlsLocked ? null : "a server action is enabled during an update"; }
                 finally { w.Updater.Busy = false; w.Server.RefreshState(); }
             });
+            Func<string, string> originalCheck = w.Updater.CheckRelease;
+            int updateChecks = 0, updateToasts = 0;
+            Add("server: Update now rechecks even when already current", delegate
+            {
+                w.Updater.CheckRelease = delegate(string dir)
+                {
+                    System.Threading.Thread.Sleep(150);
+                    System.Threading.Interlocked.Increment(ref updateChecks);
+                    return "{\"installed\":\"0.1.41\",\"latest\":\"v0.1.41\",\"available\":false}";
+                };
+                w.Updater.Available = false; w.Updater.Latest = "v0.1.41";
+                w.Server.RefreshState(); updateToasts = w.ToastCount;
+                w.Server.UpdateButtonForTest.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                w.Server.UpdateButtonForTest.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }, delegate { return !w.Updater.Checking && updateChecks > 0; }, 5000, delegate
+            {
+                if (updateChecks != 1) return "repeated clicks started " + updateChecks + " checks";
+                if (w.Updater.Status.IndexOf("Installed: 0.1.41. Latest: v0.1.41.") < 0) return "installed/latest versions are missing";
+                if (w.ToastCount <= updateToasts) return "no visible result was shown";
+                return null;
+            });
+            Add("server: current-version button stays usable and says Up to date", delegate
+            {
+                return w.Server.UpdateButtonForTest.IsEnabled && (string)w.Server.UpdateButtonForTest.Content == "Up to date" ? null : "button is disabled or has an unclear label";
+            });
+            Add("server: queued manual update disables repeated clicks", delegate
+            {
+                w.Updater.Available = true;
+                w.Updater.UpdateNow(); w.Updater.UpdateNow();
+                return w.Updater.ManualRequested && !w.Server.UpdateButtonForTest.IsEnabled && (string)w.Server.UpdateButtonForTest.Content == "Waiting for idle..." ? null : "queued state is unclear or accepts repeated clicks";
+            });
+            Add("server: restore the release checker after updater UI tests", delegate { w.Updater.CheckNow(); },
+                delegate { return !w.Updater.Checking; }, 5000, delegate
+                {
+                    w.Updater.CheckRelease = originalCheck;
+                    return !w.Updater.ManualRequested && !w.Updater.Available ? null : "manual request was not cleared when no update exists";
+                });
             if (w.Opt.UiSmoke) return;
             bool live = w.Launcher.State == RunState.Ready || w.Launcher.State == RunState.External || w.Launcher.State == RunState.Unloaded;
             if (!live) { log.AppendLine("SKIP  the chat and server tests need a running Strata (state: " + w.Launcher.State + ")"); return; }

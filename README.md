@@ -62,7 +62,7 @@ Chat uses localhost. Update checks and downloads contact official Strata release
 
 ## Automatic Strata updates
 
-Version 0.3.0 adds **Server > Strata updates**. It checks official stable releases on startup and every six hours while the app runs, verifies downloads, saves a recovery copy, and applies updates after 30 seconds without requests. It restarts the same model with the same context and memory mode. Use **Check now**, **Update now**, or switch automatic updates off there. See [how updates and recovery work](UPDATING.md).
+Use **Server > Strata updates** in version 0.3.1. It checks official stable releases on startup and every six hours while the app runs, verifies downloads, saves a recovery copy, and applies updates after 30 seconds without requests. It restarts the same model with the same context and memory mode. **Update now** rechecks the release even when already current and shows the installed and latest versions. Manual updates start as soon as Strata is idle; automatic updates keep the 30-second quiet period. You can switch automatic updates off there. See [how updates and recovery work](UPDATING.md).
 
 ## Install
 

@@ -1,6 +1,6 @@
 # Updating Strata from StrataHome
 
-StrataHome 0.3.0 adds **Server > Strata updates**. Automatic updates are enabled by default and can be switched off there. **Check now** and **Update now** work with automatic updates switched off.
+StrataHome 0.3.1 includes **Server > Strata updates**. Automatic updates are enabled by default and can be switched off there. **Check now** and **Update now** work with automatic updates switched off. Update now rechecks official releases even if the last check found no update, and shows the installed and latest versions. The button says **Up to date** when current and remains usable to check again. Manual updates start as soon as Strata is idle; only automatic updates wait for the 30-second quiet period. Repeated clicks cannot restart the wait.
 
 While StrataHome is running, it checks the official `Niko1221/Strata` stable releases on startup and every six hours. It installs a newer release after 30 seconds without requests, then starts the same model with the same memory mode. Reading, generation, queued requests, model loading and missing or stale metrics defer the update. A stopped server stays stopped. A server started outside StrataHome is only updated when you select **Update now**; automatic updates wait until StrataHome owns it.
 

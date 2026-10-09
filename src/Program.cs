@@ -9,8 +9,8 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("StrataHome")]
 [assembly: AssemblyDescription("An unofficial tray launcher for Strata, with its own window in the look of the Strata web app.")]
 [assembly: AssemblyProduct("StrataHome")]
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
+[assembly: AssemblyVersion("0.3.1.0")]
+[assembly: AssemblyFileVersion("0.3.1.0")]
 
 namespace StrataHome
 {

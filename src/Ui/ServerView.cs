@@ -208,7 +208,7 @@ namespace StrataHome
             StackPanel sp = new StackPanel();
             sp.Children.Add(Ui.Text("Strata updates", 16, "StInk", "bold"));
             tUpdate = Ui.Toggle(w.Settings.AutoUpdateStrata, delegate(bool on) { w.Settings.AutoUpdateStrata = on; w.SaveSettings(); });
-            sp.Children.Add(Row("Automatically update Strata", "Checks official stable releases on startup and every six hours while this app runs. Installs after 30 seconds without requests, then restarts the same model.", tUpdate));
+            sp.Children.Add(Row("Automatically update Strata", "Checks official stable releases on startup and every six hours while this app runs. Automatic updates wait for 30 seconds without requests. Update now installs as soon as Strata is idle.", tUpdate));
             updateStatus = Ui.Text(w.Updater.Status, 13, "StInkSoft", "regular", true);
             updateStatus.Margin = new Thickness(0, 16, 0, 12);
             sp.Children.Add(updateStatus);
@@ -259,6 +259,7 @@ namespace StrataHome
 
         public int ModelRowCount { get { return modelRows.Children.Count; } }
         public bool UpdateControlsPresent { get { return btnCheck != null && btnUpdate != null && tUpdate != null && updateStatus != null; } }
+        public Button UpdateButtonForTest { get { return btnUpdate; } }
         public bool UpdateControlsLocked { get { return !btnStart.IsEnabled && !btnStop.IsEnabled && !btnRestart.IsEnabled && !btnGpu.IsEnabled && !changeFolder.IsEnabled && !btnCheck.IsEnabled && !btnUpdate.IsEnabled; } }
 
         public void AppendLog(string s)
@@ -341,7 +342,9 @@ namespace StrataHome
             tKeep.IsEnabled = !updating;
             tUpdate.IsEnabled = !updating;
             btnCheck.IsEnabled = !updating && !w.Updater.Checking;
-            btnUpdate.IsEnabled = !updating && !w.Updater.Checking && w.Updater.Available;
+            btnUpdate.IsEnabled = !updating && !w.Updater.Checking && !w.Updater.ManualRequested;
+            btnUpdate.Content = updating ? "Updating..." : w.Updater.Checking ? "Checking..." : w.Updater.ManualRequested ? "Waiting for idle..." : !w.Updater.Available && w.Updater.Latest.Length > 0 ? "Up to date" : "Update now";
+            btnUpdate.ToolTip = "Recheck official releases and install a newer version when Strata is idle.";
             updateStatus.Text = w.Updater.Status;
             btnGpu.Content = l.Loaded ? "Free GPU" : "Load now";
             foreach (UIElement u in modelRows.Children) u.IsEnabled = !active;

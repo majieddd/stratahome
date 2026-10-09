@@ -21,7 +21,9 @@ namespace StrataHome
 
         Ellipse dot;
         TextBlock stateText, detailText, folderText, uptimeText, endpointText;
-        Button btnStart, btnStop, btnRestart, btnGpu;
+        Button btnStart, btnStop, btnRestart, btnGpu, btnCheck, btnUpdate, changeFolder;
+        TextBlock updateStatus;
+        ToggleButton tUpdate;
         StackPanel modelRows;
         readonly List<RadioButton> modeRows = new List<RadioButton>();
         TextBox idleBox;
@@ -42,6 +44,7 @@ namespace StrataHome
             col.Children.Add(Spaced(BuildStatus()));
             col.Children.Add(Spaced(BuildModel()));
             col.Children.Add(Spaced(BuildOptions()));
+            col.Children.Add(Spaced(BuildUpdates()));
             col.Children.Add(BuildLog());
             sv.Content = col;
             Root = sv;
@@ -179,7 +182,7 @@ namespace StrataHome
             folderText.TextTrimming = TextTrimming.CharacterEllipsis;
             ft.Children.Add(folderText);
             f.Children.Add(Ui.At(ft, 0, 0));
-            Button change = Ui.Btn("secondary", "Change...", null, delegate { PickFolder(); });
+            Button change = changeFolder = Ui.Btn("secondary", "Change...", null, delegate { PickFolder(); });
             change.Height = 36; change.Margin = new Thickness(12, 0, 0, 0);
             f.Children.Add(Ui.At(change, 0, 1));
             sp.Children.Add(f);
@@ -198,6 +201,25 @@ namespace StrataHome
             t.VerticalAlignment = VerticalAlignment.Center;
             g.Children.Add(Ui.At(t, 0, 1));
             return g;
+        }
+
+        FrameworkElement BuildUpdates()
+        {
+            StackPanel sp = new StackPanel();
+            sp.Children.Add(Ui.Text("Strata updates", 16, "StInk", "bold"));
+            tUpdate = Ui.Toggle(w.Settings.AutoUpdateStrata, delegate(bool on) { w.Settings.AutoUpdateStrata = on; w.SaveSettings(); });
+            sp.Children.Add(Row("Automatically update Strata", "Checks official stable releases on startup and every six hours while this app runs. Installs after 30 seconds without requests, then restarts the same model.", tUpdate));
+            updateStatus = Ui.Text(w.Updater.Status, 13, "StInkSoft", "regular", true);
+            updateStatus.Margin = new Thickness(0, 16, 0, 12);
+            sp.Children.Add(updateStatus);
+            StackPanel buttons = new StackPanel { Orientation = Orientation.Horizontal };
+            btnCheck = Ui.Btn("secondary", "Check now", null, delegate { w.Updater.CheckNow(); });
+            btnUpdate = Ui.Btn("primary", "Update now", null, delegate { w.Updater.UpdateNow(); });
+            btnUpdate.Margin = new Thickness(10, 0, 0, 0);
+            buttons.Children.Add(btnCheck); buttons.Children.Add(btnUpdate);
+            sp.Children.Add(buttons);
+            sp.Children.Add(Ui.Text("Keeps your models and settings. A recovery copy is saved before each update. This updates Strata; launcher updates are available on StrataHome's release page.", 12, "StInkMuted", "regular", true));
+            return Ui.Card(sp);
         }
 
         // ------------------------------------------------------------------ log
@@ -236,6 +258,8 @@ namespace StrataHome
         }
 
         public int ModelRowCount { get { return modelRows.Children.Count; } }
+        public bool UpdateControlsPresent { get { return btnCheck != null && btnUpdate != null && tUpdate != null && updateStatus != null; } }
+        public bool UpdateControlsLocked { get { return !btnStart.IsEnabled && !btnStop.IsEnabled && !btnRestart.IsEnabled && !btnGpu.IsEnabled && !changeFolder.IsEnabled && !btnCheck.IsEnabled && !btnUpdate.IsEnabled; } }
 
         public void AppendLog(string s)
         {
@@ -283,6 +307,7 @@ namespace StrataHome
                 idleBox.Text = w.Settings.IdleMinutes.ToString();
                 idleRow.Visibility = w.Settings.Mode == "always" ? Visibility.Collapsed : Visibility.Visible;
                 folderText.Text = w.Launcher.Dir.Length > 0 ? w.Launcher.Dir : "not found";
+                tUpdate.IsChecked = w.Settings.AutoUpdateStrata;
                 tAuto.IsChecked = w.Settings.AutoStartServer;
                 tKeep.IsChecked = w.Settings.KeepRunning;
                 tWin.IsChecked = GetWindowsStartup();
@@ -305,12 +330,19 @@ namespace StrataHome
             detailText.Text = d;
             detailText.Visibility = string.IsNullOrEmpty(d) ? Visibility.Collapsed : Visibility.Visible;
 
-            bool active = l.IsActive;
+            bool updating = w.Updater.Busy;
+            bool active = l.IsActive || updating;
             bool ready = s == RunState.Ready || s == RunState.Unloaded || s == RunState.External;
             btnStart.IsEnabled = !active && w.Models.Count > 0;
-            btnStop.IsEnabled = active && s != RunState.Stopping;
+            btnStop.IsEnabled = active && !updating && s != RunState.Stopping;
             btnRestart.IsEnabled = btnStop.IsEnabled;
-            btnGpu.IsEnabled = ready;
+            btnGpu.IsEnabled = ready && !updating;
+            changeFolder.IsEnabled = !active && !w.Updater.Checking;
+            tKeep.IsEnabled = !updating;
+            tUpdate.IsEnabled = !updating;
+            btnCheck.IsEnabled = !updating && !w.Updater.Checking;
+            btnUpdate.IsEnabled = !updating && !w.Updater.Checking && w.Updater.Available;
+            updateStatus.Text = w.Updater.Status;
             btnGpu.Content = l.Loaded ? "Free GPU" : "Load now";
             foreach (UIElement u in modelRows.Children) u.IsEnabled = !active;
             foreach (RadioButton r in modeRows) r.IsEnabled = !active;
@@ -333,6 +365,7 @@ namespace StrataHome
 
         void PickFolder()
         {
+            if (w.Updater.Busy || w.Launcher.IsActive) return;
             using (System.Windows.Forms.FolderBrowserDialog d = new System.Windows.Forms.FolderBrowserDialog())
             {
                 d.Description = "Choose the folder where Strata is installed (it contains serve\\server.py and .venv).";

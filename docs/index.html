@@ -350,13 +350,13 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       <p class="promise">Run Strata from the Windows tray. No console window, no browser tab, no batch files.</p>
       <p class="sub">A native desktop app in the look of Strata’s web interface: streaming Chat, live Monitor, About and Server controls. Keep the tray icon; skip the browser.</p>
       <div class="cta">
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.0/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download for Windows
         </a>
         <a class="link-ink" href="https://github.com/majieddd/stratahome">View the source on GitHub</a>
       </div>
-      <p class="cta-meta">v0.2.0 &middot; 391,680 bytes &middot; Windows 10/11</p>
+      <p class="cta-meta">v0.3.0 &middot; 422,912 bytes &middot; Windows 10/11</p>
       <p class="honest">It needs an existing Strata install, and the .exe is unsigned, so Windows SmartScreen may warn you. Both are explained under <a href="#install">Install</a> and <a href="#verify">Verify</a>.</p>
     </div>
     <figure class="hero-fig">
@@ -440,7 +440,7 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
           </dd>
         </div>
         <div class="row">
-          <dt>When you exit</dt>
+          <dt>Automatic Strata updates</dt><dd><p>Enabled by default. Checks official stable releases on startup and every six hours while StrataHome runs. After 30 seconds without requests, it verifies downloads, keeps a recovery copy, updates Strata and restarts the same model. Check now and Update now are in the Server tab. <a href="https://github.com/majieddd/stratahome/blob/main/UPDATING.md">Update and recovery details</a>.</p></dd></div><div class="row"><dt>When you exit</dt>
           <dd>
             <p>Closing the window sends it to the tray. Exiting the app stops a server it started through a Windows job object, unless you choose to leave Strata running.</p>
             <p>If you want it to keep running, tick &ldquo;Leave Strata running when this app exits&rdquo;.</p>
@@ -507,7 +507,7 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
 <div class="wrap">
 <p class="kicker">Models &amp; recorded performance</p>
 <h2 id="h-models">Pick the model, then the quant.</h2>
-<p class="lede">Our installed model: <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF"><strong>Swift 1.5 GSQ-RCO IQ2_XS</strong></a>. The desktop app does not bundle or download model weights.</p>
+<p class="lede">Our installed model: <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF"><strong>Swift 1.5 GSQ-RCO IQ3_S</strong></a>. The desktop app does not bundle or download model weights.</p>
 <p class="comparison-note">Snapshot: October 8, 2026. File sizes are decimal GB, summed from the Hugging Face file inventory; GGUF totals exclude separate vision projectors and MTP drafts. Not recorded / Not located means no matching measurement was found in the reviewed sources. It does not mean zero.</p>
 <ul class="model-links">
 <li>Normal Qwen <a href="https://huggingface.co/Qwen/Qwen3.8-Flash-Next">[1]</a></li>
@@ -526,9 +526,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
 <tr><td><a href="https://huggingface.co/ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Qwen GSQ-RCO</a></td><td>IQ3_XXS</td><td>75.84</td><td>62 <a href="https://github.com/Niko1221/Strata/blob/82f46a8c8f475f001ad76d92f58f4a4f8ffb0253/docs/MODELS.md">[8]</a></td><td>0.114982 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Qwen BF16</td><td>AIME25: 100.00; GPQA-D: 91.41; LCB v6: 86.29; Task average: 92.57</td><td>Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.</td></tr>
 <tr><td><a href="https://huggingface.co/ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Qwen GSQ-RCO</a></td><td>IQ3_S</td><td>83.62</td><td>53 <a href="https://github.com/Niko1221/Strata/blob/82f46a8c8f475f001ad76d92f58f4a4f8ffb0253/docs/MODELS.md">[8]</a></td><td>0.062341 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Qwen BF16</td><td>AIME25: 100.00; GPQA-D: 92.93; LCB v6: 86.86; Task average: 93.26</td><td>Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom.</td></tr>
 <tr><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>Q2_0</td><td>66.55</td><td>Not recorded</td><td>0.234242 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
-<tr class="our-model"><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>IQ2_XS</td><td>68.15</td><td>126.0 <a href="data/local-swift-iq2-xs.txt">[local]</a></td><td>0.188117 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
+<tr><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>IQ2_XS</td><td>68.15</td><td>126.0 <a href="data/local-swift-iq2-xs.txt">[local]</a></td><td>0.188117 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 48 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
 <tr><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>IQ3_XXS</td><td>75.97</td><td>Not recorded</td><td>0.116077 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
-<tr><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>IQ3_S</td><td>83.74</td><td>Not recorded</td><td>0.062556 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
+<tr class="our-model"><td><a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF">Swift 1.5 GSQ-RCO</a></td><td>IQ3_S</td><td>83.74</td><td>Not recorded</td><td>0.062556 <a href="https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF/blob/99bb8f7f95c7aa7b24a36a7786a4f657b30f5d3d/evaluation/heldout-kld.tsv">[9]</a></td><td>English C4 prose, 100 chunks; context 512; vs Swift BF16</td><td>Quant task accuracy not reported in this source; KLD is not task accuracy.</td><td>Planning: 64 GB RAM + 12 GB+ supported GPU + SSD; cache/context/OS need headroom. Same-tier estimate; current Swift release not fit-tested here.</td></tr>
 </tbody></table></div>
 <details class="comparison-details"><summary>Standard Swift GGUF — all 27 publisher tiers</summary>
 <div class="comparison-scroll" tabindex="0" role="region" aria-label="Standard Swift GGUF — all 27 publisher tiers"><table class="comparison-table">
@@ -608,7 +608,7 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
 </tbody></table></div>
 <p class="comparison-note">Mean thinking tokens, except Terminal-Bench (total output). Xhigh, MTP disabled for the reasoning evaluation. Terminal-Bench serving conditions differ; Swift used concurrency 8 and a context-recovery fix. Quant-specific task scores are not inferred from this table. <a href="https://huggingface.co/ukisai/Swift1.5-Qwen3.8-Flash-Next">[2]</a></p>
 <details class="comparison-details" open><summary>Read before comparing KLD, speed or hardware</summary><ul class="comparison-caveats">
-<li>Our installed model is Swift 1.5 GSQ-RCO IQ2_XS. The saved Strata run reports 126.0 tok/s over 265 generated tokens (thinking included), with 128.1 tok/s during answering. Hardware: RTX 5090 Laptop 24 GB, Core Ultra 9 275HX, 64 GB RAM. This is one short run, not an average or a benchmark sweep; configured maximum context was 262144, not a measured 262K prompt. The installed weights were not hash-matched to today’s Hugging Face revision.</li>
+<li>Our installed model is Swift 1.5 GSQ-RCO IQ3_S as of October 9, 2026. The historical IQ2_XS Strata run reports 126.0 tok/s over 265 generated tokens (thinking included), with 128.1 tok/s during answering. Hardware: RTX 5090 Laptop 24 GB, Core Ultra 9 275HX, 64 GB RAM. This is one short run, not an average or a benchmark sweep; configured maximum context was 262144, not a measured 262K prompt. The installed weights were not hash-matched to today’s Hugging Face revision.</li>
 <li>Qwen GSQ-RCO speeds [8] are Strata’s recorded RTX 5070 12 GB / Ryzen 5 7600 / 64 GB RAM results. Short-chat decode uses 4K answers; Q2_0 used engine 0.1.36, the other tiers 0.1.26. Prefill uses a 32K prompt. These are not Swift measurements or promises for a different PC.</li>
 <li>KLD is divergence from a reference distribution, not percent accuracy. The GSQ rows use English C4 prose at 512 tokens; standard Swift uses WikiText-2 at 512 tokens; Unsloth’s displayed table does not specify corpus/context. Do not rank these protocols against each other. Qwen and Swift also use different BF16 references, so cross-family KLD does not establish which model is smarter.</li>
 <li>Strata capacity estimates [8]: Q2_0 / IQ2_XS normally target 48 GB RAM; IQ3_XXS / IQ3_S target 64 GB, with a supported 12 GB+ GPU and SSD. Original GSQ transformer weights are about 37.6 / 39.2 / 47.0 / 54.8 GB; the ~28.8 GB n-gram lookup can remain mapped on SSD. Swift estimates use corresponding tiers, not a verified fit test of the current release. Do not infer Swift memory residency from shard 1: Swift splits are packaged differently.</li>
@@ -639,9 +639,9 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
         <span class="n" aria-hidden="true">2</span>
         <div>
           <h3>Download StrataHome.exe and put it anywhere.</h3>
-          <p>One file, 391,680 bytes. Nothing to install.</p>
+          <p>One file, 422,912 bytes. Nothing to install.</p>
         </div>
-        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
+        <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.0/StrataHome.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
           Download
         </a>
@@ -683,11 +683,11 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       </div>
     </div>
     <dl class="manifest">
-      <div class="m sha"><dt>SHA-256</dt><dd>98b82d7210fb8defd7fce8f6b15eec9b8b11b055879ed4326df31c6854163bb8<small>For StrataHome.exe v0.2.0.</small></dd></div>
-      <div class="m"><dt>Size</dt><dd>391,680 bytes, a single .exe</dd></div>
+      <div class="m sha"><dt>SHA-256</dt><dd>e865ade4ca79e2ac33df964c2f967520789aedbc1b6e21c124b80f232de6142c<small>For StrataHome.exe v0.3.0.</small></dd></div>
+      <div class="m"><dt>Size</dt><dd>422,912 bytes, a single .exe</dd></div>
       <div class="m"><dt>Memory</dt><dd>WPF desktop window; closing to the tray trims its working set</dd></div>
-      <div class="m"><dt>Network</dt><dd>none except localhost, no telemetry</dd></div>
-      <div class="m"><dt>Checks</dt><dd>14 lifecycle checks and 28 UI checks<small>Run <code>StrataHome.exe --selftest</code> and <code>StrataHome.exe --instance test --uitest</code>. The separate <code>--uitest-restart</code> adds four context save/restart/restore checks and restarts Strata twice.</small></dd></div>
+      <div class="m"><dt>Network</dt><dd>localhost chat; GitHub updates and dependency downloads; no telemetry</dd></div>
+      <div class="m"><dt>Checks</dt><dd>14 lifecycle, 11 updater recovery and 12 idle-policy checks<small>Run <code>StrataHome.exe --updater-selftest</code>, <code>StrataHome.exe --selftest</code> and <code>StrataHome.exe --instance test --uitest</code>. The separate <code>--uitest-restart</code> adds four context save/restart/restore checks and restarts Strata twice.</small></dd></div>
       <div class="m"><dt>Build</dt><dd><code>build.cmd</code>, using the C# compiler that ships with Windows, no SDK</dd></div>
       <div class="m"><dt>Source</dt><dd><a href="https://github.com/majieddd/stratahome">github.com/majieddd/stratahome</a></dd></div>
     </dl>
@@ -707,7 +707,7 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
       </div>
       <div>
         <h3>Does it send data anywhere?</h3>
-        <p>No. It makes no network connections except to localhost, and it sends no telemetry. The source is public, and you can build it yourself.</p>
+        <p>Chat content stays on localhost. Automatic updates contact official Strata releases on GitHub and install Python dependencies. StrataHome sends no telemetry or chat content to those services. Automatic updates can be turned off in Server.</p>
       </div>
       <div>
         <h3>What happens when I close it?</h3>
@@ -729,10 +729,10 @@ table.modes{width:100%;border-collapse:collapse;margin-top:48px}
   <div class="wrap">
     <div class="foot-cta">
       <div>
-        <h2>Get StrataHome v0.2.0</h2>
-        <p class="cta-meta">391,680 bytes &middot; Windows 10/11 &middot; needs an existing Strata install</p>
+        <h2>Get StrataHome v0.3.0</h2>
+        <p class="cta-meta">422,912 bytes &middot; Windows 10/11 &middot; needs an existing Strata install</p>
       </div>
-      <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.2.0/StrataHome.exe">
+      <a class="btn" href="https://github.com/majieddd/stratahome/releases/download/v0.3.0/StrataHome.exe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6.5 10 12 15.5 17.5 10M4 20h16"/></svg>
         Download for Windows
       </a>

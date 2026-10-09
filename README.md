@@ -1,17 +1,17 @@
 # StrataHome
 
-**An unofficial desktop app for [Strata](https://github.com/Niko1221/Strata).** It starts Strata's local model server without a console window and without a browser tab, and gives you a native window that looks and works like Strata's own web app: Chat, a live Monitor with all the meters, an About page, and the server controls. You do not need a browser for anything.
+**An unofficial desktop app for [Strata](https://github.com/Niko1221/Strata).** It starts Strata's local model server without a console window and without a browser tab, and gives you a native window that looks and works like Strata's own web app: Chat, a live Monitor with all the meters, an About page, and server controls with automatic Strata updates. You do not need a browser for anything.
 
 ![The Monitor tab: model state, speed, GPU load, VRAM, temperature, power, PCIe, CPU, disk, context fill and recent requests](assets/shot-monitor.png)
 
-- **Download:** [StrataHome.exe](https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe) (about 370 KB, Windows 10/11)
+- **Download:** [StrataHome.exe](https://github.com/majieddd/stratahome/releases/latest/download/StrataHome.exe) (about 425 KB, Windows 10/11)
 - **Page:** https://majieddd.github.io/stratahome/
 - **Not affiliated with Strata or its author.** Strata is MIT-licensed; the models it runs have their own licences.
 
 <!-- BEGIN MODEL COMPARISON -->
 ## Models, quantizations and recorded speeds
 
-**Our installed model:** [Swift 1.5 GSQ-RCO IQ2_XS](https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF).
+**Our installed model:** [Swift 1.5 GSQ-RCO IQ3_S](https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF).
 
 Snapshot: October 8, 2026. File sizes are decimal GB, summed from the Hugging Face file inventory; GGUF totals exclude separate vision projectors and MTP drafts. Not recorded / Not located means no matching measurement was found in the reviewed sources. It does not mean zero.
 
@@ -58,11 +58,15 @@ Light and dark themes, the Outfit font and the emerald accent are taken from Str
 | **Light on resources** | With the window open it uses about 150 MB of RAM. Closed to the tray it gives memory back to Windows (about 15 MB resident, measured) and asks the server for its state every 5 seconds instead of every second. |
 | **Start with Windows** | Optional, off by default. Starts minimized to the tray. |
 
-It makes **no network connections except to localhost** and sends no telemetry.
+Chat uses localhost. Update checks and downloads contact official Strata releases on GitHub; Strata's updater also installs Python dependencies. StrataHome sends no telemetry or chat content to those services.
+
+## Automatic Strata updates
+
+Version 0.3.0 adds **Server > Strata updates**. It checks official stable releases on startup and every six hours while the app runs, verifies downloads, saves a recovery copy, and applies updates after 30 seconds without requests. It restarts the same model with the same context and memory mode. Use **Check now**, **Update now**, or switch automatic updates off there. See [how updates and recovery work](UPDATING.md).
 
 ## Install
 
-1. Install Strata once with its own `START-HERE.bat` (StrataHome does not download Strata or any model).
+1. Install Strata once with its own `START-HERE.bat` (StrataHome needs an existing install and does not download model weights).
 2. Download `StrataHome.exe` from the [latest release](https://github.com/majieddd/stratahome/releases/latest) and put it anywhere.
 3. Run it. It looks for Strata in the usual places; if it cannot find it, open the **Server** tab, click **Change...** and pick the folder that contains `serve\server.py`.
 
@@ -102,6 +106,7 @@ Other flags: `--minimized` (start in the tray), `--no-start` (do not start Strat
 |---|---|
 | Settings (including the API key, if you set one) | `%APPDATA%\StrataHome\settings.json` |
 | Chat | `%APPDATA%\StrataHome\chat.json` |
+| Update recovery copies | `%LOCALAPPDATA%\StrataHome\updates\backups\` |
 | Logs (last five runs, plus `app.log`) | `%LOCALAPPDATA%\StrataHome\logs\` |
 | Font copies (WPF loads fonts from files) | `%LOCALAPPDATA%\StrataHome\fonts\` |
 | Start with Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `StrataHome` (only if you tick the box) |

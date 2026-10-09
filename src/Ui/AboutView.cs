@@ -210,6 +210,7 @@ namespace StrataHome
 
         void ApplyContext(bool restart)
         {
+            if (w.Updater.Busy) return;
             ModelEntry m = w.SelectedModel;
             int pick = PickedContext();
             if (m == null || pick <= 0) return;

@@ -164,6 +164,13 @@ namespace StrataHome
             });
 
             // ---- the live server
+            Add("server: update status, toggle and buttons exist", delegate { return w.Server.UpdateControlsPresent ? null : "missing update controls"; });
+            Add("server: update locks conflicting actions", delegate
+            {
+                try { w.Updater.Busy = true; w.Server.RefreshState(); return w.Server.UpdateControlsLocked ? null : "a server action is enabled during an update"; }
+                finally { w.Updater.Busy = false; w.Server.RefreshState(); }
+            });
+            if (w.Opt.UiSmoke) return;
             bool live = w.Launcher.State == RunState.Ready || w.Launcher.State == RunState.External || w.Launcher.State == RunState.Unloaded;
             if (!live) { log.AppendLine("SKIP  the chat and server tests need a running Strata (state: " + w.Launcher.State + ")"); return; }
             Add("about page fills in from the running server", delegate { w.ShowTab("about"); }, delegate { return w.About.ConfigFieldCount > 0; }, 8000, delegate { return null; });

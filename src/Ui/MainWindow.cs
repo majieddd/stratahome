@@ -18,6 +18,7 @@ namespace StrataHome
     internal sealed class Options
     {
         public bool Minimized, NoStart, Drawer, UiTest, RestartTest;       // RestartTest: --uitest-restart also changes the context and restarts the server twice
+        public bool UiSmoke;
         public double WidthPx, HeightPx;
         public string Mode, ScreenshotPath, Tab, ThemeName, Prompt;
         public int IdleMinutes;
@@ -35,6 +36,7 @@ namespace StrataHome
         public readonly Settings Settings = Settings.Load();
         public readonly MetricsPoller Metrics = new MetricsPoller();
         public readonly Options Opt;
+        public readonly StrataUpdater Updater;
         public List<ModelEntry> Models = new List<ModelEntry>();
         public ModelEntry SelectedModel;
 
@@ -59,6 +61,7 @@ namespace StrataHome
         public MainWindow(Options opt)
         {
             Opt = opt;
+            Updater = new StrataUpdater(this);
             if (opt.Mode == "always" || opt.Mode == "idle" || opt.Mode == "ondemand") Settings.Mode = opt.Mode;
             if (opt.IdleMinutes > 0) Settings.IdleMinutes = Math.Min(1440, opt.IdleMinutes);
             Paths.Diag("settings in effect: mode " + Settings.Mode + ", idle " + Settings.IdleMinutes + " min, auto-start " + Settings.AutoStartServer);
@@ -347,6 +350,7 @@ namespace StrataHome
             }
             if (sb != null) Server.AppendLog(sb.ToString());
             Server.UpdateUptime();
+            Updater.Tick();
         }
 
         // ------------------------------------------------------------------ install + settings
@@ -383,6 +387,7 @@ namespace StrataHome
 
         public void StartServer()
         {
+            if (Updater.Busy) return;
             SaveSettings();
             ModelEntry m = SelectedModel;
             string mode = Settings.Mode;
@@ -390,10 +395,11 @@ namespace StrataHome
             ThreadPool.QueueUserWorkItem(delegate { Launcher.Start(m, mode, idle); });
         }
 
-        public void StopServer() { ThreadPool.QueueUserWorkItem(delegate { Launcher.Stop(); }); }
+        public void StopServer() { if (Updater.Busy) return; ThreadPool.QueueUserWorkItem(delegate { Launcher.Stop(); }); }
 
         public void RestartServer()
         {
+            if (Updater.Busy) return;
             SaveSettings();
             ModelEntry m = SelectedModel;
             string mode = Settings.Mode;
@@ -403,6 +409,7 @@ namespace StrataHome
 
         public void GpuToggle()
         {
+            if (Updater.Busy) return;
             bool unload = Launcher.Loaded;
             ThreadPool.QueueUserWorkItem(delegate
             {
@@ -504,6 +511,7 @@ namespace StrataHome
 
         public void ExitApp()
         {
+            if (Updater.Busy) { Toast("warn", "Strata is updating", "Wait for the update to finish before exiting.", 5000); return; }
             exiting = true;
             SaveSettings();
             Metrics.Stop();

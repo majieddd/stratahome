@@ -1,0 +1,22 @@
+name: Build and updater checks
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m unittest discover -s tools -p test_strata_update.py -v
+      - run: .\build.cmd
+      - name: Check idle policy
+        shell: pwsh
+        run: |
+          $testProcess = Start-Process .\dist\StrataHome.exe -ArgumentList '--updater-selftest' -Wait -PassThru -WindowStyle Hidden
+          Get-Content "$env:LOCALAPPDATA\StrataHome\logs\updater-test.txt"
+          exit $testProcess.ExitCode
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StrataHome
+          path: dist/StrataHome.exe

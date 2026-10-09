@@ -20,6 +20,7 @@ if /i "%~1"=="dev" if not exist dist\dev mkdir dist\dev
   /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Xaml.dll ^
   /r:System.Web.Extensions.dll /r:System.Management.dll ^
   /r:PresentationCore.dll /r:PresentationFramework.dll /r:WindowsBase.dll ^
+  /resource:tools\strata_update.py,strata_update.py ^
   /resource:src\Ui\Styles.xaml,Styles.xaml ^
   /resource:assets\fonts\Outfit-Regular.ttf,Fonts.Outfit-Regular.ttf ^
   /resource:assets\fonts\Outfit-Medium.ttf,Fonts.Outfit-Medium.ttf ^

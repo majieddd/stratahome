@@ -28,10 +28,14 @@ namespace StrataHome
         TextBox max, seed;
         ToggleButton show, share;
         bool sharedOn, open;
+        readonly System.Windows.Threading.DispatcherTimer closeTimer = new System.Windows.Threading.DispatcherTimer();
 
         public SamplingDrawer(MainWindow window)
         {
             w = window;
+            // WPF may pause animation clocks while the window is hidden or minimized.
+            closeTimer.Interval = TimeSpan.FromMilliseconds(220);
+            closeTimer.Tick += delegate { closeTimer.Stop(); if (!open) Root.Visibility = Visibility.Collapsed; };
             Grid g = new Grid();
             g.Visibility = Visibility.Collapsed;
             scrim.SetResourceReference(Border.BackgroundProperty, "StScrim");
@@ -204,6 +208,7 @@ namespace StrataHome
 
         public void Open()
         {
+            closeTimer.Stop();
             Load(w.Settings);
             LoadShared();
             Root.Visibility = Visibility.Visible;
@@ -223,6 +228,7 @@ namespace StrataHome
             a.Completed += delegate { if (!open) Root.Visibility = Visibility.Collapsed; };
             slide.BeginAnimation(TranslateTransform.XProperty, a);
             scrim.Visibility = Visibility.Collapsed;
+            closeTimer.Start();
         }
 
         void Apply()
